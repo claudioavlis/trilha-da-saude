@@ -17,7 +17,7 @@
   --red:#f87171;--green:#34d399;--pink:#f472b6;--orange:#fb923c;
   --t1:#e8f4fd;--t2:#8badc4;--t3:#4a6b82;
   --b1:rgba(0,212,170,0.18);--b2:rgba(255,255,255,0.07);
-  --topbar:#0d1f3c;--nav-bg:#0d1f3c;
+  --topbar:#0d1f3c;--nav-bg:#0d1f3c;--sidebar-w:220px;
   --r:14px;--rs:10px;
 }
 /* ── LIGHT MODE ── */
@@ -31,52 +31,77 @@ body.light{
 }
 body.light .fg select option{background:#fff;color:#1a2535}
 body.light .topbar{background:var(--topbar)}
-body.light .nav{background:var(--nav-bg);border-top:1px solid var(--b2)}
-body.light .nb{color:#8090a8}
-body.light .nb.active{color:var(--teal)}
-body.light .date-pill{background:#e2eaf3;border-color:var(--b1);color:var(--t2)}
+body.light .sidebar{background:#1e3a5f;border-right-color:rgba(0,0,0,0.12)}
+body.light .sb-item{color:#c8d8ea}
+body.light .sb-item:hover,.body.light .sb-item.active{background:rgba(255,255,255,0.12);color:#fff}
+body.light .sb-overlay{background:rgba(0,0,0,0.45)}
 body.light .info-box{background:#e8f0fa;border:1px solid rgba(0,0,0,0.08)}
 body.light .stock-bar{background:#dde6f0}
 body.light .toast{box-shadow:0 4px 16px rgba(0,0,0,0.15)}
+body.light .date-pill{background:#e2eaf3;border-color:var(--b1);color:var(--t2)}
+body.light .user-chip{background:rgba(0,143,110,0.12)}
+
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;background:var(--bg);color:var(--t1);font-family:'Segoe UI',system-ui,sans-serif;overflow:hidden}
 body{display:flex;flex-direction:column}
 
-/* TOPBAR */
-.topbar{background:var(--topbar);border-bottom:1px solid var(--b1);padding:13px 16px 10px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+/* ── TOPBAR ── */
+.topbar{background:var(--topbar);border-bottom:1px solid var(--b1);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:10px}
+.topbar-left{display:flex;align-items:center;gap:10px}
+.hamburger{background:none;border:none;cursor:pointer;padding:4px;display:flex;flex-direction:column;gap:5px;border-radius:6px;transition:background 0.2s}
+.hamburger:hover{background:rgba(255,255,255,0.08)}
+.hamburger span{display:block;width:20px;height:2px;background:var(--teal);border-radius:2px;transition:all 0.3s}
 .topbar h1{font-size:16px;font-weight:700;color:var(--teal);letter-spacing:-0.2px}
 .topbar .sub{font-size:9px;color:var(--t3);margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:7px}
 .date-pill{background:var(--card);border:1px solid var(--b1);border-radius:20px;padding:4px 10px;font-size:10px;color:var(--t2)}
+.theme-btn{background:rgba(255,255,255,0.1);border:1px solid var(--b1);border-radius:20px;padding:4px 9px;font-size:12px;cursor:pointer;color:var(--t1);font-family:inherit;transition:all 0.2s}
+.user-chip{display:flex;align-items:center;gap:5px;background:rgba(0,212,170,0.1);border:1px solid var(--b1);border-radius:20px;padding:3px 10px 3px 6px;cursor:pointer;transition:background 0.2s}
+.user-avatar{width:20px;height:20px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#0a1628;flex-shrink:0}
+.user-chip-name{font-size:10px;font-weight:600;color:var(--teal)}
 
-/* MAIN */
-.main{flex:1;overflow-y:auto;overflow-x:hidden;padding:10px 12px 82px;scroll-behavior:smooth}
+/* ── SIDEBAR OVERLAY ── */
+.sb-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:299;opacity:0;pointer-events:none;transition:opacity 0.3s}
+.sb-overlay.open{opacity:1;pointer-events:all}
+
+/* ── SIDEBAR ── */
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);background:#0d1f3c;border-right:1px solid var(--b1);z-index:300;transform:translateX(-100%);transition:transform 0.3s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;padding-top:0;overflow:hidden}
+.sidebar.open{transform:translateX(0)}
+.sb-header{padding:20px 18px 16px;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between}
+.sb-logo{font-size:13px;font-weight:700;color:var(--teal)}
+.sb-close{background:none;border:none;color:var(--t2);font-size:18px;cursor:pointer;padding:2px 6px;border-radius:6px}
+.sb-close:hover{background:rgba(255,255,255,0.08);color:var(--t1)}
+.sb-nav{flex:1;overflow-y:auto;padding:8px 8px}
+.sb-nav::-webkit-scrollbar{display:none}
+.sb-section{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--t3);padding:12px 10px 6px;margin-top:4px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;color:var(--t2);font-size:13px;font-weight:500;transition:all 0.18s;margin-bottom:2px;border:none;background:none;width:100%;text-align:left;font-family:inherit}
+.sb-item:hover{background:rgba(255,255,255,0.07);color:var(--t1)}
+.sb-item.active{background:rgba(0,212,170,0.15);color:var(--teal);font-weight:600}
+.sb-item .sb-icon{font-size:17px;width:24px;text-align:center;flex-shrink:0}
+.sb-footer{padding:16px;border-top:1px solid var(--b1)}
+
+/* ── MAIN ── */
+.main{flex:1;overflow-y:auto;overflow-x:hidden;padding:12px 12px 20px}
 .main::-webkit-scrollbar{width:2px}
 .main::-webkit-scrollbar-thumb{background:var(--b1);border-radius:2px}
 
-/* NAV */
-.nav{position:fixed;bottom:0;left:0;right:0;background:var(--nav-bg, #0d1f3c);border-top:1px solid var(--b1);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
-.nb{flex:1;border:none;background:none;cursor:pointer;padding:7px 2px 5px;display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--t3);font-size:8px;font-family:inherit;transition:color 0.2s}
-.nb.active{color:var(--teal)}
-.nb svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-
-/* TABS */
 .tab{display:none}.tab.active{display:block}
 
-/* TYPOGRAPHY */
+/* ── TYPOGRAPHY ── */
 .st{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--t3);margin:14px 0 7px}
 .card{background:var(--card);border:1px solid var(--b2);border-radius:var(--r);padding:13px;margin-bottom:9px}
 .card-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
 .card-title{font-size:13px;font-weight:600}
 .card-sub{font-size:10px;color:var(--t3);margin-top:2px}
 
-/* STAT GRID */
+/* ── STAT GRID ── */
 .sgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:9px}
 .sc{background:var(--card2);border:1px solid var(--b2);border-radius:var(--rs);padding:11px}
 .sl{font-size:10px;color:var(--t3);margin-bottom:3px}
 .sv{font-size:18px;font-weight:700}
 .ss{font-size:10px;color:var(--t3);margin-top:2px}
 
-/* BADGES */
+/* ── BADGES ── */
 .badge{font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px;display:inline-flex;align-items:center}
 .bt{background:rgba(0,212,170,0.15);color:var(--teal)}
 .bb{background:rgba(74,158,255,0.15);color:var(--blue)}
@@ -84,10 +109,9 @@ body{display:flex;flex-direction:column}
 .ba{background:rgba(245,158,11,0.15);color:var(--amber)}
 .br{background:rgba(248,113,113,0.15);color:var(--red)}
 .bg2{background:rgba(52,211,153,0.15);color:var(--green)}
-.bpk{background:rgba(244,114,182,0.15);color:var(--pink)}
-.borg{background:rgba(251,146,60,0.15);color:var(--orange)}
+.hist-badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:8px;display:inline-flex;align-items:center;margin:2px 2px 0 0}
 
-/* FORMS */
+/* ── FORMS ── */
 .fg{margin-bottom:9px}
 .fg label{font-size:11px;color:var(--t2);display:block;margin-bottom:4px}
 .fg input,.fg select,.fg textarea{width:100%;background:var(--inp);border:1px solid var(--b2);border-radius:var(--rs);color:var(--t1);font-family:inherit;font-size:13px;padding:8px 11px;outline:none;transition:border-color 0.2s}
@@ -96,7 +120,7 @@ body{display:flex;flex-direction:column}
 .fg textarea{height:56px;resize:none}
 .frow{display:flex;gap:8px}.frow .fg{flex:1}
 
-/* BUTTONS */
+/* ── BUTTONS ── */
 .btn{width:100%;border:none;border-radius:var(--rs);padding:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity 0.2s,transform 0.1s}
 .btn:active{transform:scale(0.98);opacity:0.9}
 .btn-t{background:var(--teal);color:#0a1628}
@@ -107,7 +131,7 @@ body{display:flex;flex-direction:column}
 .btn-pk{background:var(--pink);color:#0a1628}
 .btn-sm{border:none;border-radius:7px;padding:5px 10px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit}
 
-/* TIMELINE */
+/* ── TIMELINE ── */
 .tl-item{display:flex;align-items:flex-start;gap:9px;padding:9px 0;border-bottom:1px solid var(--b2)}
 .tl-item:last-child{border-bottom:none}
 .tl-dot{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px}
@@ -115,7 +139,7 @@ body{display:flex;flex-direction:column}
 .tl-det{font-size:10px;color:var(--t3)}
 .tl-time{font-size:10px;color:var(--t3);text-align:right;white-space:nowrap}
 
-/* STOCK */
+/* ── STOCK ── */
 .stock-bar{height:6px;background:var(--inp);border-radius:3px;overflow:hidden;margin-top:5px}
 .stock-fill{height:100%;border-radius:3px;transition:width 0.5s}
 .stock-row{display:flex;align-items:center;justify-content:space-between;margin-top:3px;font-size:10px;color:var(--t3)}
@@ -123,7 +147,7 @@ body{display:flex;flex-direction:column}
 .stock-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
 .cat-item{display:flex;align-items:center;gap:9px;background:var(--card2);border:1px solid var(--b2);border-radius:var(--rs);padding:9px 11px;margin-bottom:6px}
 
-/* WATER */
+/* ── WATER ── */
 .water-display{text-align:center;padding:8px 0 5px}
 .water-big{font-size:34px;font-weight:700;color:var(--blue)}
 .water-btns{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-top:8px}
@@ -132,97 +156,65 @@ body{display:flex;flex-direction:column}
 .prog{height:5px;background:var(--inp);border-radius:3px;overflow:hidden;margin-top:8px}
 .prog-fill{height:100%;border-radius:3px;transition:width 0.4s}
 
-/* AGENDA */
-.ag-item{display:flex;align-items:center;gap:9px;background:var(--card2);border:1px solid var(--b2);border-radius:var(--rs);padding:9px 11px;margin-bottom:6px}
-.ag-date{text-align:center;min-width:36px}
-.ag-day{font-size:17px;font-weight:700}
-.ag-mon{font-size:8px;color:var(--t3);text-transform:uppercase}
-.ag-name{font-size:12px;font-weight:600}
-.ag-det{font-size:10px;color:var(--t3)}
-.ag-badge{font-size:9px;font-weight:600;padding:2px 7px;border-radius:10px}
-
-/* GYM */
+/* ── GYM ── */
 .gym-day-card{background:var(--card2);border:1px solid var(--b2);border-radius:var(--rs);padding:11px;margin-bottom:7px}
 .gym-day-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
 .gym-type-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
 .gym-type-btn{border:none;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.2s}
 .gym-type-btn.sel{box-shadow:0 0 0 2px currentColor}
 
-/* MISC */
+/* ── MISC ── */
 .info-box{background:var(--card2);border-radius:var(--rs);padding:9px;margin-bottom:9px;font-size:12px;color:var(--t2)}
 .hint{font-size:10px;color:var(--t3);margin-bottom:7px;margin-top:-3px}
 .divider{height:1px;background:var(--b2);margin:13px 0}
 .del-btn{background:rgba(248,113,113,0.15);border:none;color:var(--red);border-radius:6px;padding:3px 6px;cursor:pointer;font-size:10px;font-family:inherit}
 .empty-st{text-align:center;padding:18px 16px;color:var(--t3);font-size:12px}
 .empty-st .ic{font-size:26px;margin-bottom:5px}
-
-/* CHART */
 .chart-wrap{position:relative;height:155px;margin-top:7px}
 .legend{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:5px}
 .ld{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--t2)}
 .ldot{width:7px;height:7px;border-radius:50%}
-
-/* TOAST */
-.toast{position:fixed;bottom:86px;left:50%;transform:translateX(-50%) translateY(10px);border-radius:20px;padding:8px 18px;font-size:12px;font-weight:600;z-index:999;opacity:0;transition:all 0.3s;white-space:nowrap;pointer-events:none}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
-/* BACKUP SECTION */
 .backup-row{display:flex;gap:8px;margin-bottom:8px}
 .backup-row .btn{flex:1}
 
-/* ── LOGIN SCREEN ── */
-#loginScreen{
-  position:fixed;inset:0;z-index:9999;
-  background:var(--bg);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:24px;
-  transition:opacity 0.4s;
-}
-#loginScreen.hidden{opacity:0;pointer-events:none;}
-.login-logo{font-size:52px;margin-bottom:8px;animation:pulse 2s ease-in-out infinite;}
+/* ── TOAST ── */
+.toast{position:fixed;top:70px;left:50%;transform:translateX(-50%) translateY(-10px);border-radius:20px;padding:8px 18px;font-size:12px;font-weight:600;z-index:999;opacity:0;transition:all 0.3s;white-space:nowrap;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── LOGIN ── */
+#loginScreen{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;transition:opacity 0.4s;overflow-y:auto}
+#loginScreen.hidden{opacity:0;pointer-events:none}
+.login-logo{font-size:52px;margin-bottom:8px;animation:pulse 2s ease-in-out infinite}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
 .login-title{font-size:22px;font-weight:800;color:var(--teal);letter-spacing:-0.5px;margin-bottom:4px}
-.login-sub{font-size:12px;color:var(--t3);margin-bottom:32px}
-.login-box{width:100%;max-width:360px;background:var(--card);border:1px solid var(--b2);border-radius:20px;padding:24px;box-shadow:0 8px 32px rgba(0,0,0,0.25);}
-.login-box .fg{margin-bottom:14px}
-.login-box .fg label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight:600}
-.login-box .fg input{width:100%;background:var(--inp);border:1.5px solid var(--b2);border-radius:10px;color:var(--t1);font-family:inherit;font-size:14px;padding:11px 14px;outline:none;transition:border-color 0.2s;}
-.login-box .fg input:focus{border-color:var(--teal);}
-.login-error{font-size:12px;color:var(--red);text-align:center;margin-bottom:10px;min-height:18px;font-weight:600}
-.login-btn{width:100%;background:var(--teal);color:#0a1628;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.2s,transform 0.1s;margin-top:4px}
+.login-sub{font-size:12px;color:var(--t3);margin-bottom:28px}
+.login-box{width:100%;max-width:360px;background:var(--card);border:1px solid var(--b2);border-radius:20px;padding:22px;box-shadow:0 8px 32px rgba(0,0,0,0.25)}
+.login-box .fg{margin-bottom:12px}
+.login-box .fg label{font-size:12px;color:var(--t2);display:block;margin-bottom:5px;font-weight:600}
+.login-box .fg input{width:100%;background:var(--inp);border:1.5px solid var(--b2);border-radius:10px;color:var(--t1);font-family:inherit;font-size:14px;padding:10px 14px;outline:none;transition:border-color 0.2s}
+.login-box .fg input:focus{border-color:var(--teal)}
+.login-error{font-size:12px;color:var(--red);text-align:center;margin-bottom:8px;min-height:16px;font-weight:600}
+.login-btn{width:100%;background:var(--teal);color:#0a1628;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.2s,transform 0.1s;margin-top:4px}
 .login-btn:active{transform:scale(0.98);opacity:0.9}
-.login-footer{margin-top:14px;text-align:center}
+.login-footer{margin-top:12px;text-align:center}
 .login-footer button{background:none;border:none;color:var(--t3);font-size:11px;cursor:pointer;font-family:inherit;text-decoration:underline;padding:4px}
-
-/* MANAGE USERS PANEL */
-#manageUsers{display:none;margin-top:16px;background:var(--card2);border:1px solid var(--b2);border-radius:14px;padding:16px;width:100%;max-width:360px}
-.user-item{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--b2);font-size:13px}
+#manageUsers{display:none;margin-top:14px;background:var(--card2);border:1px solid var(--b2);border-radius:14px;padding:14px;width:100%;max-width:360px}
+.user-item{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--b2);font-size:13px}
 .user-item:last-child{border-bottom:none}
 .user-name{font-weight:600;color:var(--t1)}
 .user-login{font-size:11px;color:var(--t3)}
-
-/* TOPBAR USER CHIP */
-.user-chip{display:flex;align-items:center;gap:5px;background:rgba(0,212,170,0.1);border:1px solid var(--b1);border-radius:20px;padding:3px 10px 3px 6px;cursor:pointer;transition:background 0.2s}
-.user-chip:hover{background:rgba(0,212,170,0.18)}
-.user-avatar{width:20px;height:20px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#0a1628;flex-shrink:0}
-.user-chip-name{font-size:10px;font-weight:600;color:var(--teal)}
 </style>
 </head>
 <body>
 
-<!-- ══════════════ LOGIN SCREEN ══════════════ -->
+<!-- ══ LOGIN ══ -->
 <div id="loginScreen">
   <div class="login-logo">🏃</div>
   <div class="login-title">Trilha da Saúde</div>
   <div class="login-sub">Saúde · Treino · Bem-estar</div>
-
   <div class="login-box">
-    <div class="fg">
-      <label>Usuário</label>
-      <input type="text" id="login-user" placeholder="seu usuário" autocomplete="username" autocapitalize="none" onkeydown="if(event.key==='Enter')document.getElementById('login-pass').focus()">
-    </div>
-    <div class="fg" style="margin-bottom:6px">
-      <label>Senha</label>
+    <div class="fg"><label>Usuário</label><input type="text" id="login-user" placeholder="seu usuário" autocomplete="username" autocapitalize="none" onkeydown="if(event.key==='Enter')document.getElementById('login-pass').focus()"></div>
+    <div class="fg" style="margin-bottom:6px"><label>Senha</label>
       <div style="position:relative">
         <input type="password" id="login-pass" placeholder="sua senha" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()" style="padding-right:42px">
         <button onclick="togglePwd()" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;color:var(--t3)" id="eyeBtn">👁</button>
@@ -230,30 +222,60 @@ body{display:flex;flex-direction:column}
     </div>
     <div class="login-error" id="login-error"></div>
     <button class="login-btn" onclick="doLogin()">Entrar</button>
-    <div class="login-footer">
-      <button onclick="toggleManageUsers()">⚙️ Gerenciar usuários</button>
-    </div>
+    <div class="login-footer"><button onclick="toggleManageUsers()">⚙️ Gerenciar usuários</button></div>
   </div>
-
   <div id="manageUsers">
-    <div style="font-size:12px;font-weight:700;color:var(--teal);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.8px">👥 Usuários Cadastrados</div>
+    <div style="font-size:12px;font-weight:700;color:var(--teal);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.8px">👥 Usuários</div>
     <div id="userList"></div>
-    <div style="margin-top:14px;border-top:1px solid var(--b2);padding-top:14px">
-      <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:10px">Novo Usuário</div>
+    <div style="margin-top:12px;border-top:1px solid var(--b2);padding-top:12px">
+      <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:8px">Novo Usuário</div>
       <div class="fg"><label>Nome completo</label><input type="text" id="new-user-name" placeholder="ex: João Silva"></div>
-      <div class="fg"><label>Usuário (login)</label><input type="text" id="new-user-login" placeholder="ex: joaosilva" autocapitalize="none"></div>
-      <div class="fg" style="margin-bottom:10px"><label>Senha</label><input type="password" id="new-user-pass" placeholder="mínimo 4 caracteres"></div>
-      <button class="login-btn" onclick="addUser()">➕ Cadastrar Usuário</button>
+      <div class="fg"><label>Usuário</label><input type="text" id="new-user-login" placeholder="ex: joaosilva" autocapitalize="none"></div>
+      <div class="fg" style="margin-bottom:8px"><label>Senha</label><input type="password" id="new-user-pass" placeholder="mínimo 4 caracteres"></div>
+      <button class="login-btn" onclick="addUser()">➕ Cadastrar</button>
     </div>
   </div>
 </div>
-<!-- ══════════════ /LOGIN SCREEN ══════════════ -->
 
+<!-- ══ SIDEBAR OVERLAY ══ -->
+<div class="sb-overlay" id="sbOverlay" onclick="closeSidebar()"></div>
 
+<!-- ══ SIDEBAR ══ -->
+<div class="sidebar" id="sidebar">
+  <div class="sb-header">
+    <div class="sb-logo">🏃 Trilha da Saúde</div>
+    <button class="sb-close" onclick="closeSidebar()">✕</button>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-section">Principal</div>
+    <button class="sb-item active" onclick="goTab('home',this)"><span class="sb-icon">🏠</span>Início</button>
+    <button class="sb-item" onclick="goTab('register',this)"><span class="sb-icon">➕</span>Registrar</button>
+    <button class="sb-item" onclick="goTab('history',this)"><span class="sb-icon">📋</span>Histórico</button>
+
+    <div class="sb-section">Configuração</div>
+    <button class="sb-item" onclick="goTab('cadastro',this)"><span class="sb-icon">📦</span>Cadastro</button>
+    <button class="sb-item" onclick="goTab('gym',this)"><span class="sb-icon">🏋️</span>Academia</button>
+    <button class="sb-item" onclick="goTab('charts',this)"><span class="sb-icon">📊</span>Gráficos</button>
+
+    <div class="sb-section">Sistema</div>
+    <button class="sb-item" onclick="goTab('backup',this)"><span class="sb-icon">💾</span>Backup</button>
+    <button class="sb-item" onclick="doLogout()"><span class="sb-icon">🚪</span>Sair</button>
+  </div>
+  <div class="sb-footer" style="font-size:10px;color:var(--t3);text-align:center">v3.0 · Trilha da Saúde</div>
+</div>
+
+<!-- ══ TOPBAR ══ -->
 <div class="topbar">
-  <div><h1>🏃 Trilha da Saúde</h1><div class="sub">Saúde · Treino · Bem-estar</div></div>
-  <div style="display:flex;align-items:center;gap:7px">
-    <button id="themeBtn" onclick="toggleTheme()" style="background:rgba(255,255,255,0.1);border:1px solid var(--b1);border-radius:20px;padding:4px 9px;font-size:12px;cursor:pointer;color:var(--t1);font-family:inherit;transition:all 0.2s">🌙</button>
+  <div class="topbar-left">
+    <button class="hamburger" onclick="openSidebar()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <div>
+      <div class="topbar h1" style="font-size:15px;font-weight:700;color:var(--teal)">🏃 Trilha da Saúde</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <button id="themeBtn" class="theme-btn" onclick="toggleTheme()">🌙</button>
     <div class="date-pill" id="topDate"></div>
     <div class="user-chip" onclick="doLogout()" title="Sair">
       <div class="user-avatar" id="topUserAvatar">?</div>
@@ -262,15 +284,26 @@ body{display:flex;flex-direction:column}
   </div>
 </div>
 
+<!-- ══ MAIN ══ -->
 <div class="main">
 
-<!-- ══════════ TAB: INÍCIO ══════════ -->
+<!-- ════ TAB: INÍCIO ════ -->
 <div class="tab active" id="tab-home">
   <div class="sgrid">
     <div class="sc"><div class="sl">💉 Tirzepetida</div><div class="sv" id="h-tirz" style="color:var(--teal)">—</div><div class="ss" id="h-tirz-d">sem registro</div></div>
     <div class="sc"><div class="sl">🧪 Testosterona</div><div class="sv" id="h-test" style="color:var(--blue)">—</div><div class="ss" id="h-test-d">sem registro</div></div>
     <div class="sc"><div class="sl">⚖️ Peso atual</div><div class="sv" id="h-peso" style="color:var(--teal)">—</div><div class="ss" id="h-peso-d">sem registro</div></div>
     <div class="sc"><div class="sl">📐 Cintura</div><div class="sv" id="h-cintura" style="color:var(--blue)">—</div><div class="ss" id="h-cintura-d">sem registro</div></div>
+  </div>
+
+  <!-- GRÁFICOS PESO E CINTURA NA TELA INICIAL -->
+  <div class="card">
+    <div class="card-hd"><div class="card-title">⚖️ Evolução de Peso (kg)</div></div>
+    <div class="chart-wrap"><canvas id="cPeso"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="card-hd"><div class="card-title">📐 Evolução de Cintura (cm)</div></div>
+    <div class="chart-wrap"><canvas id="cCintura"></canvas></div>
   </div>
 
   <div class="card">
@@ -291,15 +324,9 @@ body{display:flex;flex-direction:column}
     </div>
   </div>
 
-  <!-- ACADEMIA RESUMO SEMANA -->
   <div class="card">
     <div class="card-hd"><div class="card-title">🏋️ Academia esta semana</div><span class="badge bg2" id="gym-week-badge">0 dias</span></div>
     <div id="gymWeekSummary"><div class="empty-st">Registre treinos na aba Academia</div></div>
-  </div>
-
-  <div class="card">
-    <div class="card-hd"><div class="card-title">📅 Próximas Aplicações</div><span class="badge bt" id="ag-count">0 prev.</span></div>
-    <div id="homeAgenda"><div class="empty-st">Configure a agenda na aba Agenda</div></div>
   </div>
 
   <div class="card">
@@ -308,118 +335,14 @@ body{display:flex;flex-direction:column}
   </div>
 </div>
 
-<!-- ══════════ TAB: CADASTRO ══════════ -->
-<div class="tab" id="tab-cadastro">
-
-  <div class="st">💉 Estoque de Tirzepetida</div>
-  <div class="card">
-    <div style="background:rgba(0,212,170,0.08);border:1px solid rgba(0,212,170,0.2);border-radius:var(--rs);padding:8px 10px;margin-bottom:10px;font-size:11px;color:var(--teal)">
-      ℹ️ Informe o <b>mg por ampola/caneta</b> e o <b>volume por unidade</b>. O total será calculado automaticamente.
-    </div>
-    <div class="fg"><label>Tipo de apresentação</label>
-      <select id="c-tirz-tipo"><option value="ampola">Ampola</option><option value="caneta">Caneta</option></select>
-    </div>
-    <div class="frow">
-      <div class="fg"><label>mg por unidade</label><input type="number" id="c-tirz-mg-unit" placeholder="ex: 15" step="0.5" oninput="updTirzCalc()"></div>
-      <div class="fg"><label>ml por unidade</label><input type="number" id="c-tirz-ml-unit" placeholder="ex: 0.5" step="0.1" oninput="updTirzCalc()"></div>
-    </div>
-    <div class="fg"><label>Quantidade de unidades</label><input type="number" id="c-tirz-qty" placeholder="ex: 4" min="1" step="1" oninput="updTirzCalc()"></div>
-    <div id="c-tirz-calc" class="info-box" style="display:none">
-      <div style="display:flex;gap:16px;font-size:13px">
-        <div>Total ml: <span id="c-tirz-tot-ml" style="color:var(--teal);font-weight:700">—</span></div>
-        <div>Total mg: <span id="c-tirz-tot-mg" style="color:var(--teal);font-weight:700">—</span></div>
-      </div>
-      <div style="margin-top:4px;font-size:10px;color:var(--t3)" id="c-tirz-conc-display">Concentração: —</div>
-    </div>
-    <div class="fg"><label>Validade</label><input type="date" id="c-tirz-val"></div>
-    <div class="fg"><label>Descrição / Marca</label><input type="text" id="c-tirz-obs" placeholder="ex: Mounjaro 15mg/0.5ml"></div>
-    <button class="btn btn-t" onclick="saveTirzStock()">➕ Adicionar Estoque</button>
-  </div>
-  <div class="st">📦 Estoques — Tirzepetida</div>
-  <div id="tirzStockList"></div>
-
-  <div class="divider"></div>
-
-  <div class="st">🧪 Estoque de Testosterona</div>
-  <div class="card">
-    <div style="background:rgba(74,158,255,0.08);border:1px solid rgba(74,158,255,0.2);border-radius:var(--rs);padding:8px 10px;margin-bottom:10px;font-size:11px;color:var(--blue)">
-      ℹ️ Informe a <b>concentração em mg/ml</b> e o <b>volume total do frasco</b>. O total mg será calculado automaticamente.
-    </div>
-    <div class="fg"><label>Tipo de frasco</label>
-      <select id="c-test-tipo"><option value="ampola-1ml">Ampola 1ml</option><option value="frasco-4ml">Frasco 4ml</option><option value="frasco-10ml">Frasco 10ml</option><option value="outro">Outro</option></select>
-    </div>
-    <div class="fg"><label>Composto</label>
-      <select id="c-test-comp"><option>Enantato</option><option>Propionato</option><option>Cipionato</option><option>Undecanoato</option><option>Decanoato</option></select>
-    </div>
-    <div class="frow">
-      <div class="fg"><label>Concentração (mg/ml)</label><input type="number" id="c-test-conc" placeholder="ex: 250" step="1" oninput="updTestCalc()"></div>
-      <div class="fg"><label>Volume por frasco (ml)</label><input type="number" id="c-test-vol" placeholder="ex: 10" step="0.1" oninput="updTestCalc()"></div>
-    </div>
-    <div class="fg"><label>Quantidade de frascos</label><input type="number" id="c-test-qty" placeholder="ex: 1" min="1" step="1" oninput="updTestCalc()"></div>
-    <div id="c-test-calc" class="info-box" style="display:none">
-      <div style="display:flex;gap:16px;font-size:13px">
-        <div>Total ml: <span id="c-test-tot-ml" style="color:var(--blue);font-weight:700">—</span></div>
-        <div>Total mg: <span id="c-test-tot-mg" style="color:var(--blue);font-weight:700">—</span></div>
-      </div>
-    </div>
-    <div class="fg"><label>Validade</label><input type="date" id="c-test-val"></div>
-    <button class="btn btn-b" onclick="saveTestStock()">➕ Adicionar Estoque</button>
-  </div>
-  <div class="st">📦 Estoques — Testosterona</div>
-  <div id="testStockList"></div>
-
-  <div class="divider"></div>
-
-  <div class="st">🌿 Cadastrar Suplemento</div>
-  <div class="card">
-    <div class="fg"><label>Nome</label><input type="text" id="c-supl-nome" placeholder="ex: Ômega 3, Zinco, Vitamina D3..."></div>
-    <div class="frow">
-      <div class="fg"><label>Dose padrão</label><input type="number" id="c-supl-dose" placeholder="ex: 1000" step="0.1"></div>
-      <div class="fg"><label>Unidade</label><select id="c-supl-unit"><option>mg</option><option>mcg</option><option>UI</option><option>g</option><option>comprimidos</option><option>cápsulas</option></select></div>
-    </div>
-    <div class="frow">
-      <div class="fg"><label>Frequência</label><select id="c-supl-freq"><option value="daily">1x/dia</option><option value="2x">2x/dia</option><option value="3x">3x/dia</option><option value="weekly">Semanal</option></select></div>
-      <div class="fg"><label>Horário preferido</label><input type="time" id="c-supl-time" value="08:00"></div>
-    </div>
-    <button class="btn btn-p" onclick="saveSuplCat()">➕ Cadastrar Suplemento</button>
-  </div>
-  <div class="st">🌿 Suplementos Cadastrados</div>
-  <div id="suplCatList"></div>
-
-  <div class="divider"></div>
-
-  <div class="st">💊 Cadastrar Medicamento</div>
-  <div class="card">
-    <div class="fg"><label>Nome</label><input type="text" id="c-med-nome" placeholder="ex: Tamoxifeno, Rosuvastatina, Dutasterida..."></div>
-    <div class="frow">
-      <div class="fg"><label>Dose padrão</label><input type="number" id="c-med-dose" placeholder="ex: 20" step="0.1"></div>
-      <div class="fg"><label>Unidade</label><select id="c-med-unit"><option>mg</option><option>mcg</option><option>ml</option><option>comprimidos</option><option>UI</option></select></div>
-    </div>
-    <div class="frow">
-      <div class="fg"><label>Frequência</label><select id="c-med-freq"><option value="daily">1x/dia</option><option value="2x">2x/dia</option><option value="3x">3x/dia</option><option value="weekly">Semanal</option></select></div>
-      <div class="fg"><label>Horário preferido</label><input type="time" id="c-med-time" value="22:00"></div>
-    </div>
-    <button class="btn btn-a" onclick="saveMedCat()">➕ Cadastrar Medicamento</button>
-  </div>
-  <div class="st">💊 Medicamentos Cadastrados</div>
-  <div id="medCatList"></div>
-
-</div>
-
-<!-- ══════════ TAB: REGISTRAR ══════════ -->
+<!-- ════ TAB: REGISTRAR ════ -->
 <div class="tab" id="tab-register">
-
   <div class="st">💉 Tirzepetida</div>
   <div class="card">
-    <div class="fg"><label>Selecionar Estoque</label>
-      <select id="r-tirz-stock" onchange="onTirzStock()"><option value="">— Selecione o estoque —</option></select>
-    </div>
+    <div class="fg"><label>Selecionar Estoque</label><select id="r-tirz-stock" onchange="onTirzStock()"><option value="">— Selecione o estoque —</option></select></div>
     <div id="r-tirz-info" style="display:none" class="info-box">
       <div style="font-size:11px;color:var(--t2);margin-bottom:5px">Estoque disponível</div>
-      <div style="display:flex;gap:14px;margin-bottom:5px">
-        <span style="font-size:12px;font-weight:700;color:var(--teal)" id="r-tirz-avail-ml">—</span>
-        <span style="font-size:12px;font-weight:700;color:var(--teal)" id="r-tirz-avail-mg">—</span>
-      </div>
+      <div style="display:flex;gap:14px;margin-bottom:5px"><span style="font-size:12px;font-weight:700;color:var(--teal)" id="r-tirz-avail-ml">—</span><span style="font-size:12px;font-weight:700;color:var(--teal)" id="r-tirz-avail-mg">—</span></div>
       <div class="stock-bar"><div class="stock-fill" id="r-tirz-sbar" style="background:var(--teal)"></div></div>
     </div>
     <div class="frow">
@@ -428,9 +351,7 @@ body{display:flex;flex-direction:column}
     </div>
     <div class="hint" id="r-tirz-hint"></div>
     <div class="fg"><label>Data e Hora</label><input type="datetime-local" id="r-tirz-date"></div>
-    <div class="fg"><label>Local de aplicação</label>
-      <select id="r-tirz-local"><option value="">Selecionar...</option><option>Abdômen esquerdo</option><option>Abdômen direito</option><option>Coxa esquerda</option><option>Coxa direita</option><option>Braço esquerdo</option><option>Braço direito</option></select>
-    </div>
+    <div class="fg"><label>Local de aplicação</label><select id="r-tirz-local"><option value="">Selecionar...</option><option>Abdômen esquerdo</option><option>Abdômen direito</option><option>Coxa esquerda</option><option>Coxa direita</option><option>Braço esquerdo</option><option>Braço direito</option></select></div>
     <div style="background:rgba(0,212,170,0.06);border:1px solid rgba(0,212,170,0.15);border-radius:var(--rs);padding:10px;margin-bottom:9px">
       <div style="font-size:11px;font-weight:700;color:var(--teal);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.8px">📏 Medidas Corporais</div>
       <div class="frow">
@@ -440,10 +361,7 @@ body{display:flex;flex-direction:column}
       <div class="frow">
         <div class="fg"><label>Altura (cm)</label><input type="number" id="r-tirz-altura" placeholder="ex: 175" step="0.5" min="100" oninput="calcTirzIMC()"></div>
         <div class="fg"><label>IMC (calculado)</label>
-          <div style="display:flex;align-items:center;gap:8px">
-            <input type="text" id="r-tirz-imc" readonly style="opacity:0.7;flex:1">
-            <span id="r-tirz-imc-label" style="font-size:10px;font-weight:600;white-space:nowrap"></span>
-          </div>
+          <div style="display:flex;align-items:center;gap:8px"><input type="text" id="r-tirz-imc" readonly style="opacity:0.7;flex:1"><span id="r-tirz-imc-label" style="font-size:10px;font-weight:600;white-space:nowrap"></span></div>
         </div>
       </div>
     </div>
@@ -451,17 +369,31 @@ body{display:flex;flex-direction:column}
     <button class="btn btn-t" onclick="saveTirzDose()">💉 Registrar Aplicação</button>
   </div>
 
+  <div class="st">💚 Klow</div>
+  <div class="card">
+    <div class="fg"><label>Selecionar Estoque</label><select id="r-klow-stock" onchange="onKlowStock()"><option value="">— Selecione o estoque —</option></select></div>
+    <div id="r-klow-info" style="display:none" class="info-box">
+      <div style="font-size:11px;color:var(--t2);margin-bottom:5px">Estoque disponível</div>
+      <div style="display:flex;gap:14px;margin-bottom:5px"><span style="font-size:12px;font-weight:700;color:var(--green)" id="r-klow-avail-ml">—</span><span style="font-size:12px;font-weight:700;color:var(--green)" id="r-klow-avail-mg">—</span></div>
+      <div class="stock-bar"><div class="stock-fill" id="r-klow-sbar" style="background:var(--green)"></div></div>
+    </div>
+    <div class="frow">
+      <div class="fg"><label>Dose (mg)</label><input type="number" id="r-klow-dose" placeholder="ex: 1.0" step="0.5" oninput="calcKlowUI()"></div>
+      <div class="fg"><label>Volume (UI — seringa U100)</label><input type="number" id="r-klow-ui" placeholder="ex: 10" step="1" oninput="calcKlowFromUI()"></div>
+    </div>
+    <div class="hint" id="r-klow-hint"></div>
+    <div class="fg"><label>Data e Hora</label><input type="datetime-local" id="r-klow-date"></div>
+    <div class="fg"><label>Local de aplicação</label><select id="r-klow-local"><option value="">Selecionar...</option><option>Abdômen esquerdo</option><option>Abdômen direito</option><option>Coxa esquerda</option><option>Coxa direita</option><option>Braço esquerdo</option><option>Braço direito</option></select></div>
+    <div class="fg"><label>Observações</label><textarea id="r-klow-obs" placeholder="Reações, sensações..."></textarea></div>
+    <button class="btn btn-g" onclick="saveKlowDose()">💚 Registrar Klow</button>
+  </div>
+
   <div class="st">🧪 Testosterona</div>
   <div class="card">
-    <div class="fg"><label>Selecionar Estoque</label>
-      <select id="r-test-stock" onchange="onTestStock()"><option value="">— Selecione o estoque —</option></select>
-    </div>
+    <div class="fg"><label>Selecionar Estoque</label><select id="r-test-stock" onchange="onTestStock()"><option value="">— Selecione o estoque —</option></select></div>
     <div id="r-test-info" style="display:none" class="info-box">
       <div style="font-size:11px;color:var(--t2);margin-bottom:5px">Estoque disponível</div>
-      <div style="display:flex;gap:14px;margin-bottom:5px">
-        <span style="font-size:12px;font-weight:700;color:var(--blue)" id="r-test-avail-ml">—</span>
-        <span style="font-size:12px;font-weight:700;color:var(--blue)" id="r-test-avail-mg">—</span>
-      </div>
+      <div style="display:flex;gap:14px;margin-bottom:5px"><span style="font-size:12px;font-weight:700;color:var(--blue)" id="r-test-avail-ml">—</span><span style="font-size:12px;font-weight:700;color:var(--blue)" id="r-test-avail-mg">—</span></div>
       <div class="stock-bar"><div class="stock-fill" id="r-test-sbar" style="background:var(--blue)"></div></div>
     </div>
     <div class="frow">
@@ -470,10 +402,8 @@ body{display:flex;flex-direction:column}
     </div>
     <div class="hint" id="r-test-hint"></div>
     <div class="fg"><label>Data e Hora</label><input type="datetime-local" id="r-test-date"></div>
-    <div class="fg"><label>Local de aplicação</label>
-      <select id="r-test-local"><option value="">Selecionar...</option><option>Glúteo esquerdo</option><option>Glúteo direito</option><option>Coxa esquerda</option><option>Coxa direita</option><option>Deltoide esquerdo</option><option>Deltoide direito</option></select>
-    </div>
-    <div style="background:rgba(74,158,255,0.06);border:1px solid rgba(74,158,255,0.15);border-radius:var(--rs);padding:10px;margin-bottom:9px">
+    <div class="fg"><label>Local de aplicação</label><select id="r-test-local"><option value="">Selecionar...</option><option>Glúteo esquerdo</option><option>Glúteo direito</option><option>Coxa esquerda</option><option>Coxa direita</option><option>Deltoide esquerdo</option><option>Deltoide direito</option></select></div>
+    <div style="background:rgba(74,158,255,0.06);border:1px solid rgba(74,158,255,0.18);border-radius:var(--rs);padding:10px;margin-bottom:9px">
       <div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.8px">📏 Medidas Corporais</div>
       <div class="frow">
         <div class="fg"><label>Peso (kg)</label><input type="number" id="r-test-peso" placeholder="ex: 95.5" step="0.1" min="30" oninput="calcTestIMC()"></div>
@@ -482,10 +412,7 @@ body{display:flex;flex-direction:column}
       <div class="frow">
         <div class="fg"><label>Altura (cm)</label><input type="number" id="r-test-altura" placeholder="ex: 175" step="0.5" min="100" oninput="calcTestIMC()"></div>
         <div class="fg"><label>IMC (calculado)</label>
-          <div style="display:flex;align-items:center;gap:8px">
-            <input type="text" id="r-test-imc" readonly style="opacity:0.7;flex:1">
-            <span id="r-test-imc-label" style="font-size:10px;font-weight:600;white-space:nowrap"></span>
-          </div>
+          <div style="display:flex;align-items:center;gap:8px"><input type="text" id="r-test-imc" readonly style="opacity:0.7;flex:1"><span id="r-test-imc-label" style="font-size:10px;font-weight:600;white-space:nowrap"></span></div>
         </div>
       </div>
     </div>
@@ -524,9 +451,7 @@ body{display:flex;flex-direction:column}
 
   <div class="st">🌿 Suplementos</div>
   <div class="card">
-    <div class="fg"><label>Suplemento</label>
-      <select id="r-supl-cat" onchange="onSuplCat()"><option value="">— Selecione —</option></select>
-    </div>
+    <div class="fg"><label>Suplemento</label><select id="r-supl-cat" onchange="onSuplCat()"><option value="">— Selecione —</option></select></div>
     <div class="frow">
       <div class="fg"><label>Dose</label><input type="number" id="r-supl-dose" placeholder="dose" step="0.1"></div>
       <div class="fg"><label>Unidade</label><input type="text" id="r-supl-unit" readonly style="opacity:0.6"></div>
@@ -537,9 +462,7 @@ body{display:flex;flex-direction:column}
 
   <div class="st">💊 Medicamentos</div>
   <div class="card">
-    <div class="fg"><label>Medicamento</label>
-      <select id="r-med-cat" onchange="onMedCat()"><option value="">— Selecione —</option></select>
-    </div>
+    <div class="fg"><label>Medicamento</label><select id="r-med-cat" onchange="onMedCat()"><option value="">— Selecione —</option></select></div>
     <div class="frow">
       <div class="fg"><label>Dose</label><input type="number" id="r-med-dose" placeholder="dose" step="0.1"></div>
       <div class="fg"><label>Unidade</label><input type="text" id="r-med-unit" readonly style="opacity:0.6"></div>
@@ -562,17 +485,140 @@ body{display:flex;flex-direction:column}
     </div>
     <button class="btn btn-b" onclick="saveWaterLog()">💧 Registrar Água</button>
   </div>
-
 </div>
 
-<!-- ══════════ TAB: ACADEMIA ══════════ -->
-<div class="tab" id="tab-gym">
+<!-- ════ TAB: HISTÓRICO ════ -->
+<div class="tab" id="tab-history">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+    <div class="fg" style="flex:1;margin-bottom:0;margin-right:8px">
+      <select id="h-filter" onchange="renderHistory()">
+        <option value="all">Todos os registros</option>
+        <option value="tirz">Tirzepetida</option>
+        <option value="klow">Klow</option>
+        <option value="test">Testosterona</option>
+        <option value="supl">Suplementos</option>
+        <option value="med">Medicamentos</option>
+        <option value="water">Água</option>
+      </select>
+    </div>
+    <button class="btn-sm" style="background:rgba(248,113,113,0.15);color:var(--red);white-space:nowrap" onclick="clearAllDoses()">🗑 Limpar</button>
+  </div>
+  <div id="histList"></div>
+  <div class="st" style="margin-top:16px">🏋️ Treinos</div>
+  <div id="gymHistList"></div>
+</div>
 
+<!-- ════ TAB: CADASTRO ════ -->
+<div class="tab" id="tab-cadastro">
+  <div class="st">💉 Estoque de Tirzepetida</div>
+  <div class="card">
+    <div style="background:rgba(0,212,170,0.08);border:1px solid rgba(0,212,170,0.2);border-radius:var(--rs);padding:8px 10px;margin-bottom:10px;font-size:11px;color:var(--teal)">ℹ️ Informe o <b>mg por ampola/caneta</b> e o <b>volume por unidade</b>.</div>
+    <div class="fg"><label>Tipo</label><select id="c-tirz-tipo"><option value="ampola">Ampola</option><option value="caneta">Caneta</option></select></div>
+    <div class="frow">
+      <div class="fg"><label>mg por unidade</label><input type="number" id="c-tirz-mg-unit" placeholder="ex: 15" step="0.5" oninput="updTirzCalc()"></div>
+      <div class="fg"><label>ml por unidade</label><input type="number" id="c-tirz-ml-unit" placeholder="ex: 0.5" step="0.1" oninput="updTirzCalc()"></div>
+    </div>
+    <div class="fg"><label>Quantidade de unidades</label><input type="number" id="c-tirz-qty" placeholder="ex: 4" min="1" step="1" oninput="updTirzCalc()"></div>
+    <div id="c-tirz-calc" class="info-box" style="display:none">
+      <div style="display:flex;gap:16px;font-size:13px"><div>Total ml: <span id="c-tirz-tot-ml" style="color:var(--teal);font-weight:700">—</span></div><div>Total mg: <span id="c-tirz-tot-mg" style="color:var(--teal);font-weight:700">—</span></div></div>
+      <div style="margin-top:4px;font-size:10px;color:var(--t3)" id="c-tirz-conc-display">Concentração: —</div>
+    </div>
+    <div class="fg"><label>Validade</label><input type="date" id="c-tirz-val"></div>
+    <div class="fg"><label>Descrição / Marca</label><input type="text" id="c-tirz-obs" placeholder="ex: Mounjaro 15mg/0.5ml"></div>
+    <button class="btn btn-t" onclick="saveTirzStock()">➕ Adicionar Estoque</button>
+  </div>
+  <div class="st">📦 Estoques — Tirzepetida</div>
+  <div id="tirzStockList"></div>
+
+  <div class="divider"></div>
+
+  <div class="st">💚 Estoque de Klow</div>
+  <div class="card">
+    <div style="background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.2);border-radius:var(--rs);padding:8px 10px;margin-bottom:10px;font-size:11px;color:var(--green)">ℹ️ Klow pode ser aplicado diariamente, em dias alternados ou semanalmente.</div>
+    <div class="fg"><label>Tipo</label><select id="c-klow-tipo"><option value="ampola">Ampola</option><option value="caneta">Caneta</option></select></div>
+    <div class="frow">
+      <div class="fg"><label>mg por unidade</label><input type="number" id="c-klow-mg-unit" placeholder="ex: 10" step="0.5" oninput="updKlowCalc()"></div>
+      <div class="fg"><label>ml por unidade</label><input type="number" id="c-klow-ml-unit" placeholder="ex: 0.5" step="0.1" oninput="updKlowCalc()"></div>
+    </div>
+    <div class="fg"><label>Quantidade de unidades</label><input type="number" id="c-klow-qty" placeholder="ex: 4" min="1" step="1" oninput="updKlowCalc()"></div>
+    <div id="c-klow-calc" class="info-box" style="display:none">
+      <div style="display:flex;gap:16px;font-size:13px"><div>Total ml: <span id="c-klow-tot-ml" style="color:var(--green);font-weight:700">—</span></div><div>Total mg: <span id="c-klow-tot-mg" style="color:var(--green);font-weight:700">—</span></div></div>
+      <div style="margin-top:4px;font-size:10px;color:var(--t3)" id="c-klow-conc-display">Concentração: —</div>
+    </div>
+    <div class="fg"><label>Frequência de uso</label>
+      <select id="c-klow-freq"><option value="daily">Diário</option><option value="alternado">Dias alternados</option><option value="weekly">Semanal</option></select>
+    </div>
+    <div class="fg"><label>Validade</label><input type="date" id="c-klow-val"></div>
+    <div class="fg"><label>Descrição / Marca</label><input type="text" id="c-klow-obs" placeholder="ex: Klow 10mg/0.5ml"></div>
+    <button class="btn btn-g" onclick="saveKlowStock()">➕ Adicionar Estoque Klow</button>
+  </div>
+  <div class="st">📦 Estoques — Klow</div>
+  <div id="klowStockList"></div>
+
+  <div class="divider"></div>
+
+  <div class="st">🧪 Estoque de Testosterona</div>
+  <div class="card">
+    <div style="background:rgba(74,158,255,0.08);border:1px solid rgba(74,158,255,0.2);border-radius:var(--rs);padding:8px 10px;margin-bottom:10px;font-size:11px;color:var(--blue)">ℹ️ Informe a <b>concentração em mg/ml</b> e o <b>volume total do frasco</b>.</div>
+    <div class="fg"><label>Tipo de frasco</label><select id="c-test-tipo"><option value="ampola-1ml">Ampola 1ml</option><option value="frasco-4ml">Frasco 4ml</option><option value="frasco-10ml">Frasco 10ml</option><option value="outro">Outro</option></select></div>
+    <div class="fg"><label>Composto</label><select id="c-test-comp"><option>Enantato</option><option>Propionato</option><option>Cipionato</option><option>Undecanoato</option><option>Decanoato</option></select></div>
+    <div class="frow">
+      <div class="fg"><label>Concentração (mg/ml)</label><input type="number" id="c-test-conc" placeholder="ex: 250" step="1" oninput="updTestCalc()"></div>
+      <div class="fg"><label>Volume por frasco (ml)</label><input type="number" id="c-test-vol" placeholder="ex: 10" step="0.1" oninput="updTestCalc()"></div>
+    </div>
+    <div class="fg"><label>Quantidade de frascos</label><input type="number" id="c-test-qty" placeholder="ex: 1" min="1" step="1" oninput="updTestCalc()"></div>
+    <div id="c-test-calc" class="info-box" style="display:none">
+      <div style="display:flex;gap:16px;font-size:13px"><div>Total ml: <span id="c-test-tot-ml" style="color:var(--blue);font-weight:700">—</span></div><div>Total mg: <span id="c-test-tot-mg" style="color:var(--blue);font-weight:700">—</span></div></div>
+    </div>
+    <div class="fg"><label>Validade</label><input type="date" id="c-test-val"></div>
+    <button class="btn btn-b" onclick="saveTestStock()">➕ Adicionar Estoque</button>
+  </div>
+  <div class="st">📦 Estoques — Testosterona</div>
+  <div id="testStockList"></div>
+
+  <div class="divider"></div>
+
+  <div class="st">🌿 Cadastrar Suplemento</div>
+  <div class="card">
+    <div class="fg"><label>Nome</label><input type="text" id="c-supl-nome" placeholder="ex: Ômega 3, Zinco, Vitamina D3..."></div>
+    <div class="frow">
+      <div class="fg"><label>Dose padrão</label><input type="number" id="c-supl-dose" placeholder="ex: 1000" step="0.1"></div>
+      <div class="fg"><label>Unidade</label><select id="c-supl-unit"><option>mg</option><option>mcg</option><option>UI</option><option>g</option><option>comprimidos</option><option>cápsulas</option></select></div>
+    </div>
+    <div class="frow">
+      <div class="fg"><label>Frequência</label><select id="c-supl-freq"><option value="daily">1x/dia</option><option value="2x">2x/dia</option><option value="3x">3x/dia</option><option value="weekly">Semanal</option></select></div>
+      <div class="fg"><label>Horário preferido</label><input type="time" id="c-supl-time" value="08:00"></div>
+    </div>
+    <button class="btn btn-p" onclick="saveSuplCat()">➕ Cadastrar Suplemento</button>
+  </div>
+  <div class="st">🌿 Suplementos Cadastrados</div>
+  <div id="suplCatList"></div>
+
+  <div class="divider"></div>
+
+  <div class="st">💊 Cadastrar Medicamento</div>
+  <div class="card">
+    <div class="fg"><label>Nome</label><input type="text" id="c-med-nome" placeholder="ex: Tamoxifeno, Rosuvastatina..."></div>
+    <div class="frow">
+      <div class="fg"><label>Dose padrão</label><input type="number" id="c-med-dose" placeholder="ex: 20" step="0.1"></div>
+      <div class="fg"><label>Unidade</label><select id="c-med-unit"><option>mg</option><option>mcg</option><option>ml</option><option>comprimidos</option><option>UI</option></select></div>
+    </div>
+    <div class="frow">
+      <div class="fg"><label>Frequência</label><select id="c-med-freq"><option value="daily">1x/dia</option><option value="2x">2x/dia</option><option value="3x">3x/dia</option><option value="weekly">Semanal</option></select></div>
+      <div class="fg"><label>Horário preferido</label><input type="time" id="c-med-time" value="22:00"></div>
+    </div>
+    <button class="btn btn-a" onclick="saveMedCat()">➕ Cadastrar Medicamento</button>
+  </div>
+  <div class="st">💊 Medicamentos Cadastrados</div>
+  <div id="medCatList"></div>
+</div>
+
+<!-- ════ TAB: ACADEMIA ════ -->
+<div class="tab" id="tab-gym">
   <div class="st">🏋️ Registrar Treino</div>
   <div class="card">
     <div class="fg"><label>Data do treino</label><input type="date" id="gym-date"></div>
-
-    <div class="fg"><label>Tipos de treino realizados</label>
+    <div class="fg"><label>Tipos de treino</label>
       <div class="gym-type-row" id="gymTypeBtns">
         <button class="gym-type-btn" data-tipo="cardio" style="background:rgba(74,158,255,0.15);color:var(--blue)" onclick="toggleGymType(this)">🏃 Cardio</button>
         <button class="gym-type-btn" data-tipo="musculacao" style="background:rgba(167,139,250,0.15);color:var(--purple)" onclick="toggleGymType(this)">💪 Musculação</button>
@@ -580,41 +626,27 @@ body{display:flex;flex-direction:column}
         <button class="gym-type-btn" data-tipo="outros" style="background:rgba(245,158,11,0.15);color:var(--amber)" onclick="toggleGymType(this)">⚡ Outros</button>
       </div>
     </div>
-
-    <!-- Cardio -->
     <div id="cardio-section" style="display:none">
       <div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.8px">🏃 Cardio</div>
       <div class="frow">
-        <div class="fg"><label>Modalidade</label>
-          <select id="gym-cardio-modal"><option>Esteira</option><option>Bicicleta</option><option>Elíptico</option><option>Corrida ao ar livre</option><option>Natação</option><option>Pular corda</option><option>Outro</option></select>
-        </div>
+        <div class="fg"><label>Modalidade</label><select id="gym-cardio-modal"><option>Esteira</option><option>Bicicleta</option><option>Elíptico</option><option>Corrida ao ar livre</option><option>Natação</option><option>Pular corda</option><option>Outro</option></select></div>
         <div class="fg"><label>Duração (min)</label><input type="number" id="gym-cardio-min" placeholder="ex: 20" min="1" step="1"></div>
       </div>
     </div>
-
-    <!-- Musculação -->
     <div id="musculacao-section" style="display:none">
       <div style="font-size:11px;font-weight:700;color:var(--purple);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.8px">💪 Musculação</div>
       <div class="frow">
-        <div class="fg"><label>Foco muscular</label>
-          <select id="gym-musc-foco"><option>Peito e Tríceps</option><option>Costas e Bíceps</option><option>Pernas</option><option>Ombro e Trapézio</option><option>Full Body</option><option>Superior</option><option>Inferior</option><option>Abdômen</option><option>Outro</option></select>
-        </div>
+        <div class="fg"><label>Foco muscular</label><select id="gym-musc-foco"><option>Peito e Tríceps</option><option>Costas e Bíceps</option><option>Pernas</option><option>Ombro e Trapézio</option><option>Full Body</option><option>Superior</option><option>Inferior</option><option>Abdômen</option><option>Outro</option></select></div>
         <div class="fg"><label>Duração (min)</label><input type="number" id="gym-musc-min" placeholder="ex: 50" min="1" step="1"></div>
       </div>
     </div>
-
-    <!-- Luta -->
     <div id="luta-section" style="display:none">
       <div style="font-size:11px;font-weight:700;color:var(--red);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.8px">🥊 Luta</div>
       <div class="frow">
-        <div class="fg"><label>Modalidade</label>
-          <select id="gym-luta-modal"><option>Muay Thai</option><option>Jiu-Jitsu</option><option>Boxe</option><option>MMA</option><option>Judô</option><option>Karatê</option><option>Outro</option></select>
-        </div>
+        <div class="fg"><label>Modalidade</label><select id="gym-luta-modal"><option>Muay Thai</option><option>Jiu-Jitsu</option><option>Boxe</option><option>MMA</option><option>Judô</option><option>Karatê</option><option>Outro</option></select></div>
         <div class="fg"><label>Duração (min)</label><input type="number" id="gym-luta-min" placeholder="ex: 60" min="1" step="1"></div>
       </div>
     </div>
-
-    <!-- Outros -->
     <div id="outros-section" style="display:none">
       <div style="font-size:11px;font-weight:700;color:var(--amber);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.8px">⚡ Outros</div>
       <div class="frow">
@@ -622,74 +654,23 @@ body{display:flex;flex-direction:column}
         <div class="fg"><label>Duração (min)</label><input type="number" id="gym-outros-min" placeholder="ex: 45" min="1" step="1"></div>
       </div>
     </div>
-
-    <div class="fg"><label>Observações gerais</label><textarea id="gym-obs" placeholder="Como foi o treino, peso corporal..."></textarea></div>
+    <div class="fg"><label>Observações</label><textarea id="gym-obs" placeholder="Como foi o treino, peso corporal..."></textarea></div>
     <div class="fg"><label>Peso corporal (kg) — opcional</label><input type="number" id="gym-peso" placeholder="ex: 95.5" step="0.1"></div>
     <button class="btn btn-g" onclick="saveGym()">🏋️ Registrar Treino</button>
   </div>
-
-  <div class="st">📊 Histórico de Treinos</div>
   <div class="card">
-    <div class="card-hd">
-      <div>
-        <div class="card-title">Esta semana</div>
-        <div class="card-sub" id="gym-week-stat">0 treinos · 0 min total</div>
-      </div>
-      <span class="badge bg2" id="gym-week-days">0 dias</span>
-    </div>
+    <div class="card-hd"><div><div class="card-title">Esta semana</div><div class="card-sub" id="gym-week-stat">0 treinos</div></div><span class="badge bg2" id="gym-week-days">0 dias</span></div>
     <div id="gymWeekDays" style="display:flex;gap:6px;margin-bottom:10px"></div>
     <div class="chart-wrap" style="height:120px"><canvas id="cGymWeek"></canvas></div>
   </div>
-
   <div class="st">📋 Treinos Registrados</div>
   <div id="gymList"></div>
-
 </div>
 
-<!-- ══════════ TAB: AGENDA ══════════ -->
-<div class="tab" id="tab-agenda">
-  <div class="card">
-    <div class="card-title" style="margin-bottom:11px">⚙️ Configurar Agenda</div>
-    <div class="st" style="margin-top:0">💉 Tirzepetida</div>
-    <div class="frow">
-      <div class="fg"><label>Intervalo (dias)</label><input type="number" id="ag-tirz-int" value="7" min="1" max="60"></div>
-      <div class="fg"><label>Próxima data</label><input type="date" id="ag-tirz-next"></div>
-    </div>
-    <div class="fg"><label>Dose planejada (mg)</label><input type="number" id="ag-tirz-dose" placeholder="ex: 2.5" step="0.5"></div>
-    <div class="st">🧪 Testosterona</div>
-    <div class="frow">
-      <div class="fg"><label>Intervalo (dias)</label><input type="number" id="ag-test-int" value="7" min="1" max="60"></div>
-      <div class="fg"><label>Próxima data</label><input type="date" id="ag-test-next"></div>
-    </div>
-    <div class="fg"><label>Dose planejada (mg)</label><input type="number" id="ag-test-dose" placeholder="ex: 100" step="5"></div>
-    <button class="btn btn-t" onclick="saveAgenda()">💾 Salvar Agenda</button>
-  </div>
-
-  <div class="st">📅 Próximas 12 Semanas</div>
-  <div id="agendaList"><div class="empty-st"><div class="ic">📅</div>Configure acima para gerar previsões</div></div>
-
-  <div class="st">💧 Meta de Hidratação</div>
-  <div class="card">
-    <div class="fg"><label>Meta diária (ml) — mínimo 3000ml</label><input type="number" id="water-goal-inp" min="1000" max="6000" step="100" value="3000"></div>
-    <button class="btn btn-b" onclick="setWGoal()">💾 Salvar Meta</button>
-  </div>
-</div>
-
-<!-- ══════════ TAB: GRÁFICOS ══════════ -->
+<!-- ════ TAB: GRÁFICOS ════ -->
 <div class="tab" id="tab-charts">
-  <div class="st">⚖️ Evolução de Peso (kg)</div>
-  <div class="card"><div class="chart-wrap"><canvas id="cPeso"></canvas></div></div>
-  <div class="st">📐 Evolução de Cintura (cm)</div>
-  <div class="card"><div class="chart-wrap"><canvas id="cCintura"></canvas></div></div>
-  <div class="st">🔢 Evolução do IMC</div>
-  <div class="card">
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px;font-size:10px;color:var(--t2)">
-      <span style="background:rgba(52,211,153,0.15);color:var(--green);padding:2px 8px;border-radius:8px;font-weight:600">18.5–24.9 Normal</span>
-      <span style="background:rgba(245,158,11,0.15);color:var(--amber);padding:2px 8px;border-radius:8px;font-weight:600">25–29.9 Sobrepeso</span>
-      <span style="background:rgba(248,113,113,0.15);color:var(--red);padding:2px 8px;border-radius:8px;font-weight:600">≥30 Obesidade</span>
-    </div>
-    <div class="chart-wrap"><canvas id="cIMC"></canvas></div>
-  </div>
+  <div class="st">💚 Klow — doses (mg)</div>
+  <div class="card"><div class="chart-wrap"><canvas id="cKlow"></canvas></div></div>
   <div class="st">💉 Tirzepetida — doses (mg)</div>
   <div class="card"><div class="chart-wrap"><canvas id="cTirz"></canvas></div></div>
   <div class="st">🧪 Testosterona — doses</div>
@@ -697,78 +678,94 @@ body{display:flex;flex-direction:column}
     <div class="legend"><div class="ld"><div class="ldot" style="background:var(--blue)"></div>mg</div><div class="ld"><div class="ldot" style="background:var(--purple)"></div>ml×100</div></div>
     <div class="chart-wrap"><canvas id="cTest"></canvas></div>
   </div>
+  <div class="st">🔢 Evolução do IMC</div>
+  <div class="card">
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;font-size:10px">
+      <span style="background:rgba(52,211,153,0.15);color:var(--green);padding:2px 8px;border-radius:8px;font-weight:600">18.5–24.9 Normal</span>
+      <span style="background:rgba(245,158,11,0.15);color:var(--amber);padding:2px 8px;border-radius:8px;font-weight:600">25–29.9 Sobrepeso</span>
+      <span style="background:rgba(248,113,113,0.15);color:var(--red);padding:2px 8px;border-radius:8px;font-weight:600">≥30 Obesidade</span>
+    </div>
+    <div class="chart-wrap"><canvas id="cIMC"></canvas></div>
+  </div>
   <div class="st">💧 Água — últimos 14 dias (ml)</div>
   <div class="card"><div class="chart-wrap"><canvas id="cWater"></canvas></div></div>
   <div class="st">🏋️ Treinos — minutos por semana</div>
   <div class="card"><div class="chart-wrap"><canvas id="cGym"></canvas></div></div>
   <div class="st">🌿 Suplementos</div>
   <div class="card"><div class="chart-wrap"><canvas id="cSupl"></canvas></div></div>
-  <div class="st">Estatísticas Gerais</div>
+  <div class="st">Estatísticas</div>
   <div class="sgrid">
     <div class="sc"><div class="sl">Total Doses</div><div class="sv" id="s-total" style="color:var(--teal)">0</div><div class="ss">todos os tipos</div></div>
     <div class="sc"><div class="sl">Tirz média</div><div class="sv" id="s-tirz" style="color:var(--teal)">—</div><div class="ss">mg/aplicação</div></div>
     <div class="sc"><div class="sl">Test. média</div><div class="sv" id="s-test" style="color:var(--blue)">—</div><div class="ss">mg/aplicação</div></div>
     <div class="sc"><div class="sl">Água hoje</div><div class="sv" id="s-water" style="color:var(--blue)">0</div><div class="ss">ml ingeridos</div></div>
     <div class="sc"><div class="sl">Treinos semana</div><div class="sv" id="s-gym" style="color:var(--green)">0</div><div class="ss">dias esta semana</div></div>
-    <div class="sc"><div class="sl">Min treino semana</div><div class="sv" id="s-gym-min" style="color:var(--green)">0</div><div class="ss">minutos totais</div></div>
+    <div class="sc"><div class="sl">Min treino</div><div class="sv" id="s-gym-min" style="color:var(--green)">0</div><div class="ss">minutos totais</div></div>
     <div class="sc"><div class="sl">⚖️ Último peso</div><div class="sv" id="s-peso" style="color:var(--teal)">—</div><div class="ss" id="s-peso-d">sem registro</div></div>
     <div class="sc"><div class="sl">📐 Última cintura</div><div class="sv" id="s-cintura" style="color:var(--blue)">—</div><div class="ss" id="s-cintura-d">sem registro</div></div>
     <div class="sc" style="grid-column:span 2"><div class="sl">🔢 Último IMC</div><div style="display:flex;align-items:center;gap:10px;margin-top:4px"><div class="sv" id="s-imc" style="color:var(--amber)">—</div><span id="s-imc-label" style="font-size:11px;font-weight:600"></span></div></div>
   </div>
 </div>
 
-<!-- ══════════ TAB: HISTÓRICO & BACKUP ══════════ -->
-<div class="tab" id="tab-history">
-
+<!-- ════ TAB: BACKUP ════ -->
+<div class="tab" id="tab-backup">
   <div class="st">💾 Backup de Dados</div>
   <div class="card">
-    <div class="card-sub" style="margin-bottom:10px">Seus dados ficam salvos no navegador. Exporte periodicamente para não perder nada.</div>
+    <div style="font-size:12px;color:var(--t2);margin-bottom:12px">Seus dados ficam no navegador do aparelho. Exporte periodicamente para não perder nada ao trocar de celular ou limpar o Chrome.</div>
     <div class="backup-row">
       <button class="btn btn-g" onclick="exportBackup()">⬇️ Exportar Backup</button>
       <button class="btn btn-b" onclick="document.getElementById('importFile').click()">⬆️ Importar Backup</button>
     </div>
     <input type="file" id="importFile" accept=".json" style="display:none" onchange="importBackup(event)">
-    <div style="font-size:10px;color:var(--t3);margin-top:6px;text-align:center" id="backup-info">Último backup: —</div>
+    <div style="font-size:10px;color:var(--t3);margin-top:8px;text-align:center" id="backup-info">Exporte periodicamente para não perder seus dados</div>
   </div>
-
-  <div class="st">📋 Registros de Doses</div>
-  <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
-    <button class="btn-sm" style="background:rgba(248,113,113,0.15);color:var(--red)" onclick="clearAllDoses()">🗑 Limpar doses</button>
+  <div class="st">💧 Meta de Hidratação</div>
+  <div class="card">
+    <div class="fg"><label>Meta diária (ml) — mínimo 3000ml</label><input type="number" id="water-goal-inp" min="1000" max="6000" step="100" value="3000"></div>
+    <button class="btn btn-b" onclick="setWGoal()">💾 Salvar Meta</button>
   </div>
-  <div class="fg"><select id="h-filter" onchange="renderHistory()">
-    <option value="all">Todos os registros</option>
-    <option value="tirz">Tirzepetida</option>
-    <option value="test">Testosterona</option>
-    <option value="supl">Suplementos</option>
-    <option value="med">Medicamentos</option>
-    <option value="water">Água</option>
-  </select></div>
-  <div id="histList"></div>
-
-  <div class="st">🏋️ Histórico de Treinos</div>
-  <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
-    <button class="btn-sm" style="background:rgba(248,113,113,0.15);color:var(--red)" onclick="clearAllGym()">🗑 Limpar treinos</button>
-  </div>
-  <div id="gymHistList"></div>
-
 </div>
 
 </div><!-- /main -->
 
-<!-- NAV BAR — 7 items, use font-size 8px -->
-<nav class="nav">
-  <button class="nb active" onclick="goTab('home',this)"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Início</button>
-  <button class="nb" onclick="goTab('cadastro',this)"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>Cadastro</button>
-  <button class="nb" onclick="goTab('register',this)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>Registrar</button>
-  <button class="nb" onclick="goTab('gym',this)"><svg viewBox="0 0 24 24"><path d="M18 3a3 3 0 00-3 3v12a3 3 0 003 3 3 3 0 003-3 3 3 0 00-3-3H6a3 3 0 00-3 3 3 3 0 003 3 3 3 0 003-3V6a3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3h12a3 3 0 003-3 3 3 0 00-3-3z"/></svg>Academia</button>
-  <button class="nb" onclick="goTab('agenda',this)"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Agenda</button>
-  <button class="nb" onclick="goTab('charts',this)"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Gráficos</button>
-  <button class="nb" onclick="goTab('history',this)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Histórico</button>
-</nav>
+<!-- SIDEBAR JS nav controls -->
+<script>
+function openSidebar(){
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sbOverlay').classList.add('open');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sbOverlay').classList.remove('open');
+}
+function goTab(name,btn){
+  closeSidebar();
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if(btn)btn.classList.add('active');
+  else{document.querySelectorAll('.sb-item').forEach(b=>{if((b.getAttribute('onclick')||'').includes("'"+name+"'"))b.classList.add('active');});}
+  if(name==='home'){renderHome();renderBodyCharts();}
+  if(name==='charts'){renderCharts();}
+  if(name==='history'){renderHistory();renderGymHist();}
+  if(name==='register'){fillRegSelects();setDates();prefillMedidas('tirz');prefillMedidas('test');}
+  if(name==='cadastro'){renderStocks();renderCats();}
+  if(name==='gym'){renderGymTab();setGymDate();}
+}
+function renderBodyCharts(){
+  const medDoses=doses.filter(d=>(d.tipo==='tirz'||d.tipo==='test')&&(d.peso||d.imc||d.cintura)).sort((a,b)=>new Date(a.date)-new Date(b.date));
+  const medLabels=medDoses.map(d=>fmtDT(d.date).split(' ')[0]);
+  if(window.charts){if(window.charts.homePeso){window.charts.homePeso.destroy();}if(window.charts.homeCintura){window.charts.homeCintura.destroy();}}
+  else window.charts={};
+  const cO2={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#162840',titleColor:'#e8f4fd',bodyColor:'#8badc4',borderColor:'rgba(0,212,170,0.3)',borderWidth:1}},scales:{x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9}}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9}}}}};
+  const ep=document.getElementById('cPeso');if(ep)window.charts.homePeso=new Chart(ep,{type:'line',data:{labels:medLabels,datasets:[{data:medDoses.map(d=>d.peso||null),borderColor:'#00d4aa',backgroundColor:'rgba(0,212,170,0.08)',tension:0.4,fill:true,pointBackgroundColor:'#00d4aa',pointRadius:4,spanGaps:true}]},options:cO2});
+  const ec=document.getElementById('cCintura');if(ec)window.charts.homeCintura=new Chart(ec,{type:'line',data:{labels:medLabels,datasets:[{data:medDoses.map(d=>d.cintura||null),borderColor:'#4a9eff',backgroundColor:'rgba(74,158,255,0.08)',tension:0.4,fill:true,pointBackgroundColor:'#4a9eff',pointRadius:4,spanGaps:true}]},options:cO2});
+}
+</script>
 
 <div class="toast" id="toast"></div>
-
 <script>
+
 // ═══════════════════════════════════════════════════
 // STORAGE
 // ═══════════════════════════════════════════════════
@@ -790,11 +787,12 @@ let waterLog    = DB.get('tds_water',{});
 let waterGoal   = DB.get('tds_wgoal',3000);
 let agCfg       = DB.get('tds_ag',{tirzInt:7,testInt:7,tirzNext:'',testNext:'',tirzDose:'',testDose:''});
 let gymLog      = DB.get('tds_gym',[]);
+let klowStocks  = DB.get('tds_klow',[]);
 
 function save(){
   DB.set('tds_doses',doses);DB.set('tds_tirz',tirzStocks);DB.set('tds_test',testStocks);
   DB.set('tds_supl',suplCat);DB.set('tds_med',medCat);DB.set('tds_water',waterLog);
-  DB.set('tds_wgoal',waterGoal);DB.set('tds_ag',agCfg);DB.set('tds_gym',gymLog);
+  DB.set('tds_wgoal',waterGoal);DB.set('tds_ag',agCfg);DB.set('tds_gym',gymLog);DB.set('tds_klow',klowStocks);
 }
 
 // ═══════════════════════════════════════════════════
@@ -903,7 +901,7 @@ function saveTestStock(){
 }
 function delTestStock(id){if(!confirm('Remover este estoque?'))return;testStocks=testStocks.filter(s=>s.id!==id);save();renderStocks();fillRegSelects();toast('🗑 Removido');}
 
-function renderStocks(){
+function renderStocks(){renderKlowStocks();
   const mkBar=(s,col)=>{
     const rem=+(s.totalMl-s.usedMl).toFixed(4),remMg=+(s.totalMg-s.usedMg).toFixed(4);
     const pct=Math.max(0,Math.min(100,Math.round(rem/s.totalMl*100)));
@@ -986,6 +984,8 @@ function fillRegSelects(){
   if(ts){const pv=ts.value;ts.innerHTML='<option value="">— Selecione o estoque —</option>'+tirzStocks.map(s=>{const rem=+(s.totalMl-s.usedMl).toFixed(2);return`<option value="${s.id}">${s.tipo==='caneta'?'🖊️':'🧪'} ${s.mgUnit}mg/${s.mlUnit}ml ×${s.qty}un — ${rem}ml disp. ${s.obs?'('+s.obs+')':''}</option>`;}).join('');ts.value=pv;}
   const tes=document.getElementById('r-test-stock');
   if(tes){const pv=tes.value;tes.innerHTML='<option value="">— Selecione o estoque —</option>'+testStocks.map(s=>{const rem=+(s.totalMl-s.usedMl).toFixed(2);return`<option value="${s.id}">${s.comp} ${s.conc}mg/ml·${s.tipo} — ${rem}ml disp.</option>`;}).join('');tes.value=pv;}
+  const ks=document.getElementById('r-klow-stock');
+  if(ks){const pv=ks.value;ks.innerHTML='<option value="">— Selecione o estoque —</option>'+klowStocks.map(s=>{const rem=+(s.totalMl-s.usedMl).toFixed(2);const freqLbl={daily:'Diário',alternado:'Alternado',weekly:'Semanal'};return`<option value="${s.id}">💚 ${s.mgUnit}mg/${s.mlUnit}ml ×${s.qty}un (${freqLbl[s.freq]||s.freq}) — ${rem}ml disp.</option>`;}).join('');ks.value=pv;}
   const sc=document.getElementById('r-supl-cat');if(sc)sc.innerHTML='<option value="">— Selecione —</option>'+suplCat.map(s=>`<option value="${s.id}">${s.nome} (${s.dose} ${s.unit})</option>`).join('');
   const mc=document.getElementById('r-med-cat');if(mc)mc.innerHTML='<option value="">— Selecione —</option>'+medCat.map(s=>`<option value="${s.id}">${s.nome} (${s.dose} ${s.unit})</option>`).join('');
 }
@@ -1170,6 +1170,83 @@ function saveTestDose(){
   document.getElementById('r-test-lip-hint').innerHTML='';
   onTestStock();renderHome();toast('✅ Testosterona registrada!');
   prefillMedidas('test');
+}
+
+
+// ═══════════════════════════════════════════════════
+// KLOW STOCK & REGISTER
+// ═══════════════════════════════════════════════════
+function updKlowCalc(){
+  const mgUnit=parseFloat(document.getElementById('c-klow-mg-unit').value)||0;
+  const mlUnit=parseFloat(document.getElementById('c-klow-ml-unit').value)||0;
+  const qty   =parseFloat(document.getElementById('c-klow-qty').value)||0;
+  const box   =document.getElementById('c-klow-calc');
+  if(mgUnit&&mlUnit&&qty){
+    box.style.display='block';
+    document.getElementById('c-klow-tot-ml').textContent=(mlUnit*qty).toFixed(2)+' ml';
+    document.getElementById('c-klow-tot-mg').textContent=(mgUnit*qty).toFixed(2)+' mg';
+    document.getElementById('c-klow-conc-display').textContent='Concentração: '+(mgUnit/mlUnit).toFixed(1)+' mg/ml';
+  } else box.style.display='none';
+}
+function saveKlowStock(){
+  const tipo  =document.getElementById('c-klow-tipo').value;
+  const mgUnit=parseFloat(document.getElementById('c-klow-mg-unit').value);
+  const mlUnit=parseFloat(document.getElementById('c-klow-ml-unit').value);
+  const qty   =parseInt(document.getElementById('c-klow-qty').value);
+  const freq  =document.getElementById('c-klow-freq').value;
+  const val   =document.getElementById('c-klow-val').value;
+  const obs   =document.getElementById('c-klow-obs').value;
+  if(!mgUnit||!mlUnit||!qty){toast('⚠️ Preencha mg/unidade, ml/unidade e quantidade','#f59e0b');return;}
+  const totalMl=+(mlUnit*qty).toFixed(4);
+  const totalMg=+(mgUnit*qty).toFixed(4);
+  const conc   =+(mgUnit/mlUnit).toFixed(4);
+  klowStocks.push({id:uid(),tipo,mgUnit,mlUnit,qty,conc,totalMl,totalMg,usedMl:0,usedMg:0,freq,val,obs,date:today()});
+  save();
+  ['c-klow-mg-unit','c-klow-ml-unit','c-klow-qty','c-klow-obs'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('c-klow-calc').style.display='none';
+  renderKlowStocks();fillRegSelects();toast('✅ Estoque Klow adicionado!');
+}
+function delKlowStock(id){if(!confirm('Remover este estoque?'))return;klowStocks=klowStocks.filter(s=>s.id!==id);save();renderKlowStocks();fillRegSelects();toast('🗑 Removido');}
+function renderKlowStocks(){
+  const el=document.getElementById('klowStockList');if(!el)return;
+  el.innerHTML=!klowStocks.length?'<div class="empty-st"><div class="ic">💉</div>Nenhum estoque</div>':klowStocks.map(s=>{
+    const rem=+(s.totalMl-s.usedMl).toFixed(4),remMg=+(s.totalMg-s.usedMg).toFixed(4);
+    const pct=Math.max(0,Math.min(100,Math.round(rem/s.totalMl*100)));
+    const col=pct>40?'var(--green)':pct>15?'var(--amber)':'var(--red)';
+    const freqLbl={daily:'Diário',alternado:'Dias alternados',weekly:'Semanal'};
+    return`<div class="stock-card"><div class="stock-hd"><div><div style="font-size:12px;font-weight:600">💚 ${s.tipo} — ${s.mgUnit}mg/${s.mlUnit}ml × ${s.qty}un</div><div style="font-size:10px;color:var(--t3)">${s.obs||''} ${s.val?'· Val: '+fmtD(s.val):''} · ${freqLbl[s.freq]||s.freq}</div></div><button class="del-btn" onclick="delKlowStock('${s.id}')">✕</button></div><div style="display:flex;gap:12px;font-size:11px;color:var(--t2)"><span>Total: <b style="color:var(--green)">${s.totalMl}ml/${s.totalMg}mg</b></span><span>Usado: <b>${s.usedMl.toFixed(2)}ml</b></span></div><div class="stock-bar"><div class="stock-fill" style="background:${col};width:${pct}%"></div></div><div class="stock-row"><b style="color:${col}">${rem.toFixed(2)}ml / ${remMg.toFixed(2)}mg restantes</b><span>${pct}%</span></div></div>`;
+  }).join('');
+}
+function getKlowS(){return klowStocks.find(s=>s.id===document.getElementById('r-klow-stock').value);}
+function onKlowStock(){
+  const s=getKlowS();const info=document.getElementById('r-klow-info');
+  if(!s){info.style.display='none';document.getElementById('r-klow-hint').textContent='';return;}
+  info.style.display='block';
+  const rem=+(s.totalMl-s.usedMl).toFixed(4),remMg=+(s.totalMg-s.usedMg).toFixed(4);
+  const pct=Math.max(0,Math.min(100,Math.round(rem/s.totalMl*100)));
+  document.getElementById('r-klow-avail-ml').textContent=rem.toFixed(2)+' ml disp.';
+  document.getElementById('r-klow-avail-mg').textContent=remMg.toFixed(2)+' mg disp.';
+  document.getElementById('r-klow-sbar').style.width=pct+'%';
+  const freqLbl={daily:'Diário',alternado:'Dias alternados',weekly:'Semanal'};
+  document.getElementById('r-klow-hint').textContent=`Concentração: ${s.conc.toFixed(1)}mg/ml · Frequência: ${freqLbl[s.freq]||s.freq} · 1 UI = ${(s.conc*0.01).toFixed(3)}mg`;
+}
+function calcKlowUI(){
+  const s=getKlowS();const dose=parseFloat(document.getElementById('r-klow-dose').value);
+  if(!s||!dose){document.getElementById('r-klow-ui').value='';return;}
+  document.getElementById('r-klow-ui').value=Math.round(dose/s.conc*100);
+}
+function calcKlowFromUI(){
+  const s=getKlowS();const ui=parseFloat(document.getElementById('r-klow-ui').value);
+  if(!s||!ui){document.getElementById('r-klow-dose').value='';return;}
+  document.getElementById('r-klow-dose').value=(ui*0.01*s.conc).toFixed(3);
+}
+function saveKlowDose(){
+  const s=getKlowS();const dose=parseFloat(document.getElementById('r-klow-dose').value);const ui=parseFloat(document.getElementById('r-klow-ui').value);
+  if(!dose){toast('⚠️ Informe a dose!','#f59e0b');return;}
+  if(s){const ml=dose/s.conc;if(ml>(s.totalMl-s.usedMl)+0.001){toast('⚠️ Dose excede estoque!','#f87171');return;}s.usedMl=+(s.usedMl+ml).toFixed(4);s.usedMg=+(s.usedMg+dose).toFixed(4);}
+  doses.unshift({id:uid(),tipo:'klow',nome:'Klow',dose,ui:ui||null,ml:s?+(dose/s.conc).toFixed(4):null,stockId:s?s.id:null,date:document.getElementById('r-klow-date').value||nowLocal(),local:document.getElementById('r-klow-local').value,obs:document.getElementById('r-klow-obs').value});
+  save();document.getElementById('r-klow-dose').value='';document.getElementById('r-klow-ui').value='';document.getElementById('r-klow-obs').value='';
+  onKlowStock();renderHome();toast('✅ Klow registrado!');
 }
 
 // ═══════════════════════════════════════════════════
@@ -1398,6 +1475,7 @@ function updateHomeAgenda(next){
 // HOME
 // ═══════════════════════════════════════════════════
 function dInfo(d){
+  if(d.tipo==='klow')return{icon:'💚',bg:'rgba(52,211,153,0.12)'};
   if(d.tipo==='tirz')return{icon:'💉',bg:'rgba(0,212,170,0.12)'};
   if(d.tipo==='test')return{icon:'🧪',bg:'rgba(74,158,255,0.12)'};
   if(d.tipo==='supl')return{icon:'🌿',bg:'rgba(167,139,250,0.12)'};
@@ -1419,7 +1497,7 @@ function renderHome(){
   renderWater();
   // Stocks
   const hs=document.getElementById('homeStocks');
-  const all=[...tirzStocks.map(s=>({name:`💉 Tirz ${s.mgUnit}mg/${s.mlUnit}ml ${s.obs?'('+s.obs+')':''}`,rem:+(s.totalMl-s.usedMl).toFixed(4),total:s.totalMl,remMg:+(s.totalMg-s.usedMg).toFixed(4),color:'var(--teal)'})),...testStocks.map(s=>({name:`🧪 ${s.comp} ${s.conc}mg/ml`,rem:+(s.totalMl-s.usedMl).toFixed(4),total:s.totalMl,remMg:+(s.totalMg-s.usedMg).toFixed(4),color:'var(--blue)'}))];
+  const all=[...klowStocks.map(s=>({name:`💚 Klow ${s.mgUnit}mg/${s.mlUnit}ml ${s.obs?'('+s.obs+')':''}`,rem:+(s.totalMl-s.usedMl).toFixed(4),total:s.totalMl,remMg:+(s.totalMg-s.usedMg).toFixed(4),color:'var(--green)'})),...tirzStocks.map(s=>({name:`💉 Tirz ${s.mgUnit}mg/${s.mlUnit}ml ${s.obs?'('+s.obs+')':''}`,rem:+(s.totalMl-s.usedMl).toFixed(4),total:s.totalMl,remMg:+(s.totalMg-s.usedMg).toFixed(4),color:'var(--teal)'})),...testStocks.map(s=>({name:`🧪 ${s.comp} ${s.conc}mg/ml`,rem:+(s.totalMl-s.usedMl).toFixed(4),total:s.totalMl,remMg:+(s.totalMg-s.usedMg).toFixed(4),color:'var(--blue)'}))];
   if(!all.length)hs.innerHTML='<div class="empty-st">Cadastre estoques na aba Cadastro</div>';
   else hs.innerHTML=all.map(s=>{const pct=Math.max(0,Math.min(100,Math.round(s.rem/s.total*100)));const c=pct>40?s.color:pct>15?'var(--amber)':'var(--red)';return`<div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px"><span style="font-weight:600">${s.name}</span><span style="color:${c};font-weight:700">${pct}%</span></div><div class="stock-bar"><div class="stock-fill" style="background:${c};width:${pct}%"></div></div><div class="stock-row"><span>${s.rem.toFixed(2)}ml · ${s.remMg.toFixed(2)}mg restantes</span></div></div>`;}).join('');
   // Gym week summary
@@ -1435,7 +1513,7 @@ function renderHome(){
   // Recent doses
   e('tot-badge').textContent=doses.length+' reg.';
   const rd=document.getElementById('recentDoses');
-  const recent=doses.filter(d=>d.tipo!=='water').slice(0,5);
+  const recent=doses.filter(d=>d.tipo!=='water').slice(0,6);
   if(!recent.length){rd.innerHTML='<div class="empty-st"><div class="ic">📝</div>Nenhum registro ainda</div>';return;}
   rd.innerHTML=recent.map(d=>{const info=dInfo(d);return`<div class="tl-item"><div class="tl-dot" style="background:${info.bg}">${info.icon}</div><div style="flex:1"><div class="tl-name">${d.nome}</div><div class="tl-det">${d.dose?d.dose+' '+(d.unit||(d.tipo==='tirz'||d.tipo==='test'?'mg':'')):''} ${d.ui?'· '+d.ui+'UI':''} ${d.ml?'· '+d.ml.toFixed(2)+'ml':''} ${d.local?'· '+d.local:''}</div></div><div class="tl-time">${fmtDT(d.date)}</div></div>`;}).join('');
 }
@@ -1445,6 +1523,7 @@ function renderHome(){
 // ═══════════════════════════════════════════════════
 function deleteDose(id){
   const d=doses.find(x=>x.id===id);
+  if(d&&(d.tipo==='klow')){const s=klowStocks.find(x=>x.id===d.stockId);if(s&&d.ml){s.usedMl=Math.max(0,+(s.usedMl-d.ml).toFixed(4));s.usedMg=Math.max(0,+(s.usedMg-d.dose).toFixed(4));}}
   if(d&&(d.tipo==='tirz'||d.tipo==='test')){
     const arr=d.tipo==='tirz'?tirzStocks:testStocks;const s=arr.find(x=>x.id===d.stockId);
     if(s&&d.ml){s.usedMl=Math.max(0,+(s.usedMl-d.ml).toFixed(4));s.usedMg=Math.max(0,+(s.usedMg-d.dose).toFixed(4));}
@@ -1454,40 +1533,75 @@ function deleteDose(id){
 function clearAllDoses(){if(confirm('Apagar TODOS os registros de doses?\n(Estoques e cadastros são mantidos)')){doses=[];save();renderHistory();renderHome();toast('🗑 Doses apagadas');}}
 function renderHistory(){
   const filter=document.getElementById('h-filter').value;
-  const list=filter==='all'?doses:doses.filter(d=>d.tipo===filter);
+  const list=filter==='all'?[...doses].sort((a,b)=>new Date(b.date)-new Date(a.date)):doses.filter(d=>d.tipo===filter).sort((a,b)=>new Date(b.date)-new Date(a.date));
   const el=document.getElementById('histList');
   if(!list.length){el.innerHTML='<div class="empty-st"><div class="ic">📋</div>Nenhum registro</div>';return;}
-  el.innerHTML=list.map(d=>{
-    const info=dInfo(d);
-    const medidas=(d.peso||d.cintura||d.imc)?`
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:5px;padding-top:5px;border-top:1px solid var(--b2)">
-        ${d.peso?`<span style="font-size:10px;background:rgba(0,212,170,0.1);color:var(--teal);padding:2px 7px;border-radius:8px">⚖️ ${d.peso}kg</span>`:''}
-        ${d.cintura?`<span style="font-size:10px;background:rgba(74,158,255,0.1);color:var(--blue);padding:2px 7px;border-radius:8px">📐 ${d.cintura}cm</span>`:''}
-        ${d.altura?`<span style="font-size:10px;background:rgba(167,139,250,0.1);color:var(--purple);padding:2px 7px;border-radius:8px">📏 ${d.altura}cm</span>`:''}
-        ${d.imc?`<span style="font-size:10px;background:rgba(245,158,11,0.1);color:var(--amber);padding:2px 7px;border-radius:8px">IMC ${d.imc} — ${imcInfo(d.imc).label}</span>`:''}
-        ${d.lab&&d.lab.date?`<div style="width:100%;margin-top:4px;font-size:10px;color:var(--t3)">🔬 Exames de ${new Date(d.lab.date+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'})}</div>`:''}
-        ${d.lab&&d.lab.testoTotal?`<span style="font-size:10px;background:rgba(74,158,255,0.1);color:var(--blue);padding:2px 7px;border-radius:8px">TT ${d.lab.testoTotal} ng/dL</span>`:''}
-        ${d.lab&&d.lab.testoLivre?`<span style="font-size:10px;background:rgba(74,158,255,0.1);color:var(--blue);padding:2px 7px;border-radius:8px">TL ${d.lab.testoLivre} pg/mL</span>`:''}
-        ${d.lab&&d.lab.dht?`<span style="font-size:10px;background:rgba(167,139,250,0.1);color:var(--purple);padding:2px 7px;border-radius:8px">DHT ${d.lab.dht} pg/mL</span>`:''}
-        ${d.lab&&d.lab.estradiol?`<span style="font-size:10px;background:rgba(167,139,250,0.15);color:var(--purple);padding:2px 7px;border-radius:8px">E2 ${d.lab.estradiol} pg/mL</span>`:''}
-        ${d.lab&&d.lab.prolactina?`<span style="font-size:10px;background:rgba(244,114,182,0.1);color:var(--pink);padding:2px 7px;border-radius:8px">PRL ${d.lab.prolactina} ng/mL</span>`:''}
-        ${d.lab&&d.lab.colTotal?`<span style="font-size:10px;background:rgba(245,158,11,0.1);color:var(--amber);padding:2px 7px;border-radius:8px">CT ${d.lab.colTotal}</span>`:''}
-        ${d.lab&&d.lab.hdl?`<span style="font-size:10px;background:rgba(52,211,153,0.1);color:var(--green);padding:2px 7px;border-radius:8px">HDL ${d.lab.hdl}</span>`:''}
-        ${d.lab&&d.lab.ldl?`<span style="font-size:10px;background:rgba(251,146,60,0.1);color:var(--orange);padding:2px 7px;border-radius:8px">LDL ${d.lab.ldl}</span>`:''}
-        ${d.lab&&d.lab.trig?`<span style="font-size:10px;background:rgba(248,113,113,0.1);color:var(--red);padding:2px 7px;border-radius:8px">TG ${d.lab.trig}</span>`:''}
-      </div>`:'';
-    return`<div class="card" style="padding:9px 11px;margin-bottom:6px">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
-        <span style="font-size:16px">${info.icon}</span>
-        <div style="flex:1"><div style="font-size:12px;font-weight:600">${d.nome}</div><div style="font-size:10px;color:var(--t3)">${fmtDT(d.date)}</div></div>
-        <button class="del-btn" onclick="deleteDose('${d.id}')">✕</button>
+  // Group by date
+  const grouped={};
+  list.forEach(d=>{
+    const dk=d.date?d.date.split('T')[0]:'sem-data';
+    if(!grouped[dk])grouped[dk]=[];
+    grouped[dk].push(d);
+  });
+  const sortedDates=Object.keys(grouped).sort((a,b)=>b.localeCompare(a));
+  el.innerHTML=sortedDates.map(dk=>{
+    const dayDoses=grouped[dk];
+    const dObj=new Date(dk+'T12:00:00');
+    const dayLabel=dk==='sem-data'?'Sem data':dObj.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+    const items=dayDoses.map(d=>{
+      const info=dInfo(d);
+      const medidas=(d.peso||d.cintura||d.imc)?
+        `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">
+          ${d.peso?`<span class="hist-badge" style="background:rgba(0,212,170,0.1);color:var(--teal)">⚖️ ${d.peso}kg</span>`:''}
+          ${d.cintura?`<span class="hist-badge" style="background:rgba(74,158,255,0.1);color:var(--blue)">📐 ${d.cintura}cm</span>`:''}
+          ${d.altura?`<span class="hist-badge" style="background:rgba(167,139,250,0.1);color:var(--purple)">📏 ${d.altura}cm</span>`:''}
+          ${d.imc?`<span class="hist-badge" style="background:rgba(245,158,11,0.1);color:var(--amber)">IMC ${d.imc} — ${imcInfo(d.imc).label}</span>`:''}
+        </div>`:'';
+      const labInfo=d.lab?`
+        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px">
+          ${d.lab.date?`<span class="hist-badge" style="background:rgba(255,255,255,0.06);color:var(--t3)">🔬 ${fmtD(d.lab.date)}</span>`:''}
+          ${d.lab.testoTotal?`<span class="hist-badge" style="background:rgba(74,158,255,0.1);color:var(--blue)">TT ${d.lab.testoTotal} ng/dL</span>`:''}
+          ${d.lab.testoLivre?`<span class="hist-badge" style="background:rgba(74,158,255,0.1);color:var(--blue)">TL ${d.lab.testoLivre} pg/mL</span>`:''}
+          ${d.lab.dht?`<span class="hist-badge" style="background:rgba(167,139,250,0.1);color:var(--purple)">DHT ${d.lab.dht} pg/mL</span>`:''}
+          ${d.lab.estradiol?`<span class="hist-badge" style="background:rgba(167,139,250,0.15);color:var(--purple)">E2 ${d.lab.estradiol} pg/mL</span>`:''}
+          ${d.lab.prolactina?`<span class="hist-badge" style="background:rgba(244,114,182,0.1);color:var(--pink)">PRL ${d.lab.prolactina} ng/mL</span>`:''}
+          ${d.lab.colTotal?`<span class="hist-badge" style="background:rgba(245,158,11,0.1);color:var(--amber)">CT ${d.lab.colTotal}</span>`:''}
+          ${d.lab.hdl?`<span class="hist-badge" style="background:rgba(52,211,153,0.1);color:var(--green)">HDL ${d.lab.hdl}</span>`:''}
+          ${d.lab.ldl?`<span class="hist-badge" style="background:rgba(251,146,60,0.1);color:var(--orange)">LDL ${d.lab.ldl}</span>`:''}
+          ${d.lab.trig?`<span class="hist-badge" style="background:rgba(248,113,113,0.1);color:var(--red)">TG ${d.lab.trig}</span>`:''}
+        </div>`:'';
+      const time=d.date&&d.date.includes('T')?new Date(d.date).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'';
+      return`<div style="display:flex;align-items:flex-start;gap:9px;padding:9px 0;border-bottom:1px solid var(--b2)">
+        <div style="width:28px;height:28px;border-radius:8px;background:${info.bg};display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">${info.icon}</div>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div style="font-size:12px;font-weight:700">${d.nome}</div>
+            <div style="display:flex;align-items:center;gap:6px">
+              ${time?`<span style="font-size:10px;color:var(--t3)">${time}</span>`:''}
+              <button class="del-btn" onclick="deleteDose('${d.id}')">✕</button>
+            </div>
+          </div>
+          <div style="font-size:11px;color:var(--t2);margin-top:2px">
+            ${d.dose?d.dose+' '+(d.unit||(d.tipo==='tirz'||d.tipo==='test'||d.tipo==='klow'?'mg':'')):''}
+            ${d.ui?'· '+d.ui+' UI':''}
+            ${d.ml?'· '+d.ml.toFixed(2)+'ml':''}
+            ${d.local?'· 📍'+d.local:''}
+            ${d.obs?'<br><span style="color:var(--t3)">📝 '+d.obs+'</span>':''}
+          </div>
+          ${medidas}${labInfo}
+        </div>
+      </div>`;
+    }).join('');
+    return`<div style="margin-bottom:12px">
+      <div style="font-size:11px;font-weight:700;color:var(--teal);text-transform:capitalize;padding:6px 0;border-bottom:2px solid var(--b1);margin-bottom:2px;display:flex;align-items:center;justify-content:space-between">
+        <span>📅 ${dayLabel}</span>
+        <span style="font-size:10px;color:var(--t3);font-weight:400">${dayDoses.length} registro${dayDoses.length>1?'s':''}</span>
       </div>
-      <div style="font-size:11px;color:var(--t2);padding-left:24px">
-        ${d.dose?d.dose+' '+(d.unit||(d.tipo==='tirz'||d.tipo==='test'?'mg':'')):''} ${d.ui?'· '+d.ui+' UI':''} ${d.ml?'· '+d.ml.toFixed(2)+'ml':''} ${d.local?'· 📍'+d.local:''} ${d.obs?'<br>📝'+d.obs:''}
-      </div>
-      ${medidas}
+      ${items}
     </div>`;
   }).join('');
+  // After grouped render, return early (skip old rendering)
+  return;
 }
 function renderGymHist(){
   const el=document.getElementById('gymHistList');if(!el)return;
@@ -1503,7 +1617,7 @@ function exportBackup(){
     version:2,
     exportDate:new Date().toISOString(),
     appName:'Trilha da Saúde',
-    doses,tirzStocks,testStocks,suplCat,medCat,waterLog,waterGoal,agCfg,gymLog
+    doses,tirzStocks,testStocks,klowStocks,suplCat,medCat,waterLog,waterGoal,agCfg,gymLog
   };
   const json=JSON.stringify(data,null,2);
   const blob=new Blob([json],{type:'application/json'});
@@ -1535,6 +1649,7 @@ function importBackup(event){
       if(data.waterGoal)waterGoal=data.waterGoal;
       if(data.agCfg)agCfg=data.agCfg;
       if(data.gymLog)gymLog=data.gymLog;
+      if(data.klowStocks)klowStocks=data.klowStocks;
       save();renderHome();fillRegSelects();renderCats();renderStocks();
       const bi=document.getElementById('backup-info');
       if(bi)bi.textContent='Backup importado: '+new Date().toLocaleString('pt-BR');
@@ -1571,6 +1686,9 @@ function renderCharts(){
   kc('imc');
   const imcDatasets=[{label:'IMC',data:medDoses.map(d=>d.imc||null),borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,0.08)',tension:0.4,fill:false,pointRadius:5,spanGaps:true,pointBackgroundColor:medDoses.map(d=>{if(!d.imc)return'#f59e0b';const i=imcInfo(d.imc);return i.color.replace('var(--','').replace(')','');})}];
   charts.imc=new Chart(document.getElementById('cIMC'),{type:'line',data:{labels:medLabels,datasets:imcDatasets},options:{...cO,plugins:{...cO.plugins,tooltip:{...cO.plugins.tooltip,callbacks:{label:ctx=>`IMC ${ctx.parsed.y} — ${imcInfo(ctx.parsed.y).label}`}}}}});
+  // Klow chart
+  kc('klow');const klowD=doses.filter(d=>d.tipo==='klow').slice().sort((a,b)=>new Date(a.date)-new Date(b.date));
+  if(document.getElementById('cKlow'))charts.klow=new Chart(document.getElementById('cKlow'),{type:'line',data:{labels:klowD.map(d=>fmtDT(d.date).split(' ')[0]),datasets:[{data:klowD.map(d=>d.dose),borderColor:'#34d399',backgroundColor:'rgba(52,211,153,0.08)',tension:0.4,fill:true,pointBackgroundColor:'#34d399',pointRadius:4}]},options:cO});
   kc('tirz');const td=doses.filter(d=>d.tipo==='tirz').slice().sort((a,b)=>new Date(a.date)-new Date(b.date));
   charts.tirz=new Chart(document.getElementById('cTirz'),{type:'line',data:{labels:td.map(d=>fmtDT(d.date).split(' ')[0]),datasets:[{data:td.map(d=>d.dose),borderColor:'#00d4aa',backgroundColor:'rgba(0,212,170,0.08)',tension:0.4,fill:true,pointBackgroundColor:'#00d4aa',pointRadius:4}]},options:cO});
   kc('test');const tsd=doses.filter(d=>d.tipo==='test').slice().sort((a,b)=>new Date(a.date)-new Date(b.date));
@@ -1668,7 +1786,7 @@ function doLogin(){
   document.getElementById('topUserAvatar').textContent = initials;
   document.getElementById('topUserName').textContent   = u.name.split(' ')[0];
   // Init app
-  applyTheme();setDates();setGymDate();fillRegSelects();renderHome();renderCats();renderStocks();
+  applyTheme();setDates();setGymDate();fillRegSelects();renderHome();renderCats();renderStocks();renderKlowStocks();
   const bi=document.getElementById('backup-info');
   if(bi)bi.textContent='Exporte periodicamente para não perder seus dados';
 }
@@ -1738,6 +1856,7 @@ function removeUser(idx){
   saveUsers();
   renderUserList();
 }
+
 </script>
 </body>
 </html>
