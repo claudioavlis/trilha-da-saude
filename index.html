@@ -8,6 +8,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Trilha da Saúde">
 <title>Trilha da Saúde</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" id="appIcon" href="">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 /* ── DARK MODE (padrão) ── */
@@ -209,7 +211,7 @@ body{display:flex;flex-direction:column}
 
 <!-- ══ LOGIN ══ -->
 <div id="loginScreen">
-  <div class="login-logo">🏃</div>
+  <div class="login-logo" id="loginLogo" style="font-size:0"><!-- icon injected by JS --></div>
   <div class="login-title">Trilha da Saúde</div>
   <div class="login-sub">Saúde · Treino · Bem-estar</div>
   <div class="login-box">
@@ -272,7 +274,7 @@ body{display:flex;flex-direction:column}
       <span></span><span></span><span></span>
     </button>
     <div>
-      <div class="topbar h1" style="font-size:15px;font-weight:700;color:var(--teal)">🏃 Trilha da Saúde</div>
+      <div style="display:flex;align-items:center;gap:7px"><span id="topIcon" style="display:inline-flex;align-items:center"></span><span style="font-size:15px;font-weight:700;color:var(--teal)">Trilha da Saúde</span></div>
     </div>
   </div>
   <div class="topbar-right">
@@ -708,7 +710,7 @@ body{display:flex;flex-direction:column}
   <div class="card"><div class="chart-wrap"><canvas id="cTirz"></canvas></div></div>
   <div class="st">🧪 Testosterona — doses</div>
   <div class="card">
-    <div class="legend"><div class="ld"><div class="ldot" style="background:var(--blue)"></div>mg</div><div class="ld"><div class="ldot" style="background:var(--purple)"></div>ml×100</div></div>
+    <div class="legend"><div class="ld"><div class="ldot" style="background:var(--blue)"></div>Dose (mg)</div><div class="ld"><div class="ldot" style="background:var(--purple)"></div>Volume (ml)</div></div>
     <div class="chart-wrap"><canvas id="cTest"></canvas></div>
   </div>
   <div class="st">💚 Klow — doses (mg)</div>
@@ -790,13 +792,26 @@ function goTab(name,btn){
   if(name==='gym'){renderGymTab();setGymDate();}
 }
 function renderBodyCharts(){
-  const medDoses=doses.filter(d=>(d.tipo==='tirz'||d.tipo==='test')&&(d.peso||d.imc||d.cintura)).sort((a,b)=>new Date(a.date)-new Date(b.date));
+  // Destroy existing home charts safely
+  if(!window.charts) window.charts={};
+  ['homePeso','homeCintura'].forEach(k=>{if(window.charts[k]){try{window.charts[k].destroy();}catch(e){} delete window.charts[k];}});
+
+  const medDoses=doses.filter(d=>(d.tipo==='tirz'||d.tipo==='test')&&(d.peso||d.cintura)).sort((a,b)=>new Date(a.date)-new Date(b.date));
   const medLabels=medDoses.map(d=>fmtDT(d.date).split(' ')[0]);
-  if(window.charts){if(window.charts.homePeso){window.charts.homePeso.destroy();}if(window.charts.homeCintura){window.charts.homeCintura.destroy();}}
-  else window.charts={};
+
   const cO2={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#162840',titleColor:'#e8f4fd',bodyColor:'#8badc4',borderColor:'rgba(0,212,170,0.3)',borderWidth:1}},scales:{x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9}}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9}}}}};
-  const ep=document.getElementById('cPeso');if(ep)window.charts.homePeso=new Chart(ep,{type:'line',data:{labels:medLabels,datasets:[{data:medDoses.map(d=>d.peso||null),borderColor:'#00d4aa',backgroundColor:'rgba(0,212,170,0.08)',tension:0.4,fill:true,pointBackgroundColor:'#00d4aa',pointRadius:4,spanGaps:true}]},options:cO2});
-  const ec=document.getElementById('cCintura');if(ec)window.charts.homeCintura=new Chart(ec,{type:'line',data:{labels:medLabels,datasets:[{data:medDoses.map(d=>d.cintura||null),borderColor:'#4a9eff',backgroundColor:'rgba(74,158,255,0.08)',tension:0.4,fill:true,pointBackgroundColor:'#4a9eff',pointRadius:4,spanGaps:true}]},options:cO2});
+
+  // Use setTimeout to ensure canvas is rendered/visible in DOM before Chart.js measures it
+  setTimeout(()=>{
+    const ep=document.getElementById('cPeso');
+    if(ep&&ep.offsetParent!==null){
+      window.charts.homePeso=new Chart(ep,{type:'line',data:{labels:medLabels,datasets:[{data:medDoses.map(d=>d.peso||null),borderColor:'#00d4aa',backgroundColor:'rgba(0,212,170,0.08)',tension:0.4,fill:true,pointBackgroundColor:'#00d4aa',pointRadius:4,spanGaps:true}]},options:cO2});
+    }
+    const ec=document.getElementById('cCintura');
+    if(ec&&ec.offsetParent!==null){
+      window.charts.homeCintura=new Chart(ec,{type:'line',data:{labels:medLabels,datasets:[{data:medDoses.map(d=>d.cintura||null),borderColor:'#4a9eff',backgroundColor:'rgba(74,158,255,0.08)',tension:0.4,fill:true,pointBackgroundColor:'#4a9eff',pointRadius:4,spanGaps:true}]},options:cO2});
+    }
+  },80);
 }
 </script>
 
@@ -1795,7 +1810,46 @@ function renderCharts(){
   kc('tirz');const td=doses.filter(d=>d.tipo==='tirz').slice().sort((a,b)=>new Date(a.date)-new Date(b.date));
   charts.tirz=new Chart(document.getElementById('cTirz'),{type:'line',data:{labels:td.map(d=>fmtDT(d.date).split(' ')[0]),datasets:[{data:td.map(d=>d.dose),borderColor:'#00d4aa',backgroundColor:'rgba(0,212,170,0.08)',tension:0.4,fill:true,pointBackgroundColor:'#00d4aa',pointRadius:4}]},options:cO});
   kc('test');const tsd=doses.filter(d=>d.tipo==='test').slice().sort((a,b)=>new Date(a.date)-new Date(b.date));
-  charts.test=new Chart(document.getElementById('cTest'),{type:'bar',data:{labels:tsd.map(d=>fmtDT(d.date).split(' ')[0]),datasets:[{label:'mg',data:tsd.map(d=>d.dose),backgroundColor:'rgba(74,158,255,0.6)',borderColor:'#4a9eff',borderWidth:1,borderRadius:4},{label:'ml×100',data:tsd.map(d=>(d.ml||0)*100),backgroundColor:'rgba(167,139,250,0.6)',borderColor:'#a78bfa',borderWidth:1,borderRadius:4}]},options:{...cO,plugins:{...cO.plugins,legend:{display:true,labels:{color:'#8badc4',font:{size:10},boxWidth:10}}}}});
+  charts.test=new Chart(document.getElementById('cTest'),{
+    type:'bar',
+    data:{
+      labels:tsd.map(d=>fmtDT(d.date).split(' ')[0]),
+      datasets:[
+        {label:'Dose (mg)',data:tsd.map(d=>d.dose),backgroundColor:'rgba(74,158,255,0.65)',borderColor:'#4a9eff',borderWidth:1,borderRadius:4,yAxisID:'yMg'},
+        {label:'Volume (ml)',data:tsd.map(d=>d.ml||0),backgroundColor:'rgba(167,139,250,0.65)',borderColor:'#a78bfa',borderWidth:1,borderRadius:4,yAxisID:'yMl'}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:true,labels:{color:'#8badc4',font:{size:10},boxWidth:10}},
+        tooltip:{
+          backgroundColor:'#162840',titleColor:'#e8f4fd',bodyColor:'#8badc4',
+          borderColor:'rgba(0,212,170,0.3)',borderWidth:1,
+          callbacks:{
+            label:ctx=>{
+              if(ctx.datasetIndex===0)return ` ${ctx.parsed.y} mg`;
+              return ` ${ctx.parsed.y.toFixed(2)} ml`;
+            },
+            afterBody:(items)=>{
+              const idx=items[0]?.dataIndex;
+              if(idx==null||!tsd[idx])return[];
+              const d=tsd[idx];
+              const parts=[];
+              if(d.dose&&d.ml)parts.push(` = ${d.dose}mg em ${d.ml.toFixed(2)}ml`);
+              if(d.local)parts.push(` 📍 ${d.local}`);
+              return parts;
+            }
+          }
+        }
+      },
+      scales:{
+        x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9}}},
+        yMg:{type:'linear',position:'left',grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a9eff',font:{size:9}},title:{display:true,text:'mg',color:'#4a9eff',font:{size:9}}},
+        yMl:{type:'linear',position:'right',grid:{drawOnChartArea:false},ticks:{color:'#a78bfa',font:{size:9},callback:v=>v.toFixed(1)+'ml'},title:{display:true,text:'ml',color:'#a78bfa',font:{size:9}}}
+      }
+    }
+  });
   // Klow chart (3rd)
   kc('klow');const klowD=doses.filter(d=>d.tipo==='klow').slice().sort((a,b)=>new Date(a.date)-new Date(b.date));
   if(document.getElementById('cKlow'))charts.klow=new Chart(document.getElementById('cKlow'),{type:'line',data:{labels:klowD.map(d=>fmtDT(d.date).split(' ')[0]),datasets:[{data:klowD.map(d=>d.dose),borderColor:'#34d399',backgroundColor:'rgba(52,211,153,0.08)',tension:0.4,fill:true,pointBackgroundColor:'#34d399',pointRadius:4}]},options:cO});
@@ -1848,6 +1902,7 @@ function renderCharts(){
 window.addEventListener('load',()=>{
   document.getElementById('topDate').textContent=new Date().toLocaleDateString('pt-BR',{weekday:'short',day:'numeric',month:'short'});
   // Apply theme for login screen preview
+  initAppIcon();
   const savedTheme=localStorage.getItem('tds_theme');
   if(savedTheme==='light'){document.body.classList.add('light');const btn=document.getElementById('themeBtn');if(btn)btn.textContent='🌙';}
   // Show login screen
@@ -2027,6 +2082,101 @@ function saveProfile(){
 }
 // Pre-fill altura from profile when opening register
 const origPrefill=window.prefillMedidas||null;
+
+
+// ═══════════════════════════════════════════════════
+// APP ICON — generate SVG heart-pulse icon
+// ═══════════════════════════════════════════════════
+function buildIcon(size){
+  // Draw on canvas: dark background + teal medical cross + pulse line
+  const c=document.createElement('canvas');c.width=size;c.height=size;
+  const ctx=c.getContext('2d');
+  const r=size*0.12; // corner radius
+
+  // Background gradient
+  const grad=ctx.createLinearGradient(0,0,size,size);
+  grad.addColorStop(0,'#0d1f3c');grad.addColorStop(1,'#0a1628');
+  ctx.fillStyle=grad;
+  ctx.beginPath();ctx.moveTo(r,0);ctx.lineTo(size-r,0);
+  ctx.quadraticCurveTo(size,0,size,r);ctx.lineTo(size,size-r);
+  ctx.quadraticCurveTo(size,size,size-r,size);ctx.lineTo(r,size);
+  ctx.quadraticCurveTo(0,size,0,size-r);ctx.lineTo(0,r);
+  ctx.quadraticCurveTo(0,0,r,0);ctx.closePath();ctx.fill();
+
+  const cx=size/2, cy=size/2, s=size;
+
+  // Teal glow circle
+  const glow=ctx.createRadialGradient(cx,cy,s*0.1,cx,cy,s*0.42);
+  glow.addColorStop(0,'rgba(0,212,170,0.18)');glow.addColorStop(1,'rgba(0,212,170,0)');
+  ctx.fillStyle=glow;ctx.beginPath();ctx.arc(cx,cy,s*0.42,0,Math.PI*2);ctx.fill();
+
+  // Heart shape
+  const hs=s*0.28;
+  ctx.save();ctx.translate(cx,cy-s*0.02);
+  ctx.scale(hs,hs);
+  ctx.beginPath();
+  ctx.moveTo(0,-0.3);
+  ctx.bezierCurveTo(0,-0.9,-1,-0.9,-1,-0.3);
+  ctx.bezierCurveTo(-1,0.1,-0.5,0.5,0,0.9);
+  ctx.bezierCurveTo(0.5,0.5,1,0.1,1,-0.3);
+  ctx.bezierCurveTo(1,-0.9,0,-0.9,0,-0.3);
+  ctx.fillStyle='rgba(0,212,170,0.25)';ctx.fill();
+  ctx.strokeStyle='#00d4aa';ctx.lineWidth=0.12;ctx.stroke();
+  ctx.restore();
+
+  // Pulse / ECG line inside heart area
+  ctx.save();ctx.beginPath();
+  const y0=cy+s*0.02;
+  const pts=[
+    [cx-s*0.22,y0],[cx-s*0.1,y0],[cx-s*0.05,y0-s*0.16],
+    [cx,y0+s*0.12],[cx+s*0.06,y0-s*0.08],[cx+s*0.12,y0],
+    [cx+s*0.22,y0]
+  ];
+  ctx.moveTo(pts[0][0],pts[0][1]);
+  for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i][0],pts[i][1]);
+  ctx.strokeStyle='#ffffff';ctx.lineWidth=size*0.04;
+  ctx.lineJoin='round';ctx.lineCap='round';ctx.stroke();
+  ctx.restore();
+
+  return c.toDataURL('image/png');
+}
+
+function initAppIcon(){
+  const dataUrl=buildIcon(192);
+  // Set login logo
+  const ll=document.getElementById('loginLogo');
+  if(ll){const img=document.createElement('img');img.src=dataUrl;img.style.cssText='width:72px;height:72px;border-radius:18px;margin-bottom:0';ll.style.fontSize='';ll.appendChild(img);}
+  // Set topbar icon
+  const ti=document.getElementById('topIcon');
+  if(ti){const img=document.createElement('img');img.src=dataUrl;img.style.cssText='width:26px;height:26px;border-radius:7px';ti.appendChild(img);}
+  // Set apple touch icon
+  const ai=document.getElementById('appIcon');
+  if(ai)ai.href=dataUrl;
+  // Inject manifest dynamically with generated icon
+  injectManifest(dataUrl,buildIcon(512));
+}
+
+function injectManifest(icon192,icon512){
+  const manifest={
+    name:'Trilha da Saúde',
+    short_name:'Trilha',
+    description:'Controle de saúde, tratamento e treino',
+    start_url:'.',
+    display:'standalone',
+    background_color:'#0a1628',
+    theme_color:'#00d4aa',
+    orientation:'portrait',
+    icons:[
+      {src:icon192,sizes:'192x192',type:'image/png',purpose:'any maskable'},
+      {src:icon512,sizes:'512x512',type:'image/png',purpose:'any maskable'}
+    ]
+  };
+  const blob=new Blob([JSON.stringify(manifest)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  let link=document.querySelector('link[rel="manifest"]');
+  if(!link){link=document.createElement('link');link.rel='manifest';document.head.appendChild(link);}
+  link.href=url;
+}
 
 </script>
 </body>
