@@ -801,17 +801,22 @@ function renderBodyCharts(){
 
   const cO2={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#162840',titleColor:'#e8f4fd',bodyColor:'#8badc4',borderColor:'rgba(0,212,170,0.3)',borderWidth:1}},scales:{x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9}}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9}}}}};
 
-  // Use setTimeout to ensure canvas is rendered/visible in DOM before Chart.js measures it
-  setTimeout(()=>{
+  // Render charts; retry if canvas not yet measurable (e.g. during login transition)
+  function drawHomeCharts(attempt){
     const ep=document.getElementById('cPeso');
-    if(ep&&ep.offsetParent!==null){
-      window.charts.homePeso=new Chart(ep,{type:'line',data:{labels:medLabels,datasets:[{data:medDoses.map(d=>d.peso||null),borderColor:'#00d4aa',backgroundColor:'rgba(0,212,170,0.08)',tension:0.4,fill:true,pointBackgroundColor:'#00d4aa',pointRadius:4,spanGaps:true}]},options:cO2});
-    }
     const ec=document.getElementById('cCintura');
-    if(ec&&ec.offsetParent!==null){
+    if(!ep||!ec)return;
+    // If the home tab still has zero width, the canvas isn't laid out yet — retry
+    const ready=ep.clientWidth>0;
+    if(!ready&&attempt<20){requestAnimationFrame(()=>drawHomeCharts(attempt+1));return;}
+    try{
+      window.charts.homePeso=new Chart(ep,{type:'line',data:{labels:medLabels,datasets:[{data:medDoses.map(d=>d.peso||null),borderColor:'#00d4aa',backgroundColor:'rgba(0,212,170,0.08)',tension:0.4,fill:true,pointBackgroundColor:'#00d4aa',pointRadius:4,spanGaps:true}]},options:cO2});
+    }catch(e){}
+    try{
       window.charts.homeCintura=new Chart(ec,{type:'line',data:{labels:medLabels,datasets:[{data:medDoses.map(d=>d.cintura||null),borderColor:'#4a9eff',backgroundColor:'rgba(74,158,255,0.08)',tension:0.4,fill:true,pointBackgroundColor:'#4a9eff',pointRadius:4,spanGaps:true}]},options:cO2});
-    }
-  },80);
+    }catch(e){}
+  }
+  requestAnimationFrame(()=>drawHomeCharts(0));
 }
 </script>
 
@@ -1859,10 +1864,39 @@ function renderCharts(){
   kc('gym');const weeks=[];for(let w=7;w>=0;w--){const now2=new Date();const dow=now2.getDay();const diff=dow===0?-6:1-dow;const ws=new Date(now2);ws.setDate(now2.getDate()+diff-(w*7));const we=new Date(ws);we.setDate(ws.getDate()+6);const wMin=gymLog.filter(g=>{const gd=new Date(g.date+'T12:00:00');return gd>=ws&&gd<=we;}).reduce((a,g)=>a+g.totalMin,0);const wDays=new Set(gymLog.filter(g=>{const gd=new Date(g.date+'T12:00:00');return gd>=ws&&gd<=we;}).map(g=>g.date)).size;weeks.push({label:ws.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}),val:wMin,days:wDays});}
   charts.gym=new Chart(document.getElementById('cGym'),{type:'bar',data:{labels:weeks.map(x=>x.label),datasets:[{data:weeks.map(x=>x.val),backgroundColor:weeks.map(x=>x.val>0?'rgba(52,211,153,0.65)':'rgba(255,255,255,0.04)'),borderRadius:4}]},options:{...cO,plugins:{...cO.plugins,tooltip:{...cO.plugins.tooltip,callbacks:{label:ctx=>`${ctx.parsed.y} min · ${weeks[ctx.dataIndex].days} dia(s)`}}}}});
   // SUPL
-  // Med chart
-  kc('med');const medD=doses.filter(d=>d.tipo==='med').slice().sort((a,b)=>new Date(a.date)-new Date(b.date));
-  const medMap={};medD.forEach(d=>{medMap[d.nome]=(medMap[d.nome]||0)+1;});const medNames=Object.keys(medMap);
-  if(document.getElementById('cMed'))charts.med=new Chart(document.getElementById('cMed'),{type:'bar',data:{labels:medNames.length?medNames:['Sem dados'],datasets:[{data:medNames.length?medNames.map(n=>medMap[n]):[0],backgroundColor:['rgba(245,158,11,0.7)','rgba(251,146,60,0.7)','rgba(248,113,113,0.7)','rgba(167,139,250,0.7)','rgba(74,158,255,0.7)','rgba(52,211,153,0.7)'],borderRadius:4}]},options:{...cO,indexAxis:'y',scales:{x:{...cO.scales.x,ticks:{...cO.scales.x.ticks,stepSize:1}},y:{...cO.scales.y}}}});
+  // Med chart — barras verticais por medicamento (contagem de registros)
+  kc('med');
+  const medD=doses.filter(d=>d.tipo==='med');
+  const medMap={};
+  medD.forEach(d=>{const nm=d.nome||'(sem nome)';medMap[nm]=(medMap[nm]||0)+1;});
+  const medNames=Object.keys(medMap);
+  const medColors=['rgba(245,158,11,0.75)','rgba(251,146,60,0.75)','rgba(248,113,113,0.75)','rgba(167,139,250,0.75)','rgba(74,158,255,0.75)','rgba(52,211,153,0.75)','rgba(0,212,170,0.75)','rgba(244,114,182,0.75)'];
+  const cMedEl=document.getElementById('cMed');
+  if(cMedEl){
+    charts.med=new Chart(cMedEl,{
+      type:'bar',
+      data:{
+        labels:medNames.length?medNames:['Sem registros'],
+        datasets:[{
+          label:'Registros',
+          data:medNames.length?medNames.map(n=>medMap[n]):[0],
+          backgroundColor:medNames.length?medNames.map((n,i)=>medColors[i%medColors.length]):['rgba(255,255,255,0.06)'],
+          borderRadius:4
+        }]
+      },
+      options:{
+        responsive:true,maintainAspectRatio:false,
+        plugins:{
+          legend:{display:false},
+          tooltip:{backgroundColor:'#162840',titleColor:'#e8f4fd',bodyColor:'#8badc4',borderColor:'rgba(0,212,170,0.3)',borderWidth:1,callbacks:{label:ctx=>` ${ctx.parsed.y} registro(s)`}}
+        },
+        scales:{
+          x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9}}},
+          y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9},precision:0,stepSize:1}}
+        }
+      }
+    });
+  }
   kc('supl');const sm={};doses.filter(d=>d.tipo==='supl').forEach(d=>{sm[d.nome]=(sm[d.nome]||0)+1;});const sn=Object.keys(sm);
   const cols=['rgba(167,139,250,0.8)','rgba(0,212,170,0.8)','rgba(74,158,255,0.8)','rgba(245,158,11,0.8)','rgba(248,113,113,0.8)','rgba(52,211,153,0.8)'];
   charts.supl=new Chart(document.getElementById('cSupl'),{type:'doughnut',data:{labels:sn.length?sn:['Sem dados'],datasets:[{data:sn.length?sn.map(n=>sm[n]):[1],backgroundColor:cols,borderColor:'#111f35',borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#8badc4',font:{size:10},padding:10}},tooltip:cO.plugins.tooltip}}});
@@ -1951,7 +1985,7 @@ function doLogin(){
   document.getElementById('topUserAvatar').textContent = initials;
   document.getElementById('topUserName').textContent   = u.name.split(' ')[0];
   // Init app
-  applyTheme();setDates();setGymDate();fillRegSelects();renderHome();renderCats();renderStocks();renderKlowStocks();
+  applyTheme();setDates();setGymDate();fillRegSelects();renderHome();renderCats();renderStocks();renderKlowStocks();renderBodyCharts();
   const bi=document.getElementById('backup-info');
   if(bi)bi.textContent='Exporte periodicamente para não perder seus dados';
 }
