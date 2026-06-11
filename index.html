@@ -205,6 +205,17 @@ body{display:flex;flex-direction:column}
 .user-item:last-child{border-bottom:none}
 .user-name{font-weight:600;color:var(--t1)}
 .user-login{font-size:11px;color:var(--t3)}
+
+/* ── CHART DRAG & DROP ── */
+.chart-block{margin-bottom:9px;border-radius:var(--r);transition:opacity 0.2s,transform 0.15s}
+.chart-block.dragging{opacity:0.4}
+.chart-block.drag-over{transform:scale(0.98)}
+.chart-block-hd{display:flex;align-items:center;gap:7px;margin:14px 0 7px;padding:0 2px}
+.drag-handle{font-size:15px;color:var(--t3);cursor:grab;padding:2px 4px;border-radius:5px;background:var(--card2);border:1px solid var(--b2);line-height:1;user-select:none;touch-action:none}
+.drag-handle:active{cursor:grabbing;color:var(--teal)}
+.chart-block-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--t3)}
+.chart-block.drop-indicator-top{border-top:2px solid var(--teal)}
+.chart-block.drop-indicator-bottom{border-bottom:2px solid var(--teal)}
 </style>
 </head>
 <body>
@@ -298,13 +309,13 @@ body{display:flex;flex-direction:column}
     <div class="sc"><div class="sl">🧪 Testosterona</div><div class="sv" id="h-test" style="color:var(--blue)">—</div><div class="ss" id="h-test-d">sem registro</div></div>
     <div class="sc" style="grid-column:span 2">
       <div class="sl" style="margin-bottom:6px">⚖️ Peso (kg)</div>
-      <div style="display:flex;align-items:center;gap:0;justify-content:space-between">
+      <div style="display:flex;align-items:flex-start;gap:0;justify-content:space-between">
         <div style="text-align:center;flex:1">
           <div style="font-size:9px;color:var(--t3);margin-bottom:2px">Inicial</div>
           <div style="font-size:16px;font-weight:700;color:var(--t2)" id="h-peso-ini">—</div>
         </div>
         <div style="text-align:center;flex:1">
-          <div style="font-size:9px;color:var(--t3);margin-bottom:2px">Atual</div>
+          <div style="font-size:9px;color:var(--t3);margin-bottom:2px">Atual/Meta</div>
           <div style="font-size:20px;font-weight:700;color:var(--teal)" id="h-peso">—</div>
         </div>
         <div style="text-align:center;flex:1">
@@ -312,23 +323,31 @@ body{display:flex;flex-direction:column}
           <div style="font-size:16px;font-weight:700" id="h-peso-diff">—</div>
         </div>
       </div>
+      <div id="h-peso-prog-wrap" style="display:none;margin-top:8px">
+        <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--t3);margin-bottom:3px"><span>Progresso até a meta</span><span id="h-peso-prog-pct" style="font-weight:700;color:var(--teal)">0%</span></div>
+        <div class="prog"><div class="prog-fill" id="h-peso-prog-bar" style="background:var(--teal);width:0%"></div></div>
+      </div>
       <div style="font-size:10px;color:var(--t3);margin-top:4px;text-align:center" id="h-peso-d"></div>
     </div>
     <div class="sc" style="grid-column:span 2">
       <div class="sl" style="margin-bottom:6px">📐 Cintura (cm)</div>
-      <div style="display:flex;align-items:center;gap:0;justify-content:space-between">
+      <div style="display:flex;align-items:flex-start;gap:0;justify-content:space-between">
         <div style="text-align:center;flex:1">
           <div style="font-size:9px;color:var(--t3);margin-bottom:2px">Inicial</div>
           <div style="font-size:16px;font-weight:700;color:var(--t2)" id="h-cintura-ini">—</div>
         </div>
         <div style="text-align:center;flex:1">
-          <div style="font-size:9px;color:var(--t3);margin-bottom:2px">Atual</div>
+          <div style="font-size:9px;color:var(--t3);margin-bottom:2px">Atual/Meta</div>
           <div style="font-size:20px;font-weight:700;color:var(--blue)" id="h-cintura">—</div>
         </div>
         <div style="text-align:center;flex:1">
           <div style="font-size:9px;color:var(--t3);margin-bottom:2px">Variação</div>
           <div style="font-size:16px;font-weight:700" id="h-cintura-diff">—</div>
         </div>
+      </div>
+      <div id="h-cintura-prog-wrap" style="display:none;margin-top:8px">
+        <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--t3);margin-bottom:3px"><span>Progresso até a meta</span><span id="h-cintura-prog-pct" style="font-weight:700;color:var(--blue)">0%</span></div>
+        <div class="prog"><div class="prog-fill" id="h-cintura-prog-bar" style="background:var(--blue);width:0%"></div></div>
       </div>
       <div style="font-size:10px;color:var(--t3);margin-top:4px;text-align:center" id="h-cintura-d"></div>
     </div>
@@ -519,6 +538,31 @@ body{display:flex;flex-direction:column}
 
 <!-- ════ TAB: CADASTRO ════ -->
 <div class="tab" id="tab-cadastro">
+  <div class="st">🎯 Cadastrar Metas Corporais</div>
+  <div class="card">
+    <div style="background:rgba(0,212,170,0.08);border:1px solid rgba(0,212,170,0.2);border-radius:var(--rs);padding:8px 10px;margin-bottom:10px;font-size:11px;color:var(--teal)">ℹ️ Defina metas com período de validade. Elas aparecem nos cards e gráficos da tela inicial.</div>
+
+    <div style="font-size:11px;font-weight:700;color:var(--teal);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.8px">⚖️ Meta de Peso</div>
+    <div class="frow">
+      <div class="fg"><label>Data de início</label><input type="date" id="meta-peso-ini"></div>
+      <div class="fg"><label>Data de fim</label><input type="date" id="meta-peso-fim"></div>
+    </div>
+    <div class="fg"><label>Meta de Peso (kg)</label><input type="number" id="meta-peso-val" placeholder="ex: 78" step="0.1" min="30"></div>
+    <button class="btn btn-t" onclick="saveMetaPeso()">➕ Adicionar Meta de Peso</button>
+
+    <div style="font-size:11px;font-weight:700;color:var(--blue);margin:14px 0 8px;text-transform:uppercase;letter-spacing:0.8px">📐 Meta de Cintura</div>
+    <div class="frow">
+      <div class="fg"><label>Data de início</label><input type="date" id="meta-cintura-ini"></div>
+      <div class="fg"><label>Data de fim</label><input type="date" id="meta-cintura-fim"></div>
+    </div>
+    <div class="fg"><label>Meta de Cintura (cm)</label><input type="number" id="meta-cintura-val" placeholder="ex: 85" step="0.5" min="40"></div>
+    <button class="btn btn-b" onclick="saveMetaCintura()">➕ Adicionar Meta de Cintura</button>
+  </div>
+  <div class="st">🎯 Metas Cadastradas</div>
+  <div id="metasList"></div>
+
+  <div class="divider"></div>
+
   <div class="st">💉 Estoque de Tirzepetida</div>
   <div class="card">
     <div style="background:rgba(0,212,170,0.08);border:1px solid rgba(0,212,170,0.2);border-radius:var(--rs);padding:8px 10px;margin-bottom:10px;font-size:11px;color:var(--teal)">ℹ️ Informe o <b>mg por ampola/caneta</b> e o <b>volume por unidade</b>.</div>
@@ -678,42 +722,67 @@ body{display:flex;flex-direction:column}
 
 <!-- ════ TAB: GRÁFICOS ════ -->
 <div class="tab" id="tab-charts">
-  <div class="st">💉 Tirzepetida — doses (mg)</div>
-  <div class="card"><div class="chart-wrap"><canvas id="cTirz"></canvas></div></div>
-  <div class="st">🧪 Testosterona — doses</div>
-  <div class="card">
-    <div class="legend"><div class="ld"><div class="ldot" style="background:var(--blue)"></div>Dose (mg)</div><div class="ld"><div class="ldot" style="background:var(--purple)"></div>Volume (ml)</div></div>
-    <div class="chart-wrap"><canvas id="cTest"></canvas></div>
+  <div style="background:var(--card2);border:1px solid var(--b2);border-radius:var(--rs);padding:8px 11px;margin-bottom:10px;font-size:11px;color:var(--t3);display:flex;align-items:center;gap:6px">
+    <span style="font-size:14px">⠿</span> Arraste os gráficos pelo ícone para reorganizar. A ordem é salva automaticamente.
   </div>
-  <div class="st">💚 Klow — doses (mg)</div>
-  <div class="card"><div class="chart-wrap"><canvas id="cKlow"></canvas></div></div>
-  <div class="st">🔢 Evolução do IMC</div>
-  <div class="card">
-    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;font-size:10px">
+  <div id="chartsContainer">
+  <div class="chart-block" data-chart="cTirz" draggable="true">
+    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">💉 Tirzepetida — doses (mg)</span></div>
+    <div class="card"><div class="chart-wrap"><canvas id="cTirz"></canvas></div></div>
+  </div>
+  <div class="chart-block" data-chart="cTest" draggable="true">
+    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🧪 Testosterona — doses</span></div>
+    <div class="card"><div class="legend"><div class="ld"><div class="ldot" style="background:var(--blue)"></div>Dose (mg)</div><div class="ld"><div class="ldot" style="background:var(--purple)"></div>Volume (ml)</div></div><div class="chart-wrap"><canvas id="cTest"></canvas></div></div>
+  </div>
+  <div class="chart-block" data-chart="cKlow" draggable="true">
+    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">💚 Klow — doses (mg)</span></div>
+    <div class="card"><div class="chart-wrap"><canvas id="cKlow"></canvas></div></div>
+  </div>
+  <div class="chart-block" data-chart="cIMC" draggable="true">
+    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🔢 Evolução do IMC</span></div>
+    <div class="card"><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;font-size:10px">
       <span style="background:rgba(52,211,153,0.15);color:var(--green);padding:2px 8px;border-radius:8px;font-weight:600">18.5–24.9 Normal</span>
       <span style="background:rgba(245,158,11,0.15);color:var(--amber);padding:2px 8px;border-radius:8px;font-weight:600">25–29.9 Sobrepeso</span>
       <span style="background:rgba(248,113,113,0.15);color:var(--red);padding:2px 8px;border-radius:8px;font-weight:600">≥30 Obesidade</span>
-    </div>
-    <div class="chart-wrap"><canvas id="cIMC"></canvas></div>
+    </div><div class="chart-wrap"><canvas id="cIMC"></canvas></div></div>
   </div>
-  <div class="st">🔬 Exames — Testosterona Total (ng/dL)</div>
-  <div class="card"><div class="chart-wrap"><canvas id="cExTesto"></canvas></div></div>
-  <div class="st">🔬 Exames — Estradiol E2 (pg/mL)</div>
-  <div class="card"><div class="chart-wrap"><canvas id="cExEstradiol"></canvas></div></div>
-  <div class="st">🔬 Exames — Colesterol Total (mg/dL)</div>
-  <div class="card"><div class="chart-wrap"><canvas id="cExColesterol"></canvas></div></div>
-  <div class="st">🔬 Exames — Prolactina (ng/mL)</div>
-  <div class="card"><div class="chart-wrap"><canvas id="cExProlactina"></canvas></div></div>
-  <div class="st">🔬 Exames — Hematócrito (%)</div>
-  <div class="card"><div class="chart-wrap"><canvas id="cExHematocrito"></canvas></div></div>
-  <div class="st">💧 Água — últimos 14 dias (ml)</div>
-  <div class="card"><div class="chart-wrap"><canvas id="cWater"></canvas></div></div>
-  <div class="st">🏋️ Treinos — minutos por semana</div>
-  <div class="card"><div class="chart-wrap"><canvas id="cGym"></canvas></div></div>
-  <div class="st">💊 Medicamentos — registros</div>
-  <div class="card"><div class="chart-wrap"><canvas id="cMed"></canvas></div></div>
-  <div class="st">🌿 Suplementos — frequência</div>
-  <div class="card"><div class="chart-wrap"><canvas id="cSupl"></canvas></div></div>
+  <div class="chart-block" data-chart="cExTesto" draggable="true">
+    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🔬 Exames — Testosterona Total (ng/dL)</span></div>
+    <div class="card"><div class="chart-wrap"><canvas id="cExTesto"></canvas></div></div>
+  </div>
+  <div class="chart-block" data-chart="cExEstradiol" draggable="true">
+    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🔬 Exames — Estradiol E2 (pg/mL)</span></div>
+    <div class="card"><div class="chart-wrap"><canvas id="cExEstradiol"></canvas></div></div>
+  </div>
+  <div class="chart-block" data-chart="cExColesterol" draggable="true">
+    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🔬 Exames — Colesterol Total (mg/dL)</span></div>
+    <div class="card"><div class="chart-wrap"><canvas id="cExColesterol"></canvas></div></div>
+  </div>
+  <div class="chart-block" data-chart="cExProlactina" draggable="true">
+    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🔬 Exames — Prolactina (ng/mL)</span></div>
+    <div class="card"><div class="chart-wrap"><canvas id="cExProlactina"></canvas></div></div>
+  </div>
+  <div class="chart-block" data-chart="cExHematocrito" draggable="true">
+    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🔬 Exames — Hematócrito (%)</span></div>
+    <div class="card"><div class="chart-wrap"><canvas id="cExHematocrito"></canvas></div></div>
+  </div>
+  <div class="chart-block" data-chart="cWater" draggable="true">
+    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">💧 Água — últimos 14 dias (ml)</span></div>
+    <div class="card"><div class="chart-wrap"><canvas id="cWater"></canvas></div></div>
+  </div>
+  <div class="chart-block" data-chart="cGym" draggable="true">
+    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🏋️ Treinos — minutos por semana</span></div>
+    <div class="card"><div class="chart-wrap"><canvas id="cGym"></canvas></div></div>
+  </div>
+  <div class="chart-block" data-chart="cMed" draggable="true">
+    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">💊 Medicamentos — registros</span></div>
+    <div class="card"><div class="chart-wrap"><canvas id="cMed"></canvas></div></div>
+  </div>
+  <div class="chart-block" data-chart="cSupl" draggable="true">
+    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🌿 Suplementos — frequência</span></div>
+    <div class="card"><div class="chart-wrap"><canvas id="cSupl"></canvas></div></div>
+  </div>
+  </div>
   <div class="st">Estatísticas</div>
   <div class="sgrid">
     <div class="sc"><div class="sl">Total Doses</div><div class="sv" id="s-total" style="color:var(--teal)">0</div><div class="ss">todos os tipos</div></div>
@@ -822,10 +891,10 @@ function goTab(name,btn){
   if(btn)btn.classList.add('active');
   else{document.querySelectorAll('.sb-item').forEach(b=>{if((b.getAttribute('onclick')||'').includes("'"+name+"'"))b.classList.add('active');});}
   if(name==='home'){renderHome();renderBodyCharts();}
-  if(name==='charts'){renderCharts();}
+  if(name==='charts'){applyChartOrder();renderCharts();initChartDnD();}
   if(name==='history'){renderHistory();renderGymHist();}
   if(name==='register'){fillRegSelects();setDates();prefillMedidas('tirz');prefillMedidas('test');}
-  if(name==='cadastro'){renderStocks();renderCats();}
+  if(name==='cadastro'){renderStocks();renderCats();renderMetas();}
   if(name==='gym'){renderGymTab();setGymDate();}
   if(name==='exames'){renderExames();setExDate();}
 }
@@ -847,11 +916,18 @@ function renderBodyCharts(){
     // If the home tab still has zero width, the canvas isn't laid out yet — retry
     const ready=ep.clientWidth>0;
     if(!ready&&attempt<20){requestAnimationFrame(()=>drawHomeCharts(attempt+1));return;}
+    // Meta line for peso: para cada ponto, a meta vigente naquela data
+    const pesoMetaLine=medDoses.map(d=>{const m=getMetaVigente(metasPeso,d.date.split('T')[0]);return m?m.val:null;});
+    const cinMetaLine=medDoses.map(d=>{const m=getMetaVigente(metasCintura,d.date.split('T')[0]);return m?m.val:null;});
     try{
-      window.charts.homePeso=new Chart(ep,{type:'line',data:{labels:medLabels,datasets:[{data:medDoses.map(d=>d.peso||null),borderColor:'#00d4aa',backgroundColor:'rgba(0,212,170,0.08)',tension:0.4,fill:true,pointBackgroundColor:'#00d4aa',pointRadius:4,spanGaps:true}]},options:cO2});
+      const pesoDs=[{label:'Peso',data:medDoses.map(d=>d.peso||null),borderColor:'#00d4aa',backgroundColor:'rgba(0,212,170,0.08)',tension:0.4,fill:true,pointBackgroundColor:'#00d4aa',pointRadius:4,spanGaps:true}];
+      if(pesoMetaLine.some(v=>v!=null))pesoDs.push({label:'Meta',data:pesoMetaLine,borderColor:'#f59e0b',borderDash:[6,4],backgroundColor:'transparent',tension:0,fill:false,pointRadius:0,spanGaps:true,borderWidth:2});
+      window.charts.homePeso=new Chart(ep,{type:'line',data:{labels:medLabels,datasets:pesoDs},options:{...cO2,plugins:{...cO2.plugins,legend:{display:pesoMetaLine.some(v=>v!=null),labels:{color:'#8badc4',font:{size:9},boxWidth:10}}}}});
     }catch(e){}
     try{
-      window.charts.homeCintura=new Chart(ec,{type:'line',data:{labels:medLabels,datasets:[{data:medDoses.map(d=>d.cintura||null),borderColor:'#4a9eff',backgroundColor:'rgba(74,158,255,0.08)',tension:0.4,fill:true,pointBackgroundColor:'#4a9eff',pointRadius:4,spanGaps:true}]},options:cO2});
+      const cinDs=[{label:'Cintura',data:medDoses.map(d=>d.cintura||null),borderColor:'#4a9eff',backgroundColor:'rgba(74,158,255,0.08)',tension:0.4,fill:true,pointBackgroundColor:'#4a9eff',pointRadius:4,spanGaps:true}];
+      if(cinMetaLine.some(v=>v!=null))cinDs.push({label:'Meta',data:cinMetaLine,borderColor:'#f59e0b',borderDash:[6,4],backgroundColor:'transparent',tension:0,fill:false,pointRadius:0,spanGaps:true,borderWidth:2});
+      window.charts.homeCintura=new Chart(ec,{type:'line',data:{labels:medLabels,datasets:cinDs},options:{...cO2,plugins:{...cO2.plugins,legend:{display:cinMetaLine.some(v=>v!=null),labels:{color:'#8badc4',font:{size:9},boxWidth:10}}}}});
     }catch(e){}
   }
   requestAnimationFrame(()=>drawHomeCharts(0));
@@ -912,12 +988,15 @@ let agCfg       = DB.get('tds_ag',{tirzInt:7,testInt:7,tirzNext:'',testNext:'',t
 let gymLog      = DB.get('tds_gym',[]);
 let klowStocks  = DB.get('tds_klow',[]);
 let exames      = DB.get('tds_exames',[]);
+let metasPeso   = DB.get('tds_metas_peso',[]);
+let metasCintura= DB.get('tds_metas_cintura',[]);
+let chartOrder  = DB.get('tds_chart_order',[]);
 let userProfiles= DB.get('tds_profiles',{});
 
 function save(){
   DB.set('tds_doses',doses);DB.set('tds_tirz',tirzStocks);DB.set('tds_test',testStocks);
   DB.set('tds_supl',suplCat);DB.set('tds_med',medCat);DB.set('tds_water',waterLog);
-  DB.set('tds_wgoal',waterGoal);DB.set('tds_ag',agCfg);DB.set('tds_gym',gymLog);DB.set('tds_klow',klowStocks);DB.set('tds_profiles',userProfiles);DB.set('tds_exames',exames);
+  DB.set('tds_wgoal',waterGoal);DB.set('tds_ag',agCfg);DB.set('tds_gym',gymLog);DB.set('tds_klow',klowStocks);DB.set('tds_profiles',userProfiles);DB.set('tds_exames',exames);DB.set('tds_metas_peso',metasPeso);DB.set('tds_metas_cintura',metasCintura);DB.set('tds_chart_order',chartOrder);
 }
 
 // ═══════════════════════════════════════════════════
@@ -1611,9 +1690,29 @@ function renderHome(){
     const pDiff=+(pAtual-pIni).toFixed(1);
     const pColor=pDiff<0?'var(--green)':pDiff>0?'var(--red)':'var(--t2)';
     const pSign=pDiff>0?'+':'';
+    const mPeso=getMetaVigente(metasPeso);
     if(e('h-peso-ini'))e('h-peso-ini').textContent=pIni;
-    if(e('h-peso'))e('h-peso').textContent=pAtual;
-    if(e('h-peso-diff')){e('h-peso-diff').textContent=pSign+pDiff+' kg';e('h-peso-diff').style.color=pColor;}
+    // Atual / Meta
+    if(e('h-peso'))e('h-peso').innerHTML=mPeso?pAtual+'<span style="font-size:13px;color:var(--t3)">/'+mPeso.val+'</span>':pAtual;
+    // Variação: mostra diff total e % vs meta
+    if(e('h-peso-diff')){
+      let txt=pSign+pDiff+' kg';
+      if(mPeso){const pct=Math.abs(pIni-mPeso.val)>0?Math.abs((pAtual-pIni)/(pIni-mPeso.val)*100):0;txt=pSign+pDiff+' kg ('+Math.abs((pDiff/pIni*100)).toFixed(2)+'%)';}
+      e('h-peso-diff').textContent=txt;e('h-peso-diff').style.color=pColor;
+    }
+    // Progress bar towards meta
+    if(mPeso&&e('h-peso-prog-wrap')){
+      e('h-peso-prog-wrap').style.display='block';
+      const total=pIni-mPeso.val; // total a perder (positivo se meta<inicial)
+      const done=pIni-pAtual;     // já perdido
+      let prog=total!==0?(done/total*100):100;
+      prog=Math.max(0,Math.min(100,prog));
+      e('h-peso-prog-bar').style.width=prog+'%';
+      e('h-peso-prog-pct').textContent=prog.toFixed(0)+'%';
+      const reached=(total>0&&pAtual<=mPeso.val)||(total<0&&pAtual>=mPeso.val);
+      e('h-peso-prog-bar').style.background=reached?'var(--green)':'var(--teal)';
+      e('h-peso-prog-pct').textContent=(reached?'🎯 ':'')+prog.toFixed(0)+'%';
+    } else if(e('h-peso-prog-wrap')){e('h-peso-prog-wrap').style.display='none';}
     const lp=allPeso[allPeso.length-1];
     if(e('h-peso-d'))e('h-peso-d').textContent='Atualizado: '+fmtDT(lp.date).split(' ')[0]+(lp.imc?' · IMC '+lp.imc:'');
   }
@@ -1623,9 +1722,19 @@ function renderHome(){
     const cDiff=+(cAtual-cIni).toFixed(1);
     const cColor=cDiff<0?'var(--green)':cDiff>0?'var(--red)':'var(--t2)';
     const cSign=cDiff>0?'+':'';
+    const mCin=getMetaVigente(metasCintura);
     if(e('h-cintura-ini'))e('h-cintura-ini').textContent=cIni;
-    if(e('h-cintura'))e('h-cintura').textContent=cAtual;
+    if(e('h-cintura'))e('h-cintura').innerHTML=mCin?cAtual+'<span style="font-size:13px;color:var(--t3)">/'+mCin.val+'</span>':cAtual;
     if(e('h-cintura-diff')){e('h-cintura-diff').textContent=cSign+cDiff+' cm';e('h-cintura-diff').style.color=cColor;}
+    if(mCin&&e('h-cintura-prog-wrap')){
+      e('h-cintura-prog-wrap').style.display='block';
+      const total=cIni-mCin.val, done=cIni-cAtual;
+      let prog=total!==0?(done/total*100):100;prog=Math.max(0,Math.min(100,prog));
+      e('h-cintura-prog-bar').style.width=prog+'%';
+      const reached=(total>0&&cAtual<=mCin.val)||(total<0&&cAtual>=mCin.val);
+      e('h-cintura-prog-bar').style.background=reached?'var(--green)':'var(--blue)';
+      e('h-cintura-prog-pct').textContent=(reached?'🎯 ':'')+prog.toFixed(0)+'%';
+    } else if(e('h-cintura-prog-wrap')){e('h-cintura-prog-wrap').style.display='none';}
     const lc=allCin[allCin.length-1];
     if(e('h-cintura-d'))e('h-cintura-d').textContent='Atualizado: '+fmtDT(lc.date).split(' ')[0];
   }
@@ -1752,7 +1861,7 @@ function exportBackup(){
     version:2,
     exportDate:new Date().toISOString(),
     appName:'Trilha da Saúde',
-    doses,tirzStocks,testStocks,klowStocks,suplCat,medCat,waterLog,waterGoal,agCfg,gymLog,userProfiles,exames
+    doses,tirzStocks,testStocks,klowStocks,suplCat,medCat,waterLog,waterGoal,agCfg,gymLog,userProfiles,exames,metasPeso,metasCintura,chartOrder
   };
   const json=JSON.stringify(data,null,2);
   const blob=new Blob([json],{type:'application/json'});
@@ -1787,6 +1896,9 @@ function importBackup(event){
       if(data.klowStocks)klowStocks=data.klowStocks;
       if(data.userProfiles)userProfiles=data.userProfiles;
       if(data.exames)exames=data.exames;
+      if(data.metasPeso)metasPeso=data.metasPeso;
+      if(data.metasCintura)metasCintura=data.metasCintura;
+      if(data.chartOrder)chartOrder=data.chartOrder;
       save();renderHome();fillRegSelects();renderCats();renderStocks();
       const bi=document.getElementById('backup-info');
       if(bi)bi.textContent='Backup importado: '+new Date().toLocaleString('pt-BR');
@@ -1797,6 +1909,61 @@ function importBackup(event){
   event.target.value='';
 }
 
+
+
+// ═══════════════════════════════════════════════════
+// METAS CORPORAIS (Peso e Cintura)
+// ═══════════════════════════════════════════════════
+function saveMetaPeso(){
+  const ini=document.getElementById('meta-peso-ini').value;
+  const fim=document.getElementById('meta-peso-fim').value;
+  const val=parseFloat(document.getElementById('meta-peso-val').value);
+  if(!ini||!fim||!val){toast('⚠️ Preencha período e meta de peso','#f59e0b');return;}
+  if(fim<ini){toast('⚠️ Data fim deve ser após início','#f59e0b');return;}
+  metasPeso.push({id:uid(),ini,fim,val});
+  save();
+  document.getElementById('meta-peso-ini').value='';document.getElementById('meta-peso-fim').value='';document.getElementById('meta-peso-val').value='';
+  renderMetas();renderHome();toast('✅ Meta de peso adicionada!');
+}
+function saveMetaCintura(){
+  const ini=document.getElementById('meta-cintura-ini').value;
+  const fim=document.getElementById('meta-cintura-fim').value;
+  const val=parseFloat(document.getElementById('meta-cintura-val').value);
+  if(!ini||!fim||!val){toast('⚠️ Preencha período e meta de cintura','#f59e0b');return;}
+  if(fim<ini){toast('⚠️ Data fim deve ser após início','#f59e0b');return;}
+  metasCintura.push({id:uid(),ini,fim,val});
+  save();
+  document.getElementById('meta-cintura-ini').value='';document.getElementById('meta-cintura-fim').value='';document.getElementById('meta-cintura-val').value='';
+  renderMetas();renderHome();toast('✅ Meta de cintura adicionada!');
+}
+function delMetaPeso(id){if(!confirm('Remover esta meta?'))return;metasPeso=metasPeso.filter(m=>m.id!==id);save();renderMetas();renderHome();toast('🗑 Removida');}
+function delMetaCintura(id){if(!confirm('Remover esta meta?'))return;metasCintura=metasCintura.filter(m=>m.id!==id);save();renderMetas();renderHome();toast('🗑 Removida');}
+
+// Retorna a meta vigente para uma data (default: hoje). Se nenhuma vigente, retorna a mais recente.
+function getMetaVigente(metas,dateStr){
+  if(!metas.length)return null;
+  const d=dateStr||today();
+  // Meta vigente: d entre ini e fim
+  const vigentes=metas.filter(m=>d>=m.ini&&d<=m.fim).sort((a,b)=>b.ini.localeCompare(a.ini));
+  if(vigentes.length)return vigentes[0];
+  // Senão, a mais recente cadastrada
+  return [...metas].sort((a,b)=>b.fim.localeCompare(a.fim))[0];
+}
+
+function renderMetas(){
+  const el=document.getElementById('metasList');if(!el)return;
+  if(!metasPeso.length&&!metasCintura.length){el.innerHTML='<div class="empty-st"><div class="ic">🎯</div>Nenhuma meta cadastrada</div>';return;}
+  const todayK=today();
+  const pesoCards=metasPeso.sort((a,b)=>b.ini.localeCompare(a.ini)).map(m=>{
+    const vigente=todayK>=m.ini&&todayK<=m.fim;
+    return `<div class="cat-item"><span style="font-size:18px">⚖️</span><div style="flex:1"><div style="font-size:12px;font-weight:600">Meta: ${m.val} kg ${vigente?'<span style="font-size:9px;background:rgba(0,212,170,0.2);color:var(--teal);padding:1px 6px;border-radius:8px;margin-left:4px">VIGENTE</span>':''}</div><div style="font-size:10px;color:var(--t3)">${fmtD(m.ini)} até ${fmtD(m.fim)}</div></div><button class="del-btn" onclick="delMetaPeso('${m.id}')">✕</button></div>`;
+  }).join('');
+  const cinCards=metasCintura.sort((a,b)=>b.ini.localeCompare(a.ini)).map(m=>{
+    const vigente=todayK>=m.ini&&todayK<=m.fim;
+    return `<div class="cat-item"><span style="font-size:18px">📐</span><div style="flex:1"><div style="font-size:12px;font-weight:600">Meta: ${m.val} cm ${vigente?'<span style="font-size:9px;background:rgba(74,158,255,0.2);color:var(--blue);padding:1px 6px;border-radius:8px;margin-left:4px">VIGENTE</span>':''}</div><div style="font-size:10px;color:var(--t3)">${fmtD(m.ini)} até ${fmtD(m.fim)}</div></div><button class="del-btn" onclick="delMetaCintura('${m.id}')">✕</button></div>`;
+  }).join('');
+  el.innerHTML=pesoCards+cinCards;
+}
 
 // ═══════════════════════════════════════════════════
 // EXAMES LABORATORIAIS
@@ -1907,6 +2074,90 @@ function renderExamesCharts(){
   mk('cExColesterol','colTotal','rgb(245,158,11)','mg/dL');
   mk('cExProlactina','prolactina','rgb(244,114,182)','ng/mL');
   mk('cExHematocrito','hematocrito','rgb(248,113,113)','%');
+}
+
+
+// ═══════════════════════════════════════════════════
+// CHART REORDER — Drag & Drop (mouse + touch)
+// ═══════════════════════════════════════════════════
+function applyChartOrder(){
+  const container=document.getElementById('chartsContainer');
+  if(!container||!chartOrder.length)return;
+  chartOrder.forEach(cid=>{
+    const blk=container.querySelector('.chart-block[data-chart="'+cid+'"]');
+    if(blk)container.appendChild(blk);
+  });
+}
+function saveChartOrder(){
+  const container=document.getElementById('chartsContainer');
+  if(!container)return;
+  chartOrder=[...container.querySelectorAll('.chart-block')].map(b=>b.getAttribute('data-chart'));
+  save();
+}
+
+let dragSrc=null;
+
+function initChartDnD(){
+  const container=document.getElementById('chartsContainer');
+  if(!container||container.dataset.dndInit)return;
+  container.dataset.dndInit='1';
+
+  // ── Desktop: HTML5 drag events ──
+  container.querySelectorAll('.chart-block').forEach(blk=>{
+    blk.addEventListener('dragstart',e=>{dragSrc=blk;blk.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
+    blk.addEventListener('dragend',e=>{blk.classList.remove('dragging');container.querySelectorAll('.chart-block').forEach(b=>b.classList.remove('drag-over'));saveChartOrder();});
+    blk.addEventListener('dragover',e=>{e.preventDefault();const after=getDragAfter(container,e.clientY);const dragging=container.querySelector('.dragging');if(!dragging)return;if(after==null)container.appendChild(dragging);else container.insertBefore(dragging,after);});
+  });
+
+  // ── Mobile: touch on drag-handle ──
+  container.querySelectorAll('.drag-handle').forEach(handle=>{
+    handle.addEventListener('touchstart',onTouchStart,{passive:false});
+  });
+}
+
+function getDragAfter(container,y){
+  const els=[...container.querySelectorAll('.chart-block:not(.dragging)')];
+  return els.reduce((closest,child)=>{
+    const box=child.getBoundingClientRect();
+    const offset=y-box.top-box.height/2;
+    if(offset<0&&offset>closest.offset)return{offset,element:child};
+    return closest;
+  },{offset:Number.NEGATIVE_INFINITY}).element||null;
+}
+
+// Touch dragging
+let touchBlk=null, touchPlaceholder=null, touchStartY=0, touchScrollStart=0;
+function onTouchStart(e){
+  e.preventDefault();
+  const handle=e.currentTarget;
+  touchBlk=handle.closest('.chart-block');
+  if(!touchBlk)return;
+  touchBlk.classList.add('dragging');
+  touchStartY=e.touches[0].clientY;
+  document.addEventListener('touchmove',onTouchMove,{passive:false});
+  document.addEventListener('touchend',onTouchEnd,{passive:false});
+}
+function onTouchMove(e){
+  if(!touchBlk)return;
+  e.preventDefault();
+  const container=document.getElementById('chartsContainer');
+  const y=e.touches[0].clientY;
+  const after=getDragAfter(container,y);
+  if(after==null)container.appendChild(touchBlk);
+  else container.insertBefore(touchBlk,after);
+  // Auto-scroll near edges
+  const vh=window.innerHeight;
+  if(y<90)window.scrollBy(0,-8);
+  else if(y>vh-90)window.scrollBy(0,8);
+}
+function onTouchEnd(e){
+  if(!touchBlk)return;
+  touchBlk.classList.remove('dragging');
+  touchBlk=null;
+  document.removeEventListener('touchmove',onTouchMove);
+  document.removeEventListener('touchend',onTouchEnd);
+  saveChartOrder();
+  toast('✅ Ordem salva');
 }
 
 // ═══════════════════════════════════════════════════
@@ -2115,7 +2366,7 @@ function doLogin(){
   document.getElementById('topUserAvatar').textContent = initials;
   document.getElementById('topUserName').textContent   = u.name.split(' ')[0];
   // Init app
-  applyTheme();setDates();setGymDate();fillRegSelects();renderHome();renderCats();renderStocks();renderKlowStocks();renderBodyCharts();renderExames();
+  applyTheme();setDates();setGymDate();fillRegSelects();renderHome();renderCats();renderStocks();renderKlowStocks();renderBodyCharts();renderExames();renderMetas();
   const bi=document.getElementById('backup-info');
   if(bi)bi.textContent='Exporte periodicamente para não perder seus dados';
 }
