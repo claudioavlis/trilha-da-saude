@@ -681,30 +681,80 @@ body{display:flex;flex-direction:column}
     </div>
     <div id="cardio-section" style="display:none">
       <div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.8px">🏃 Cardio</div>
+      <div class="fg"><label>Modalidade</label><select id="gym-cardio-modal"><option>Esteira</option><option>Bicicleta</option><option>Elíptico</option><option>Corrida ao ar livre</option><option>Natação</option><option>Pular corda</option><option>Outro</option></select></div>
+      <div style="background:var(--inp);border-radius:var(--rs);padding:10px;margin-bottom:8px">
+        <div style="text-align:center;margin-bottom:8px">
+          <div style="font-size:32px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--blue)" id="gym-cardio-timer">00:00:00</div>
+          <div style="font-size:9px;color:var(--t3);margin-top:2px" id="gym-cardio-timer-status">Cronômetro parado</div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button type="button" class="btn-sm" style="flex:1;background:rgba(52,211,153,0.15);color:var(--green);padding:9px" onclick="timerStart('cardio')" id="gym-cardio-btn-start">▶ Iniciar</button>
+          <button type="button" class="btn-sm" style="flex:1;background:rgba(245,158,11,0.15);color:var(--amber);padding:9px" onclick="timerPause('cardio')" id="gym-cardio-btn-pause">⏸ Pausar</button>
+          <button type="button" class="btn-sm" style="flex:1;background:rgba(74,158,255,0.15);color:var(--blue);padding:9px" onclick="timerStop('cardio')" id="gym-cardio-btn-stop">⏹ Concluir</button>
+        </div>
+        <div style="font-size:10px;color:var(--t3);text-align:center;margin-top:6px">Duração: <b id="gym-cardio-min-display" style="color:var(--blue)">0 min</b> · ou digite manualmente abaixo</div>
+        <input type="number" id="gym-cardio-min" placeholder="minutos (manual)" min="0" step="1" style="margin-top:6px;text-align:center">
+      </div>
       <div class="frow">
-        <div class="fg"><label>Modalidade</label><select id="gym-cardio-modal"><option>Esteira</option><option>Bicicleta</option><option>Elíptico</option><option>Corrida ao ar livre</option><option>Natação</option><option>Pular corda</option><option>Outro</option></select></div>
-        <div class="fg"><label>Duração (min)</label><input type="number" id="gym-cardio-min" placeholder="ex: 20" min="1" step="1"></div>
+        <div class="fg"><label>❤️ Batimentos (bpm)</label><input type="number" id="gym-cardio-bpm" placeholder="ex: 145" min="30" max="230" step="1"></div>
+        <div class="fg"><label>📏 Distância (km)</label><input type="number" id="gym-cardio-km" placeholder="ex: 5.0" min="0" step="0.1"></div>
       </div>
     </div>
     <div id="musculacao-section" style="display:none">
       <div style="font-size:11px;font-weight:700;color:var(--purple);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.8px">💪 Musculação</div>
-      <div class="frow">
-        <div class="fg"><label>Foco muscular</label><select id="gym-musc-foco"><option>Peito e Tríceps</option><option>Costas e Bíceps</option><option>Pernas</option><option>Ombro e Trapézio</option><option>Full Body</option><option>Superior</option><option>Inferior</option><option>Abdômen</option><option>Outro</option></select></div>
-        <div class="fg"><label>Duração (min)</label><input type="number" id="gym-musc-min" placeholder="ex: 50" min="1" step="1"></div>
+      <div class="fg"><label>Foco muscular</label><select id="gym-musc-foco"><option>Peito e Tríceps</option><option>Costas e Bíceps</option><option>Pernas</option><option>Ombro e Trapézio</option><option>Full Body</option><option>Superior</option><option>Inferior</option><option>Abdômen</option><option>Outro</option></select></div>
+      <div style="background:var(--inp);border-radius:var(--rs);padding:10px;margin-bottom:8px">
+        <div style="text-align:center;margin-bottom:8px">
+          <div style="font-size:32px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--purple)" id="gym-musc-timer">00:00:00</div>
+          <div style="font-size:9px;color:var(--t3);margin-top:2px" id="gym-musc-timer-status">Cronômetro parado</div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button type="button" class="btn-sm" style="flex:1;background:rgba(52,211,153,0.15);color:var(--green);padding:9px" onclick="timerStart('musc')" id="gym-musc-btn-start">▶ Iniciar</button>
+          <button type="button" class="btn-sm" style="flex:1;background:rgba(245,158,11,0.15);color:var(--amber);padding:9px" onclick="timerPause('musc')" id="gym-musc-btn-pause">⏸ Pausar</button>
+          <button type="button" class="btn-sm" style="flex:1;background:rgba(74,158,255,0.15);color:var(--blue);padding:9px" onclick="timerStop('musc')" id="gym-musc-btn-stop">⏹ Concluir</button>
+        </div>
+        <div style="font-size:10px;color:var(--t3);text-align:center;margin-top:6px">Duração: <b id="gym-musc-min-display" style="color:var(--purple)">0 min</b> · ou digite manualmente abaixo</div>
+        <input type="number" id="gym-musc-min" placeholder="minutos (manual)" min="0" step="1" style="margin-top:6px;text-align:center">
       </div>
+      <div class="fg"><label>❤️ Batimentos (bpm)</label><input type="number" id="gym-musc-bpm" placeholder="ex: 120" min="30" max="230" step="1"></div>
     </div>
     <div id="luta-section" style="display:none">
       <div style="font-size:11px;font-weight:700;color:var(--red);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.8px">🥊 Luta</div>
-      <div class="frow">
-        <div class="fg"><label>Modalidade</label><select id="gym-luta-modal"><option>Muay Thai</option><option>Jiu-Jitsu</option><option>Boxe</option><option>MMA</option><option>Judô</option><option>Karatê</option><option>Outro</option></select></div>
-        <div class="fg"><label>Duração (min)</label><input type="number" id="gym-luta-min" placeholder="ex: 60" min="1" step="1"></div>
+      <div class="fg"><label>Modalidade</label><select id="gym-luta-modal"><option>Muay Thai</option><option>Jiu-Jitsu</option><option>Boxe</option><option>MMA</option><option>Judô</option><option>Karatê</option><option>Outro</option></select></div>
+      <div style="background:var(--inp);border-radius:var(--rs);padding:10px;margin-bottom:8px">
+        <div style="text-align:center;margin-bottom:8px">
+          <div style="font-size:32px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--red)" id="gym-luta-timer">00:00:00</div>
+          <div style="font-size:9px;color:var(--t3);margin-top:2px" id="gym-luta-timer-status">Cronômetro parado</div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button type="button" class="btn-sm" style="flex:1;background:rgba(52,211,153,0.15);color:var(--green);padding:9px" onclick="timerStart('luta')" id="gym-luta-btn-start">▶ Iniciar</button>
+          <button type="button" class="btn-sm" style="flex:1;background:rgba(245,158,11,0.15);color:var(--amber);padding:9px" onclick="timerPause('luta')" id="gym-luta-btn-pause">⏸ Pausar</button>
+          <button type="button" class="btn-sm" style="flex:1;background:rgba(74,158,255,0.15);color:var(--blue);padding:9px" onclick="timerStop('luta')" id="gym-luta-btn-stop">⏹ Concluir</button>
+        </div>
+        <div style="font-size:10px;color:var(--t3);text-align:center;margin-top:6px">Duração: <b id="gym-luta-min-display" style="color:var(--red)">0 min</b> · ou digite manualmente abaixo</div>
+        <input type="number" id="gym-luta-min" placeholder="minutos (manual)" min="0" step="1" style="margin-top:6px;text-align:center">
       </div>
+      <div class="fg"><label>❤️ Batimentos (bpm)</label><input type="number" id="gym-luta-bpm" placeholder="ex: 150" min="30" max="230" step="1"></div>
     </div>
     <div id="outros-section" style="display:none">
       <div style="font-size:11px;font-weight:700;color:var(--amber);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.8px">⚡ Outros</div>
+      <div class="fg"><label>Descrição</label><input type="text" id="gym-outros-desc" placeholder="ex: Pilates, Yoga, Caminhada..."></div>
+      <div style="background:var(--inp);border-radius:var(--rs);padding:10px;margin-bottom:8px">
+        <div style="text-align:center;margin-bottom:8px">
+          <div style="font-size:32px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--amber)" id="gym-outros-timer">00:00:00</div>
+          <div style="font-size:9px;color:var(--t3);margin-top:2px" id="gym-outros-timer-status">Cronômetro parado</div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button type="button" class="btn-sm" style="flex:1;background:rgba(52,211,153,0.15);color:var(--green);padding:9px" onclick="timerStart('outros')" id="gym-outros-btn-start">▶ Iniciar</button>
+          <button type="button" class="btn-sm" style="flex:1;background:rgba(245,158,11,0.15);color:var(--amber);padding:9px" onclick="timerPause('outros')" id="gym-outros-btn-pause">⏸ Pausar</button>
+          <button type="button" class="btn-sm" style="flex:1;background:rgba(74,158,255,0.15);color:var(--blue);padding:9px" onclick="timerStop('outros')" id="gym-outros-btn-stop">⏹ Concluir</button>
+        </div>
+        <div style="font-size:10px;color:var(--t3);text-align:center;margin-top:6px">Duração: <b id="gym-outros-min-display" style="color:var(--amber)">0 min</b> · ou digite manualmente abaixo</div>
+        <input type="number" id="gym-outros-min" placeholder="minutos (manual)" min="0" step="1" style="margin-top:6px;text-align:center">
+      </div>
       <div class="frow">
-        <div class="fg"><label>Descrição</label><input type="text" id="gym-outros-desc" placeholder="ex: Pilates, Yoga..."></div>
-        <div class="fg"><label>Duração (min)</label><input type="number" id="gym-outros-min" placeholder="ex: 45" min="1" step="1"></div>
+        <div class="fg"><label>❤️ Batimentos (bpm)</label><input type="number" id="gym-outros-bpm" placeholder="ex: 110" min="30" max="230" step="1"></div>
+        <div class="fg"><label>📏 Distância (km)</label><input type="number" id="gym-outros-km" placeholder="opcional" min="0" step="0.1"></div>
       </div>
     </div>
     <div class="fg"><label>Observações</label><textarea id="gym-obs" placeholder="Como foi o treino, peso corporal..."></textarea></div>
@@ -1473,6 +1523,54 @@ function toggleGymType(btn){
   document.getElementById(tipo+'-section').style.display=btn.classList.contains('sel')?'block':'none';
 }
 
+
+// ═══════════════════════════════════════════════════
+// CRONÔMETROS DE TREINO
+// ═══════════════════════════════════════════════════
+const gymTimers={cardio:{elapsed:0,running:false,interval:null,startTs:0},musc:{elapsed:0,running:false,interval:null,startTs:0},luta:{elapsed:0,running:false,interval:null,startTs:0},outros:{elapsed:0,running:false,interval:null,startTs:0}};
+
+function fmtTimer(sec){
+  const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;
+  return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
+function updateTimerDisplay(tipo){
+  const t=gymTimers[tipo];
+  const el=document.getElementById('gym-'+tipo+'-timer');
+  if(el)el.textContent=fmtTimer(t.elapsed);
+  const minEl=document.getElementById('gym-'+tipo+'-min-display');
+  if(minEl)minEl.textContent=Math.round(t.elapsed/60)+' min';
+}
+function timerStart(tipo){
+  const t=gymTimers[tipo];
+  if(t.running)return;
+  t.running=true;t.startTs=Date.now()-t.elapsed*1000;
+  t.interval=setInterval(()=>{t.elapsed=Math.floor((Date.now()-t.startTs)/1000);updateTimerDisplay(tipo);},1000);
+  const st=document.getElementById('gym-'+tipo+'-timer-status');if(st){st.textContent='⏱ Em andamento...';st.style.color='var(--green)';}
+}
+function timerPause(tipo){
+  const t=gymTimers[tipo];
+  if(!t.running)return;
+  t.running=false;clearInterval(t.interval);
+  const st=document.getElementById('gym-'+tipo+'-timer-status');if(st){st.textContent='⏸ Pausado em '+fmtTimer(t.elapsed);st.style.color='var(--amber)';}
+}
+function timerStop(tipo){
+  const t=gymTimers[tipo];
+  t.running=false;clearInterval(t.interval);
+  const mins=Math.round(t.elapsed/60);
+  // Joga o valor para o campo manual de minutos
+  const minInput=document.getElementById('gym-'+tipo+'-min');
+  if(minInput)minInput.value=mins;
+  const st=document.getElementById('gym-'+tipo+'-timer-status');if(st){st.textContent='✅ Concluído: '+mins+' min ('+fmtTimer(t.elapsed)+')';st.style.color='var(--blue)';}
+  if(mins>0)toast('⏱ '+mins+' min registrados no campo');
+}
+function timerReset(tipo){
+  const t=gymTimers[tipo];
+  t.running=false;clearInterval(t.interval);t.elapsed=0;t.startTs=0;
+  updateTimerDisplay(tipo);
+  const st=document.getElementById('gym-'+tipo+'-timer-status');if(st){st.textContent='Cronômetro parado';st.style.color='var(--t3)';}
+}
+function resetAllTimers(){['cardio','musc','luta','outros'].forEach(timerReset);}
+
 function saveGym(){
   const date=document.getElementById('gym-date').value;
   if(!date){toast('⚠️ Selecione a data','#f59e0b');return;}
@@ -1481,22 +1579,30 @@ function saveGym(){
   const muscBtn=document.querySelector('[data-tipo=musculacao]');
   const lutaBtn=document.querySelector('[data-tipo=luta]');
   const outrosBtn=document.querySelector('[data-tipo=outros]');
+  // Helper: minutos do timer (se rodou) ou do campo manual
+  const getMin=(tipo)=>{const manual=parseInt(document.getElementById('gym-'+tipo+'-min').value);if(manual)return manual;return Math.round(gymTimers[tipo].elapsed/60);};
   if(cardioBtn&&cardioBtn.classList.contains('sel')){
-    const min=parseInt(document.getElementById('gym-cardio-min').value)||0;
-    treinos.push({tipo:'cardio',label:'Cardio',modal:document.getElementById('gym-cardio-modal').value,min,icon:'🏃',color:'var(--blue)'});
+    const min=getMin('cardio');
+    const bpm=parseInt(document.getElementById('gym-cardio-bpm').value)||null;
+    const km=parseFloat(document.getElementById('gym-cardio-km').value)||null;
+    treinos.push({tipo:'cardio',label:'Cardio',modal:document.getElementById('gym-cardio-modal').value,min,bpm,km,icon:'🏃',color:'var(--blue)'});
   }
   if(muscBtn&&muscBtn.classList.contains('sel')){
-    const min=parseInt(document.getElementById('gym-musc-min').value)||0;
-    treinos.push({tipo:'musculacao',label:'Musculação',modal:document.getElementById('gym-musc-foco').value,min,icon:'💪',color:'var(--purple)'});
+    const min=getMin('musc');
+    const bpm=parseInt(document.getElementById('gym-musc-bpm').value)||null;
+    treinos.push({tipo:'musculacao',label:'Musculação',modal:document.getElementById('gym-musc-foco').value,min,bpm,icon:'💪',color:'var(--purple)'});
   }
   if(lutaBtn&&lutaBtn.classList.contains('sel')){
-    const min=parseInt(document.getElementById('gym-luta-min').value)||0;
-    treinos.push({tipo:'luta',label:'Luta',modal:document.getElementById('gym-luta-modal').value,min,icon:'🥊',color:'var(--red)'});
+    const min=getMin('luta');
+    const bpm=parseInt(document.getElementById('gym-luta-bpm').value)||null;
+    treinos.push({tipo:'luta',label:'Luta',modal:document.getElementById('gym-luta-modal').value,min,bpm,icon:'🥊',color:'var(--red)'});
   }
   if(outrosBtn&&outrosBtn.classList.contains('sel')){
-    const min=parseInt(document.getElementById('gym-outros-min').value)||0;
+    const min=getMin('outros');
+    const bpm=parseInt(document.getElementById('gym-outros-bpm').value)||null;
+    const km=parseFloat(document.getElementById('gym-outros-km').value)||null;
     const desc=document.getElementById('gym-outros-desc').value;
-    treinos.push({tipo:'outros',label:desc||'Outros',modal:desc,min,icon:'⚡',color:'var(--amber)'});
+    treinos.push({tipo:'outros',label:desc||'Outros',modal:desc,min,bpm,km,icon:'⚡',color:'var(--amber)'});
   }
   if(!treinos.length){toast('⚠️ Selecione pelo menos um tipo de treino','#f59e0b');return;}
   const totalMin=treinos.reduce((acc,t)=>acc+t.min,0);
@@ -1509,7 +1615,7 @@ function saveGym(){
     // Merge treinos (avoid duplicating same tipo)
     treinos.forEach(t=>{
       const dup=ex.treinos.findIndex(et=>et.tipo===t.tipo);
-      if(dup>=0){ex.treinos[dup].min+=t.min;}
+      if(dup>=0){ex.treinos[dup].min+=t.min;if(t.bpm)ex.treinos[dup].bpm=t.bpm;if(t.km)ex.treinos[dup].km=(ex.treinos[dup].km||0)+t.km;}
       else{ex.treinos.push(t);}
     });
     ex.totalMin=ex.treinos.reduce((a,t)=>a+t.min,0);
@@ -1522,8 +1628,9 @@ function saveGym(){
   // Reset
   document.querySelectorAll('.gym-type-btn').forEach(b=>{b.classList.remove('sel');});
   gymTypes.forEach(t=>document.getElementById(t+'-section').style.display='none');
-  ['gym-cardio-min','gym-musc-min','gym-luta-min','gym-outros-min','gym-peso'].forEach(id=>document.getElementById(id).value='');
+  ['gym-cardio-min','gym-musc-min','gym-luta-min','gym-outros-min','gym-peso','gym-cardio-bpm','gym-cardio-km','gym-musc-bpm','gym-luta-bpm','gym-outros-bpm','gym-outros-km'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('gym-obs').value='';
+  resetAllTimers();
   renderGymTab();renderHome();toast('🏋️ Treino registrado!');
 }
 
@@ -1583,7 +1690,7 @@ function renderGymTab(){
         <span style="font-size:16px">${t.icon}</span>
         <div style="flex:1">
           <div style="font-size:11px;font-weight:600;color:${t.color}">${t.label}</div>
-          <div style="font-size:10px;color:var(--t3)">${t.modal||''} · ${t.min} min</div>
+          <div style="font-size:10px;color:var(--t3)">${t.modal||''} · ${t.min} min${t.bpm?' · ❤️ '+t.bpm+' bpm':''}${t.km?' · 📏 '+t.km+' km':''}</div>
         </div>
       </div>`).join('')}
       ${g.obs?`<div style="font-size:10px;color:var(--t3);margin-top:4px;padding-top:4px;border-top:1px solid var(--b2)">📝 ${g.obs}</div>`:''}
@@ -1850,7 +1957,7 @@ function renderHistory(){
 function renderGymHist(){
   const el=document.getElementById('gymHistList');if(!el)return;
   if(!gymLog.length){el.innerHTML='<div class="empty-st"><div class="ic">🏋️</div>Nenhum treino</div>';return;}
-  el.innerHTML=gymLog.map(g=>`<div class="card" style="padding:9px 11px;margin-bottom:6px"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px"><div style="font-size:12px;font-weight:600">🏋️ ${fmtD(g.date)} — ${g.totalMin} min</div><button class="del-btn" onclick="delGym('${g.id}')">✕</button></div>${g.treinos.map(t=>`<div style="font-size:11px;color:var(--t2);padding-left:0">${t.icon} ${t.label}: ${t.modal} · ${t.min} min</div>`).join('')} ${g.peso?`<div style="font-size:10px;color:var(--t3);margin-top:2px">⚖️ ${g.peso} kg</div>`:''} ${g.obs?`<div style="font-size:10px;color:var(--t3)">📝 ${g.obs}</div>`:''}</div>`).join('');
+  el.innerHTML=gymLog.map(g=>`<div class="card" style="padding:9px 11px;margin-bottom:6px"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px"><div style="font-size:12px;font-weight:600">🏋️ ${fmtD(g.date)} — ${g.totalMin} min</div><button class="del-btn" onclick="delGym('${g.id}')">✕</button></div>${g.treinos.map(t=>`<div style="font-size:11px;color:var(--t2);padding-left:0">${t.icon} ${t.label}: ${t.modal} · ${t.min} min${t.bpm?' · ❤️ '+t.bpm+'bpm':''}${t.km?' · 📏 '+t.km+'km':''}</div>`).join('')} ${g.peso?`<div style="font-size:10px;color:var(--t3);margin-top:2px">⚖️ ${g.peso} kg</div>`:''} ${g.obs?`<div style="font-size:10px;color:var(--t3)">📝 ${g.obs}</div>`:''}</div>`).join('');
 }
 
 // ═══════════════════════════════════════════════════
