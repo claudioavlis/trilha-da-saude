@@ -170,6 +170,7 @@ body{display:flex;flex-direction:column}
 .hint{font-size:10px;color:var(--t3);margin-bottom:7px;margin-top:-3px}
 .divider{height:1px;background:var(--b2);margin:13px 0}
 .del-btn{background:rgba(248,113,113,0.15);border:none;color:var(--red);border-radius:6px;padding:3px 6px;cursor:pointer;font-size:10px;font-family:inherit}
+.edit-btn{background:rgba(74,158,255,0.15);border:none;color:var(--blue);border-radius:6px;padding:3px 6px;cursor:pointer;font-size:10px;font-family:inherit}
 .empty-st{text-align:center;padding:18px 16px;color:var(--t3);font-size:12px}
 .empty-st .ic{font-size:26px;margin-bottom:5px}
 .chart-wrap{position:relative;height:155px;margin-top:7px}
@@ -477,6 +478,8 @@ body{display:flex;flex-direction:column}
     <button class="btn btn-b" onclick="saveTestDose()">🧪 Registrar Aplicação</button>
   </div>
 
+  <div id="customRegisterCards"></div>
+
   <div class="st">🌿 Suplementos</div>
   <div class="card">
     <div class="fg"><label>Suplemento</label><select id="r-supl-cat" onchange="onSuplCat()"><option value="">— Selecione —</option></select></div>
@@ -526,6 +529,7 @@ body{display:flex;flex-direction:column}
         <option value="test">Testosterona</option>
         <option value="supl">Suplementos</option>
         <option value="med">Medicamentos</option>
+        <option value="custom">Hormônios Personalizados</option>
         <option value="water">Água</option>
       </select>
     </div>
@@ -578,7 +582,7 @@ body{display:flex;flex-direction:column}
     </div>
     <div class="fg"><label>Validade</label><input type="date" id="c-tirz-val"></div>
     <div class="fg"><label>Descrição / Marca</label><input type="text" id="c-tirz-obs" placeholder="ex: Mounjaro 15mg/0.5ml"></div>
-    <button class="btn btn-t" onclick="saveTirzStock()">➕ Adicionar Estoque</button>
+    <button class="btn btn-t" id="btn-tirz-stock" onclick="saveTirzStock()">➕ Adicionar Estoque</button>
   </div>
   <div class="st">📦 Estoques — Tirzepetida</div>
   <div id="tirzStockList"></div>
@@ -603,7 +607,7 @@ body{display:flex;flex-direction:column}
     </div>
     <div class="fg"><label>Validade</label><input type="date" id="c-klow-val"></div>
     <div class="fg"><label>Descrição / Marca</label><input type="text" id="c-klow-obs" placeholder="ex: Klow 10mg/0.5ml"></div>
-    <button class="btn btn-g" onclick="saveKlowStock()">➕ Adicionar Estoque Klow</button>
+    <button class="btn btn-g" id="btn-klow-stock" onclick="saveKlowStock()">➕ Adicionar Estoque Klow</button>
   </div>
   <div class="st">📦 Estoques — Klow</div>
   <div id="klowStockList"></div>
@@ -624,10 +628,24 @@ body{display:flex;flex-direction:column}
       <div style="display:flex;gap:16px;font-size:13px"><div>Total ml: <span id="c-test-tot-ml" style="color:var(--blue);font-weight:700">—</span></div><div>Total mg: <span id="c-test-tot-mg" style="color:var(--blue);font-weight:700">—</span></div></div>
     </div>
     <div class="fg"><label>Validade</label><input type="date" id="c-test-val"></div>
-    <button class="btn btn-b" onclick="saveTestStock()">➕ Adicionar Estoque</button>
+    <button class="btn btn-b" id="btn-test-stock" onclick="saveTestStock()">➕ Adicionar Estoque</button>
   </div>
   <div class="st">📦 Estoques — Testosterona</div>
   <div id="testStockList"></div>
+
+  <div class="divider"></div>
+
+  <div class="st">💉 Hormônios Personalizados</div>
+  <div class="card">
+    <div style="background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.2);border-radius:var(--rs);padding:8px 10px;margin-bottom:10px;font-size:11px;color:var(--purple)">ℹ️ Crie outros injetáveis (ex: Deca, GHK-Cu) e cadastre estoques no mesmo molde da Testosterona.</div>
+    <div class="frow">
+      <div class="fg"><label>Nome do hormônio</label><input type="text" id="c-customh-nome" placeholder="ex: Deca (Nandrolona), GHK-Cu"></div>
+      <div class="fg" style="max-width:90px"><label>Cor</label><input type="color" id="c-customh-cor" value="#a78bfa" style="height:38px;padding:3px"></div>
+    </div>
+    <button class="btn btn-p" id="btn-customh" onclick="saveCustomHormone()">➕ Criar Hormônio</button>
+  </div>
+  <div id="customHormonesList"></div>
+
 
   <div class="divider"></div>
 
@@ -841,23 +859,23 @@ body{display:flex;flex-direction:column}
     </div><div class="chart-wrap"><canvas id="cIMC"></canvas></div></div>
   </div>
   <div class="chart-block" data-chart="cExTesto" draggable="true">
-    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🔬 Exames — Testosterona Total (ng/dL)</span></div>
+    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🔬 Testosterona Total · ref. 264–916 ng/dL</span></div>
     <div class="card"><div class="chart-wrap"><canvas id="cExTesto"></canvas></div></div>
   </div>
   <div class="chart-block" data-chart="cExEstradiol" draggable="true">
-    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🔬 Exames — Estradiol E2 (pg/mL)</span></div>
+    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🔬 Estradiol E2 · ref. 10–40 pg/mL</span></div>
     <div class="card"><div class="chart-wrap"><canvas id="cExEstradiol"></canvas></div></div>
   </div>
   <div class="chart-block" data-chart="cExColesterol" draggable="true">
-    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🔬 Exames — Colesterol Total (mg/dL)</span></div>
+    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🔬 Colesterol Total · ideal <200 mg/dL</span></div>
     <div class="card"><div class="chart-wrap"><canvas id="cExColesterol"></canvas></div></div>
   </div>
   <div class="chart-block" data-chart="cExProlactina" draggable="true">
-    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🔬 Exames — Prolactina (ng/mL)</span></div>
+    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🔬 Prolactina · ref. 4–15 ng/mL</span></div>
     <div class="card"><div class="chart-wrap"><canvas id="cExProlactina"></canvas></div></div>
   </div>
   <div class="chart-block" data-chart="cExHematocrito" draggable="true">
-    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🔬 Exames — Hematócrito (%)</span></div>
+    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🔬 Hematócrito · ref. 40–50%</span></div>
     <div class="card"><div class="chart-wrap"><canvas id="cExHematocrito"></canvas></div></div>
   </div>
   <div class="chart-block" data-chart="cWater" draggable="true">
@@ -865,7 +883,7 @@ body{display:flex;flex-direction:column}
     <div class="card"><div class="chart-wrap"><canvas id="cWater"></canvas></div></div>
   </div>
   <div class="chart-block" data-chart="cGym" draggable="true">
-    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🏋️ Treinos — minutos por semana</span></div>
+    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🏋️ Treinos — minutos por dia</span></div>
     <div class="card"><div class="chart-wrap"><canvas id="cGym"></canvas></div></div>
   </div>
   <div class="chart-block" data-chart="cMed" draggable="true">
@@ -987,8 +1005,8 @@ function goTab(name,btn){
   if(name==='home'){renderHome();renderBodyCharts();}
   if(name==='charts'){applyChartOrder();renderCharts();initChartDnD();}
   if(name==='history'){renderHistory();renderGymHist();}
-  if(name==='register'){fillRegSelects();setDates();prefillMedidas('tirz');prefillMedidas('test');}
-  if(name==='cadastro'){renderStocks();renderCats();renderMetas();}
+  if(name==='register'){renderCustomRegisterCards();fillRegSelects();setDates();prefillMedidas('tirz');prefillMedidas('test');}
+  if(name==='cadastro'){renderStocks();renderCats();renderMetas();renderCustomHormones();}
   if(name==='gym'){renderGymTab();setGymDate();}
   if(name==='exames'){renderExames();setExDate();}
 }
@@ -1069,6 +1087,9 @@ const DB={
 
 let doses       = DB.get('tds_doses',[]);
 let tirzStocks  = DB.get('tds_tirz',[]);
+let editingStock = {tirz:null,test:null,klow:null,custom:null,customH:null};
+let customHormones = DB.get('tds_customhorm',[]); // [{id,nome,cor}]
+let customStocks   = DB.get('tds_customstock',[]); // [{id,hormoneId,tipo,comp,conc,vol,qty,totalMl,totalMg,usedMl,usedMg,val,obs,date}]
 let testStocks  = DB.get('tds_test',[]);
 let suplCat     = DB.get('tds_supl',[
   {id:'s1',nome:'Ômega 3',dose:1000,unit:'mg',freq:'daily',time:'13:00'},
@@ -1090,7 +1111,7 @@ let userProfiles= DB.get('tds_profiles',{});
 function save(){
   DB.set('tds_doses',doses);DB.set('tds_tirz',tirzStocks);DB.set('tds_test',testStocks);
   DB.set('tds_supl',suplCat);DB.set('tds_med',medCat);DB.set('tds_water',waterLog);
-  DB.set('tds_wgoal',waterGoal);DB.set('tds_ag',agCfg);DB.set('tds_gym',gymLog);DB.set('tds_klow',klowStocks);DB.set('tds_profiles',userProfiles);DB.set('tds_exames',exames);DB.set('tds_metas_peso',metasPeso);DB.set('tds_metas_cintura',metasCintura);DB.set('tds_chart_order',chartOrder);
+  DB.set('tds_wgoal',waterGoal);DB.set('tds_ag',agCfg);DB.set('tds_gym',gymLog);DB.set('tds_klow',klowStocks);DB.set('tds_profiles',userProfiles);DB.set('tds_exames',exames);DB.set('tds_metas_peso',metasPeso);DB.set('tds_metas_cintura',metasCintura);DB.set('tds_chart_order',chartOrder);DB.set('tds_customhorm',customHormones);DB.set('tds_customstock',customStocks);
 }
 
 // ═══════════════════════════════════════════════════
@@ -1104,7 +1125,9 @@ function fmtD(iso){if(!iso)return'—';const d=new Date(iso+'T12:00:00');return 
 function uid(){return'id'+Date.now()+Math.random().toString(36).slice(2);}
 function toast(msg,col){const t=document.getElementById('toast');t.textContent=msg;t.style.background=col||'var(--teal)';t.style.color='#0a1628';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
 
-function getWeekStart(){const d=new Date();const day=d.getDay();const diff=d.getDate()-day+(day===0?-6:1);return new Date(d.setDate(diff));}
+function getWeekStart(){const d=new Date();d.setHours(0,0,0,0);const day=d.getDay();const diff=d.getDate()-day+(day===0?-6:1);d.setDate(diff);return d;}
+function getWeekStartStr(){const d=getWeekStart();return d.toISOString().split('T')[0];}
+function getWeekEndStr(){const d=getWeekStart();d.setDate(d.getDate()+6);return d.toISOString().split('T')[0];}
 
 // ═══════════════════════════════════════════════════
 // NAVIGATION
@@ -1143,11 +1166,36 @@ function saveTirzStock(){
   const totalMl = +(mlUnit*qty).toFixed(4);
   const totalMg = +(mgUnit*qty).toFixed(4);           // CORRETO: mg/un × qty
   const conc    = +(mgUnit/mlUnit).toFixed(4);         // mg/ml (para cálculo de UI)
-  tirzStocks.push({id:uid(),tipo,mgUnit,mlUnit,qty,conc,totalMl,totalMg,usedMl:0,usedMg:0,val,obs,date:today()});
+  if(editingStock.tirz){
+    const s=tirzStocks.find(x=>x.id===editingStock.tirz);
+    if(s){Object.assign(s,{tipo,mgUnit,mlUnit,qty,conc,totalMl,totalMg,val,obs});
+      // Ajusta usado se exceder novo total
+      if(s.usedMl>totalMl)s.usedMl=totalMl;if(s.usedMg>totalMg)s.usedMg=totalMg;}
+    editingStock.tirz=null;
+    document.getElementById('btn-tirz-stock').textContent='➕ Adicionar Estoque';
+    toast('✅ Estoque atualizado!');
+  } else {
+    tirzStocks.push({id:uid(),tipo,mgUnit,mlUnit,qty,conc,totalMl,totalMg,usedMl:0,usedMg:0,val,obs,date:today()});
+    toast('✅ Estoque Tirzepetida adicionado!');
+  }
   save();
-  ['c-tirz-mg-unit','c-tirz-ml-unit','c-tirz-qty','c-tirz-obs'].forEach(id=>document.getElementById(id).value='');
+  ['c-tirz-mg-unit','c-tirz-ml-unit','c-tirz-qty','c-tirz-obs','c-tirz-val'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('c-tirz-calc').style.display='none';
-  renderStocks();fillRegSelects();toast('✅ Estoque Tirzepetida adicionado!');
+  renderStocks();fillRegSelects();
+}
+function editTirzStock(id){
+  const s=tirzStocks.find(x=>x.id===id);if(!s)return;
+  editingStock.tirz=id;
+  document.getElementById('c-tirz-tipo').value=s.tipo;
+  document.getElementById('c-tirz-mg-unit').value=s.mgUnit;
+  document.getElementById('c-tirz-ml-unit').value=s.mlUnit;
+  document.getElementById('c-tirz-qty').value=s.qty;
+  document.getElementById('c-tirz-val').value=s.val||'';
+  document.getElementById('c-tirz-obs').value=s.obs||'';
+  updTirzCalc();
+  document.getElementById('btn-tirz-stock').textContent='💾 Salvar Alterações';
+  document.getElementById('c-tirz-tipo').scrollIntoView({behavior:'smooth',block:'center'});
+  toast('✏️ Editando estoque');
 }
 function delTirzStock(id){if(!confirm('Remover este estoque?'))return;tirzStocks=tirzStocks.filter(s=>s.id!==id);save();renderStocks();fillRegSelects();toast('🗑 Removido');}
 
@@ -1177,11 +1225,35 @@ function saveTestStock(){
   if(!conc||!vol||!qty){toast('⚠️ Preencha concentração, volume e quantidade','#f59e0b');return;}
   const totalMl = +(vol*qty).toFixed(4);
   const totalMg = +(conc*vol*qty).toFixed(4);         // CORRETO: mg/ml × ml × frascos
-  testStocks.push({id:uid(),tipo,comp,conc,vol,qty,totalMl,totalMg,usedMl:0,usedMg:0,val,date:today()});
+  if(editingStock.test){
+    const s=testStocks.find(x=>x.id===editingStock.test);
+    if(s){Object.assign(s,{tipo,comp,conc,vol,qty,totalMl,totalMg,val});
+      if(s.usedMl>totalMl)s.usedMl=totalMl;if(s.usedMg>totalMg)s.usedMg=totalMg;}
+    editingStock.test=null;
+    document.getElementById('btn-test-stock').textContent='➕ Adicionar Estoque';
+    toast('✅ Estoque atualizado!');
+  } else {
+    testStocks.push({id:uid(),tipo,comp,conc,vol,qty,totalMl,totalMg,usedMl:0,usedMg:0,val,date:today()});
+    toast('✅ Estoque Testosterona adicionado!');
+  }
   save();
-  ['c-test-conc','c-test-vol','c-test-qty'].forEach(id=>document.getElementById(id).value='');
+  ['c-test-conc','c-test-vol','c-test-qty','c-test-val'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('c-test-calc').style.display='none';
-  renderStocks();fillRegSelects();toast('✅ Estoque Testosterona adicionado!');
+  renderStocks();fillRegSelects();
+}
+function editTestStock(id){
+  const s=testStocks.find(x=>x.id===id);if(!s)return;
+  editingStock.test=id;
+  document.getElementById('c-test-tipo').value=s.tipo;
+  document.getElementById('c-test-comp').value=s.comp;
+  document.getElementById('c-test-conc').value=s.conc;
+  document.getElementById('c-test-vol').value=s.vol;
+  document.getElementById('c-test-qty').value=s.qty;
+  document.getElementById('c-test-val').value=s.val||'';
+  updTestCalc();
+  document.getElementById('btn-test-stock').textContent='💾 Salvar Alterações';
+  document.getElementById('c-test-tipo').scrollIntoView({behavior:'smooth',block:'center'});
+  toast('✏️ Editando estoque');
 }
 function delTestStock(id){if(!confirm('Remover este estoque?'))return;testStocks=testStocks.filter(s=>s.id!==id);save();renderStocks();fillRegSelects();toast('🗑 Removido');}
 
@@ -1203,7 +1275,7 @@ function renderStocks(){renderKlowStocks();
           <div style="font-size:12px;font-weight:600">${icon} ${s.tipo.charAt(0).toUpperCase()+s.tipo.slice(1)} — ${s.mgUnit}mg / ${s.mlUnit}ml por unidade × ${s.qty}</div>
           <div style="font-size:10px;color:var(--t3)">${s.obs||''} ${s.val?'· Val: '+fmtD(s.val):''} · Conc: ${s.conc.toFixed(1)}mg/ml</div>
         </div>
-        <button class="del-btn" onclick="delTirzStock('${s.id}')">✕</button>
+        <div style="display:flex;gap:5px"><button class="edit-btn" onclick="editTirzStock('${s.id}')">✏️</button><button class="del-btn" onclick="delTirzStock('${s.id}')">✕</button></div>
       </div>
       <div style="display:flex;gap:12px;font-size:11px;color:var(--t2)">
         <span>Total: <b style="color:var(--teal)">${s.totalMl}ml / ${s.totalMg}mg</b></span>
@@ -1223,7 +1295,7 @@ function renderStocks(){renderKlowStocks();
           <div style="font-size:12px;font-weight:600">🧪 ${s.comp} ${s.conc}mg/ml · ${s.tipo}</div>
           <div style="font-size:10px;color:var(--t3)">${s.qty} frasco(s) × ${s.vol}ml ${s.val?'· Val: '+fmtD(s.val):''}</div>
         </div>
-        <button class="del-btn" onclick="delTestStock('${s.id}')">✕</button>
+        <div style="display:flex;gap:5px"><button class="edit-btn" onclick="editTestStock('${s.id}')">✏️</button><button class="del-btn" onclick="delTestStock('${s.id}')">✕</button></div>
       </div>
       <div style="display:flex;gap:12px;font-size:11px;color:var(--t2)">
         <span>Total: <b style="color:var(--blue)">${s.totalMl}ml / ${s.totalMg}mg</b></span>
@@ -1233,6 +1305,205 @@ function renderStocks(){renderKlowStocks();
       <div class="stock-row"><b style="color:${c}">${rem.toFixed(2)}ml / ${remMg.toFixed(2)}mg restantes</b><span>${pct}%</span></div>
     </div>`;
   }).join('');
+}
+
+
+// ═══════════════════════════════════════════════════
+// HORMÔNIOS PERSONALIZADOS
+// ═══════════════════════════════════════════════════
+function saveCustomHormone(){
+  const nome=document.getElementById('c-customh-nome').value.trim();
+  const cor=document.getElementById('c-customh-cor').value;
+  if(!nome){toast('⚠️ Informe o nome do hormônio','#f59e0b');return;}
+  if(editingStock.customH){
+    const h=customHormones.find(x=>x.id===editingStock.customH);
+    if(h){h.nome=nome;h.cor=cor;}
+    editingStock.customH=null;
+    document.getElementById('btn-customh').textContent='➕ Criar Hormônio';
+    toast('✅ Hormônio atualizado!');
+  } else {
+    if(customHormones.some(h=>h.nome.toLowerCase()===nome.toLowerCase())){toast('⚠️ Já existe um hormônio com esse nome','#f59e0b');return;}
+    customHormones.push({id:uid(),nome,cor});
+    toast('✅ Hormônio "'+nome+'" criado!');
+  }
+  save();
+  document.getElementById('c-customh-nome').value='';
+  renderCustomHormones();renderCustomRegisterCards();fillRegSelects();
+}
+function editCustomHormone(id){
+  const h=customHormones.find(x=>x.id===id);if(!h)return;
+  editingStock.customH=id;
+  document.getElementById('c-customh-nome').value=h.nome;
+  document.getElementById('c-customh-cor').value=h.cor||'#a78bfa';
+  document.getElementById('btn-customh').textContent='💾 Salvar Hormônio';
+  document.getElementById('c-customh-nome').scrollIntoView({behavior:'smooth',block:'center'});
+}
+function delCustomHormone(id){
+  const h=customHormones.find(x=>x.id===id);if(!h)return;
+  const nStocks=customStocks.filter(s=>s.hormoneId===id).length;
+  if(!confirm('Remover "'+h.nome+'"'+(nStocks?' e seus '+nStocks+' estoque(s)':'')+'? Os registros no histórico serão mantidos.'))return;
+  customHormones=customHormones.filter(x=>x.id!==id);
+  customStocks=customStocks.filter(s=>s.hormoneId!==id);
+  save();renderCustomHormones();renderCustomRegisterCards();fillRegSelects();toast('🗑 Removido');
+}
+
+// Renderiza a lista de hormônios + seus formulários de estoque na aba Cadastro
+function renderCustomHormones(){
+  const el=document.getElementById('customHormonesList');if(!el)return;
+  if(!customHormones.length){el.innerHTML='<div class="empty-st"><div class="ic">💉</div>Nenhum hormônio personalizado</div>';return;}
+  el.innerHTML=customHormones.map(h=>{
+    const stocks=customStocks.filter(s=>s.hormoneId===h.id);
+    const stockCards=!stocks.length?'<div style="font-size:11px;color:var(--t3);padding:6px 0">Nenhum estoque cadastrado</div>':stocks.map(s=>{
+      const rem=+(s.totalMl-s.usedMl).toFixed(4),remMg=+(s.totalMg-s.usedMg).toFixed(4);
+      const pct=Math.max(0,Math.min(100,Math.round(rem/s.totalMl*100)));
+      const c=pct>40?h.cor:pct>15?'var(--amber)':'var(--red)';
+      return`<div style="background:var(--card2);border:1px solid var(--b2);border-radius:var(--rs);padding:10px;margin-bottom:6px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <div><div style="font-size:12px;font-weight:600">${s.comp?s.comp+' ':''}${s.conc}mg/ml · ${s.tipo}</div>
+          <div style="font-size:10px;color:var(--t3)">${s.qty} un × ${s.vol}ml ${s.val?'· Val: '+fmtD(s.val):''}</div></div>
+          <div style="display:flex;gap:5px"><button class="edit-btn" onclick="editCustomStock('${s.id}')">✏️</button><button class="del-btn" onclick="delCustomStock('${s.id}')">✕</button></div>
+        </div>
+        <div style="display:flex;gap:12px;font-size:11px;color:var(--t2)"><span>Total: <b style="color:${h.cor}">${s.totalMl}ml/${s.totalMg}mg</b></span><span>Usado: <b>${s.usedMl.toFixed(2)}ml</b></span></div>
+        <div class="stock-bar"><div class="stock-fill" style="background:${c};width:${pct}%"></div></div>
+        <div class="stock-row"><b style="color:${c}">${rem.toFixed(2)}ml / ${remMg.toFixed(2)}mg restantes</b><span>${pct}%</span></div>
+      </div>`;
+    }).join('');
+    return`<div class="card" style="border-left:3px solid ${h.cor}">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div style="font-size:13px;font-weight:700;color:${h.cor}">💉 ${h.nome}</div>
+        <div style="display:flex;gap:5px"><button class="edit-btn" onclick="editCustomHormone('${h.id}')">✏️ Nome</button><button class="del-btn" onclick="delCustomHormone('${h.id}')">✕</button></div>
+      </div>
+      <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px">Adicionar estoque</div>
+      <div class="fg"><label>Tipo / Apresentação</label><input type="text" id="ch-${h.id}-tipo" placeholder="ex: frasco, ampola"></div>
+      <div class="fg"><label>Composto / Éster (opcional)</label><input type="text" id="ch-${h.id}-comp" placeholder="ex: Decanoato"></div>
+      <div class="frow">
+        <div class="fg"><label>Concentração (mg/ml)</label><input type="number" id="ch-${h.id}-conc" placeholder="ex: 250" step="1" oninput="updCustomCalc('${h.id}')"></div>
+        <div class="fg"><label>Volume por frasco (ml)</label><input type="number" id="ch-${h.id}-vol" placeholder="ex: 10" step="0.1" oninput="updCustomCalc('${h.id}')"></div>
+      </div>
+      <div class="fg"><label>Quantidade de frascos</label><input type="number" id="ch-${h.id}-qty" placeholder="ex: 1" min="1" step="1" oninput="updCustomCalc('${h.id}')"></div>
+      <div id="ch-${h.id}-calc" class="info-box" style="display:none">
+        <div style="display:flex;gap:16px;font-size:13px"><div>Total ml: <span id="ch-${h.id}-tot-ml" style="color:${h.cor};font-weight:700">—</span></div><div>Total mg: <span id="ch-${h.id}-tot-mg" style="color:${h.cor};font-weight:700">—</span></div></div>
+      </div>
+      <div class="fg"><label>Validade</label><input type="date" id="ch-${h.id}-val"></div>
+      <button class="btn" id="btn-ch-${h.id}" style="background:${h.cor};color:#0a1628" onclick="saveCustomStock('${h.id}')">➕ Adicionar Estoque</button>
+      <div style="margin-top:10px">${stockCards}</div>
+    </div>`;
+  }).join('');
+}
+
+function updCustomCalc(hid){
+  const conc=parseFloat(document.getElementById('ch-'+hid+'-conc').value)||0;
+  const vol=parseFloat(document.getElementById('ch-'+hid+'-vol').value)||0;
+  const qty=parseFloat(document.getElementById('ch-'+hid+'-qty').value)||0;
+  const box=document.getElementById('ch-'+hid+'-calc');
+  if(conc&&vol&&qty){
+    box.style.display='block';
+    document.getElementById('ch-'+hid+'-tot-ml').textContent=(vol*qty).toFixed(2)+' ml';
+    document.getElementById('ch-'+hid+'-tot-mg').textContent=(conc*vol*qty).toFixed(2)+' mg';
+  } else box.style.display='none';
+}
+
+function saveCustomStock(hid){
+  const tipo=document.getElementById('ch-'+hid+'-tipo').value||'frasco';
+  const comp=document.getElementById('ch-'+hid+'-comp').value;
+  const conc=parseFloat(document.getElementById('ch-'+hid+'-conc').value);
+  const vol=parseFloat(document.getElementById('ch-'+hid+'-vol').value);
+  const qty=parseInt(document.getElementById('ch-'+hid+'-qty').value);
+  const val=document.getElementById('ch-'+hid+'-val').value;
+  if(!conc||!vol||!qty){toast('⚠️ Preencha concentração, volume e quantidade','#f59e0b');return;}
+  const totalMl=+(vol*qty).toFixed(4);
+  const totalMg=+(conc*vol*qty).toFixed(4);
+  if(editingStock.custom){
+    const s=customStocks.find(x=>x.id===editingStock.custom);
+    if(s){Object.assign(s,{tipo,comp,conc,vol,qty,totalMl,totalMg,val});
+      if(s.usedMl>totalMl)s.usedMl=totalMl;if(s.usedMg>totalMg)s.usedMg=totalMg;}
+    editingStock.custom=null;
+    toast('✅ Estoque atualizado!');
+  } else {
+    customStocks.push({id:uid(),hormoneId:hid,tipo,comp,conc,vol,qty,totalMl,totalMg,usedMl:0,usedMg:0,val,date:today()});
+    toast('✅ Estoque adicionado!');
+  }
+  save();renderCustomHormones();renderCustomRegisterCards();fillRegSelects();
+}
+
+function editCustomStock(id){
+  const s=customStocks.find(x=>x.id===id);if(!s)return;
+  editingStock.custom=id;
+  const hid=s.hormoneId;
+  renderCustomHormones(); // garante que os campos existem
+  setTimeout(()=>{
+    document.getElementById('ch-'+hid+'-tipo').value=s.tipo||'';
+    document.getElementById('ch-'+hid+'-comp').value=s.comp||'';
+    document.getElementById('ch-'+hid+'-conc').value=s.conc;
+    document.getElementById('ch-'+hid+'-vol').value=s.vol;
+    document.getElementById('ch-'+hid+'-qty').value=s.qty;
+    document.getElementById('ch-'+hid+'-val').value=s.val||'';
+    updCustomCalc(hid);
+    const btn=document.getElementById('btn-ch-'+hid);if(btn)btn.textContent='💾 Salvar Alterações';
+    document.getElementById('ch-'+hid+'-tipo').scrollIntoView({behavior:'smooth',block:'center'});
+  },50);
+  toast('✏️ Editando estoque');
+}
+
+function delCustomStock(id){
+  if(!confirm('Remover este estoque?'))return;
+  customStocks=customStocks.filter(s=>s.id!==id);
+  save();renderCustomHormones();renderCustomRegisterCards();fillRegSelects();toast('🗑 Removido');
+}
+
+// ── Cards dinâmicos de REGISTRO para cada hormônio personalizado ──
+function renderCustomRegisterCards(){
+  const cont=document.getElementById('customRegisterCards');if(!cont)return;
+  cont.innerHTML=customHormones.map(h=>{
+    return`<div class="st">💉 ${h.nome}</div>
+    <div class="card">
+      <div class="fg"><label>Selecionar Estoque</label><select id="rc-${h.id}-stock" onchange="onCustomStock('${h.id}')"><option value="">— Selecione o estoque —</option></select></div>
+      <div id="rc-${h.id}-info" style="display:none" class="info-box">
+        <div style="font-size:11px;color:var(--t2);margin-bottom:5px">Estoque disponível</div>
+        <div style="display:flex;gap:14px;margin-bottom:5px"><span style="font-size:12px;font-weight:700;color:${h.cor}" id="rc-${h.id}-avail-ml">—</span><span style="font-size:12px;font-weight:700;color:${h.cor}" id="rc-${h.id}-avail-mg">—</span></div>
+        <div class="stock-bar"><div class="stock-fill" id="rc-${h.id}-sbar" style="background:${h.cor}"></div></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>Dose (mg)</label><input type="number" id="rc-${h.id}-dose" placeholder="ex: 100" step="1" oninput="calcCustomML('${h.id}')"></div>
+        <div class="fg"><label>Volume ml (auto)</label><input type="number" id="rc-${h.id}-ml" placeholder="calculado" readonly style="opacity:0.6"></div>
+      </div>
+      <div class="hint" id="rc-${h.id}-hint"></div>
+      <div class="fg"><label>Data e Hora</label><input type="datetime-local" id="rc-${h.id}-date"></div>
+      <div class="fg"><label>Local de aplicação</label><select id="rc-${h.id}-local"><option value="">Selecionar...</option><option>Glúteo esquerdo</option><option>Glúteo direito</option><option>Coxa esquerda</option><option>Coxa direita</option><option>Deltoide esquerdo</option><option>Deltoide direito</option><option>Abdômen esquerdo</option><option>Abdômen direito</option><option>Subcutâneo</option></select></div>
+      <div class="fg"><label>Observações</label><textarea id="rc-${h.id}-obs" placeholder="Reações, sensações..."></textarea></div>
+      <button class="btn" style="background:${h.cor};color:#0a1628" onclick="saveCustomDose('${h.id}')">💉 Registrar ${h.nome}</button>
+    </div>`;
+  }).join('');
+  fillRegSelects();
+}
+
+function getCustomS(hid){return customStocks.find(s=>s.id===document.getElementById('rc-'+hid+'-stock').value);}
+function onCustomStock(hid){
+  const s=getCustomS(hid);const info=document.getElementById('rc-'+hid+'-info');
+  if(!s){info.style.display='none';document.getElementById('rc-'+hid+'-hint').textContent='';return;}
+  info.style.display='block';
+  const rem=+(s.totalMl-s.usedMl).toFixed(4),remMg=+(s.totalMg-s.usedMg).toFixed(4);
+  const pct=Math.max(0,Math.min(100,Math.round(rem/s.totalMl*100)));
+  document.getElementById('rc-'+hid+'-avail-ml').textContent=rem.toFixed(2)+' ml disp.';
+  document.getElementById('rc-'+hid+'-avail-mg').textContent=remMg.toFixed(2)+' mg disp.';
+  document.getElementById('rc-'+hid+'-sbar').style.width=pct+'%';
+  document.getElementById('rc-'+hid+'-hint').textContent=`${s.comp?s.comp+' ':''}${s.conc}mg/ml — volume calculado automaticamente`;
+}
+function calcCustomML(hid){
+  const s=getCustomS(hid);const dose=parseFloat(document.getElementById('rc-'+hid+'-dose').value);
+  if(!s||!dose){document.getElementById('rc-'+hid+'-ml').value='';return;}
+  document.getElementById('rc-'+hid+'-ml').value=(dose/s.conc).toFixed(3);
+}
+function saveCustomDose(hid){
+  const h=customHormones.find(x=>x.id===hid);if(!h)return;
+  const s=getCustomS(hid);const dose=parseFloat(document.getElementById('rc-'+hid+'-dose').value);
+  if(!dose){toast('⚠️ Informe a dose!','#f59e0b');return;}
+  let ml=null;
+  if(s){ml=dose/s.conc;if(ml>(s.totalMl-s.usedMl)+0.001){toast('⚠️ Dose excede estoque!','#f87171');return;}s.usedMl=+(s.usedMl+ml).toFixed(4);s.usedMg=+(s.usedMg+dose).toFixed(4);}
+  doses.unshift({id:uid(),tipo:'custom',hormoneId:hid,nome:h.nome+(s&&s.comp?' '+s.comp:''),dose,ml:ml?+ml.toFixed(4):null,stockId:s?s.id:null,cor:h.cor,date:document.getElementById('rc-'+hid+'-date').value||nowLocal(),local:document.getElementById('rc-'+hid+'-local').value,obs:document.getElementById('rc-'+hid+'-obs').value});
+  save();
+  document.getElementById('rc-'+hid+'-dose').value='';document.getElementById('rc-'+hid+'-ml').value='';document.getElementById('rc-'+hid+'-obs').value='';
+  onCustomStock(hid);renderHome();toast('✅ '+h.nome+' registrado!');
 }
 
 // ═══════════════════════════════════════════════════
@@ -1270,6 +1541,13 @@ function fillRegSelects(){
   if(tes){const pv=tes.value;tes.innerHTML='<option value="">— Selecione o estoque —</option>'+testStocks.map(s=>{const rem=+(s.totalMl-s.usedMl).toFixed(2);return`<option value="${s.id}">${s.comp} ${s.conc}mg/ml·${s.tipo} — ${rem}ml disp.</option>`;}).join('');tes.value=pv;}
   const ks=document.getElementById('r-klow-stock');
   if(ks){const pv=ks.value;ks.innerHTML='<option value="">— Selecione o estoque —</option>'+klowStocks.map(s=>{const rem=+(s.totalMl-s.usedMl).toFixed(2);const freqLbl={daily:'Diário',alternado:'Alternado',weekly:'Semanal'};return`<option value="${s.id}">💚 ${s.mgUnit}mg/${s.mlUnit}ml ×${s.qty}un (${freqLbl[s.freq]||s.freq}) — ${rem}ml disp.</option>`;}).join('');ks.value=pv;}
+  // Custom hormones stock selects
+  customHormones.forEach(h=>{
+    const sel=document.getElementById('rc-'+h.id+'-stock');
+    if(sel){const pv=sel.value;const hs=customStocks.filter(s=>s.hormoneId===h.id);
+      sel.innerHTML='<option value="">— Selecione o estoque —</option>'+hs.map(s=>{const rem=+(s.totalMl-s.usedMl).toFixed(2);return`<option value="${s.id}">${s.comp?s.comp+' ':''}${s.conc}mg/ml·${s.tipo} — ${rem}ml disp.</option>`;}).join('');
+      sel.value=pv;}
+  });
   const sc=document.getElementById('r-supl-cat');if(sc)sc.innerHTML='<option value="">— Selecione —</option>'+suplCat.map(s=>`<option value="${s.id}">${s.nome} (${s.dose} ${s.unit})</option>`).join('');
   const mc=document.getElementById('r-med-cat');if(mc)mc.innerHTML='<option value="">— Selecione —</option>'+medCat.map(s=>`<option value="${s.id}">${s.nome} (${s.dose} ${s.unit})</option>`).join('');
 }
@@ -1472,11 +1750,36 @@ function saveKlowStock(){
   const totalMl=+(mlUnit*qty).toFixed(4);
   const totalMg=+(mgUnit*qty).toFixed(4);
   const conc   =+(mgUnit/mlUnit).toFixed(4);
-  klowStocks.push({id:uid(),tipo,mgUnit,mlUnit,qty,conc,totalMl,totalMg,usedMl:0,usedMg:0,freq,val,obs,date:today()});
+  if(editingStock.klow){
+    const s=klowStocks.find(x=>x.id===editingStock.klow);
+    if(s){Object.assign(s,{tipo,mgUnit,mlUnit,qty,conc,totalMl,totalMg,freq,val,obs});
+      if(s.usedMl>totalMl)s.usedMl=totalMl;if(s.usedMg>totalMg)s.usedMg=totalMg;}
+    editingStock.klow=null;
+    document.getElementById('btn-klow-stock').textContent='➕ Adicionar Estoque Klow';
+    toast('✅ Estoque atualizado!');
+  } else {
+    klowStocks.push({id:uid(),tipo,mgUnit,mlUnit,qty,conc,totalMl,totalMg,usedMl:0,usedMg:0,freq,val,obs,date:today()});
+    toast('✅ Estoque Klow adicionado!');
+  }
   save();
-  ['c-klow-mg-unit','c-klow-ml-unit','c-klow-qty','c-klow-obs'].forEach(id=>document.getElementById(id).value='');
+  ['c-klow-mg-unit','c-klow-ml-unit','c-klow-qty','c-klow-obs','c-klow-val'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('c-klow-calc').style.display='none';
-  renderKlowStocks();fillRegSelects();toast('✅ Estoque Klow adicionado!');
+  renderKlowStocks();fillRegSelects();
+}
+function editKlowStock(id){
+  const s=klowStocks.find(x=>x.id===id);if(!s)return;
+  editingStock.klow=id;
+  document.getElementById('c-klow-tipo').value=s.tipo;
+  document.getElementById('c-klow-mg-unit').value=s.mgUnit;
+  document.getElementById('c-klow-ml-unit').value=s.mlUnit;
+  document.getElementById('c-klow-qty').value=s.qty;
+  document.getElementById('c-klow-freq').value=s.freq;
+  document.getElementById('c-klow-val').value=s.val||'';
+  document.getElementById('c-klow-obs').value=s.obs||'';
+  updKlowCalc();
+  document.getElementById('btn-klow-stock').textContent='💾 Salvar Alterações';
+  document.getElementById('c-klow-tipo').scrollIntoView({behavior:'smooth',block:'center'});
+  toast('✏️ Editando estoque');
 }
 function delKlowStock(id){if(!confirm('Remover este estoque?'))return;klowStocks=klowStocks.filter(s=>s.id!==id);save();renderKlowStocks();fillRegSelects();toast('🗑 Removido');}
 function renderKlowStocks(){
@@ -1486,7 +1789,7 @@ function renderKlowStocks(){
     const pct=Math.max(0,Math.min(100,Math.round(rem/s.totalMl*100)));
     const col=pct>40?'var(--green)':pct>15?'var(--amber)':'var(--red)';
     const freqLbl={daily:'Diário',alternado:'Dias alternados',weekly:'Semanal'};
-    return`<div class="stock-card"><div class="stock-hd"><div><div style="font-size:12px;font-weight:600">💚 ${s.tipo} — ${s.mgUnit}mg/${s.mlUnit}ml × ${s.qty}un</div><div style="font-size:10px;color:var(--t3)">${s.obs||''} ${s.val?'· Val: '+fmtD(s.val):''} · ${freqLbl[s.freq]||s.freq}</div></div><button class="del-btn" onclick="delKlowStock('${s.id}')">✕</button></div><div style="display:flex;gap:12px;font-size:11px;color:var(--t2)"><span>Total: <b style="color:var(--green)">${s.totalMl}ml/${s.totalMg}mg</b></span><span>Usado: <b>${s.usedMl.toFixed(2)}ml</b></span></div><div class="stock-bar"><div class="stock-fill" style="background:${col};width:${pct}%"></div></div><div class="stock-row"><b style="color:${col}">${rem.toFixed(2)}ml / ${remMg.toFixed(2)}mg restantes</b><span>${pct}%</span></div></div>`;
+    return`<div class="stock-card"><div class="stock-hd"><div><div style="font-size:12px;font-weight:600">💚 ${s.tipo} — ${s.mgUnit}mg/${s.mlUnit}ml × ${s.qty}un</div><div style="font-size:10px;color:var(--t3)">${s.obs||''} ${s.val?'· Val: '+fmtD(s.val):''} · ${freqLbl[s.freq]||s.freq}</div></div><div style="display:flex;gap:5px"><button class="edit-btn" onclick="editKlowStock('${s.id}')">✏️</button><button class="del-btn" onclick="delKlowStock('${s.id}')">✕</button></div></div><div style="display:flex;gap:12px;font-size:11px;color:var(--t2)"><span>Total: <b style="color:var(--green)">${s.totalMl}ml/${s.totalMg}mg</b></span><span>Usado: <b>${s.usedMl.toFixed(2)}ml</b></span></div><div class="stock-bar"><div class="stock-fill" style="background:${col};width:${pct}%"></div></div><div class="stock-row"><b style="color:${col}">${rem.toFixed(2)}ml / ${remMg.toFixed(2)}mg restantes</b><span>${pct}%</span></div></div>`;
   }).join('');
 }
 function getKlowS(){return klowStocks.find(s=>s.id===document.getElementById('r-klow-stock').value);}
@@ -1718,8 +2021,9 @@ function saveGym(){
 }
 
 function getWeekGym(){
-  const ws=getWeekStart();
-  return gymLog.filter(g=>{const gd=new Date(g.date+'T12:00:00');return gd>=ws;});
+  const wsStr=getWeekStartStr();
+  const weStr=getWeekEndStr();
+  return gymLog.filter(g=>g.date>=wsStr&&g.date<=weStr);
 }
 
 function renderGymTab(){
@@ -1864,6 +2168,7 @@ function dInfo(d){
   if(d.tipo==='supl')return{icon:'🌿',bg:'rgba(167,139,250,0.12)'};
   if(d.tipo==='med')return{icon:'💊',bg:'rgba(245,158,11,0.12)'};
   if(d.tipo==='water')return{icon:'💧',bg:'rgba(74,158,255,0.12)'};
+  if(d.tipo==='custom')return{icon:'💉',bg:'rgba(167,139,250,0.12)'};
   return{icon:'📋',bg:'rgba(255,255,255,0.05)'};
 }
 function renderHome(){
@@ -1931,7 +2236,7 @@ function renderHome(){
   renderWater();
   // Stocks
   const hs=document.getElementById('homeStocks');
-  const all=[...klowStocks.map(s=>({name:`💚 Klow ${s.mgUnit}mg/${s.mlUnit}ml ${s.obs?'('+s.obs+')':''}`,rem:+(s.totalMl-s.usedMl).toFixed(4),total:s.totalMl,remMg:+(s.totalMg-s.usedMg).toFixed(4),color:'var(--green)'})),...tirzStocks.map(s=>({name:`💉 Tirz ${s.mgUnit}mg/${s.mlUnit}ml ${s.obs?'('+s.obs+')':''}`,rem:+(s.totalMl-s.usedMl).toFixed(4),total:s.totalMl,remMg:+(s.totalMg-s.usedMg).toFixed(4),color:'var(--teal)'})),...testStocks.map(s=>({name:`🧪 ${s.comp} ${s.conc}mg/ml`,rem:+(s.totalMl-s.usedMl).toFixed(4),total:s.totalMl,remMg:+(s.totalMg-s.usedMg).toFixed(4),color:'var(--blue)'}))];
+  const all=[...klowStocks.map(s=>({name:`💚 Klow ${s.mgUnit}mg/${s.mlUnit}ml ${s.obs?'('+s.obs+')':''}`,rem:+(s.totalMl-s.usedMl).toFixed(4),total:s.totalMl,remMg:+(s.totalMg-s.usedMg).toFixed(4),color:'var(--green)'})),...tirzStocks.map(s=>({name:`💉 Tirz ${s.mgUnit}mg/${s.mlUnit}ml ${s.obs?'('+s.obs+')':''}`,rem:+(s.totalMl-s.usedMl).toFixed(4),total:s.totalMl,remMg:+(s.totalMg-s.usedMg).toFixed(4),color:'var(--teal)'})),...testStocks.map(s=>({name:`🧪 ${s.comp} ${s.conc}mg/ml`,rem:+(s.totalMl-s.usedMl).toFixed(4),total:s.totalMl,remMg:+(s.totalMg-s.usedMg).toFixed(4),color:'var(--blue)'})),...customStocks.map(s=>{const h=customHormones.find(x=>x.id===s.hormoneId);return{name:`💉 ${h?h.nome:'?'} ${s.conc}mg/ml`,rem:+(s.totalMl-s.usedMl).toFixed(4),total:s.totalMl,remMg:+(s.totalMg-s.usedMg).toFixed(4),color:h?h.cor:'var(--purple)'};})];
   if(!all.length)hs.innerHTML='<div class="empty-st">Cadastre estoques na aba Cadastro</div>';
   else hs.innerHTML=all.map(s=>{const pct=Math.max(0,Math.min(100,Math.round(s.rem/s.total*100)));const c=pct>40?s.color:pct>15?'var(--amber)':'var(--red)';return`<div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px"><span style="font-weight:600">${s.name}</span><span style="color:${c};font-weight:700">${pct}%</span></div><div class="stock-bar"><div class="stock-fill" style="background:${c};width:${pct}%"></div></div><div class="stock-row"><span>${s.rem.toFixed(2)}ml · ${s.remMg.toFixed(2)}mg restantes</span></div></div>`;}).join('');
   // Gym week summary
@@ -1962,6 +2267,7 @@ function deleteDose(id){
     const arr=d.tipo==='tirz'?tirzStocks:testStocks;const s=arr.find(x=>x.id===d.stockId);
     if(s&&d.ml){s.usedMl=Math.max(0,+(s.usedMl-d.ml).toFixed(4));s.usedMg=Math.max(0,+(s.usedMg-d.dose).toFixed(4));}
   }
+  if(d&&d.tipo==='custom'){const s=customStocks.find(x=>x.id===d.stockId);if(s&&d.ml){s.usedMl=Math.max(0,+(s.usedMl-d.ml).toFixed(4));s.usedMg=Math.max(0,+(s.usedMg-d.dose).toFixed(4));}}
   doses=doses.filter(x=>x.id!==id);save();renderHistory();renderHome();toast('🗑 Removido');
 }
 function clearAllDoses(){if(confirm('Apagar TODOS os registros de doses?\n(Estoques e cadastros são mantidos)')){doses=[];save();renderHistory();renderHome();toast('🗑 Doses apagadas');}}
@@ -2051,7 +2357,7 @@ function exportBackup(){
     version:2,
     exportDate:new Date().toISOString(),
     appName:'Trilha da Saúde',
-    doses,tirzStocks,testStocks,klowStocks,suplCat,medCat,waterLog,waterGoal,agCfg,gymLog,userProfiles,exames,metasPeso,metasCintura,chartOrder
+    doses,tirzStocks,testStocks,klowStocks,suplCat,medCat,waterLog,waterGoal,agCfg,gymLog,userProfiles,exames,metasPeso,metasCintura,chartOrder,customHormones,customStocks
   };
   const json=JSON.stringify(data,null,2);
   const blob=new Blob([json],{type:'application/json'});
@@ -2089,6 +2395,8 @@ function importBackup(event){
       if(data.metasPeso)metasPeso=data.metasPeso;
       if(data.metasCintura)metasCintura=data.metasCintura;
       if(data.chartOrder)chartOrder=data.chartOrder;
+      if(data.customHormones)customHormones=data.customHormones;
+      if(data.customStocks)customStocks=data.customStocks;
       save();renderHome();fillRegSelects();renderCats();renderStocks();
       const bi=document.getElementById('backup-info');
       if(bi)bi.textContent='Backup importado: '+new Date().toLocaleString('pt-BR');
@@ -2253,17 +2561,44 @@ function renderExames(){
 function renderExamesCharts(){
   const sorted=[...exames].sort((a,b)=>a.date.localeCompare(b.date));
   const labels=sorted.map(e=>{const d=new Date(e.date+'T12:00:00');return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'});});
-  const mk=(canvasId,key,color,unit)=>{
+  // ref={min,max} faixa de referência para homens adultos
+  const mk=(canvasId,key,color,unit,ref)=>{
     const el=document.getElementById(canvasId);if(!el)return;
     kc(canvasId);
     const data=sorted.map(e=>e[key]!=null?e[key]:null);
-    charts[canvasId]=new Chart(el,{type:'line',data:{labels,datasets:[{data,borderColor:color,backgroundColor:color.replace('rgb','rgba').replace(')',',0.08)'),tension:0.3,fill:true,pointBackgroundColor:color,pointRadius:4,spanGaps:true}]},options:{...cO,plugins:{...cO.plugins,tooltip:{...cO.plugins.tooltip,callbacks:{label:ctx=>` ${ctx.parsed.y} ${unit}`}}}}});
+    const n=labels.length||1;
+    const datasets=[{label:key,data,borderColor:color,backgroundColor:color.replace('rgb','rgba').replace(')',',0.08)'),tension:0.3,fill:true,pointBackgroundColor:color,pointRadius:4,spanGaps:true,order:1}];
+    if(ref){
+      if(ref.min!=null)datasets.push({label:'Mín ('+ref.min+')',data:Array(n).fill(ref.min),borderColor:'rgba(248,113,113,0.7)',borderDash:[5,4],borderWidth:1.5,pointRadius:0,fill:false,tension:0,order:2});
+      if(ref.max!=null)datasets.push({label:'Máx ('+ref.max+')',data:Array(n).fill(ref.max),borderColor:'rgba(245,158,11,0.7)',borderDash:[5,4],borderWidth:1.5,pointRadius:0,fill:false,tension:0,order:2});
+    }
+    // Calcula limites do eixo Y incluindo as referências
+    const allVals=data.filter(v=>v!=null);
+    if(ref){if(ref.min!=null)allVals.push(ref.min);if(ref.max!=null)allVals.push(ref.max);}
+    const yMin=allVals.length?Math.min(...allVals):0;
+    const yMax=allVals.length?Math.max(...allVals):100;
+    const pad=(yMax-yMin)*0.12||5;
+    charts[canvasId]=new Chart(el,{
+      type:'line',
+      data:{labels,datasets},
+      options:{...cO,
+        plugins:{...cO.plugins,
+          legend:{display:!!ref,labels:{color:'#8badc4',font:{size:9},boxWidth:14,padding:6,filter:i=>i.text!==key}},
+          tooltip:{...cO.plugins.tooltip,callbacks:{label:ctx=>{
+            if(ctx.dataset.label&&ctx.dataset.label.startsWith('M'))return ' '+ctx.dataset.label;
+            return ' '+ctx.parsed.y+' '+unit;
+          }}}
+        },
+        scales:{x:{...cO.scales.x},y:{...cO.scales.y,min:Math.max(0,yMin-pad),max:yMax+pad}}
+      }
+    });
   };
-  mk('cExTesto','testoTotal','rgb(74,158,255)','ng/dL');
-  mk('cExEstradiol','estradiol','rgb(244,114,182)','pg/mL');
-  mk('cExColesterol','colTotal','rgb(245,158,11)','mg/dL');
-  mk('cExProlactina','prolactina','rgb(244,114,182)','ng/mL');
-  mk('cExHematocrito','hematocrito','rgb(248,113,113)','%');
+  // Referências para homens adultos
+  mk('cExTesto','testoTotal','rgb(74,158,255)','ng/dL',{min:264,max:916});
+  mk('cExEstradiol','estradiol','rgb(167,139,250)','pg/mL',{min:10,max:40});
+  mk('cExColesterol','colTotal','rgb(245,158,11)','mg/dL',{min:null,max:200});
+  mk('cExProlactina','prolactina','rgb(244,114,182)','ng/mL',{min:4,max:15});
+  mk('cExHematocrito','hematocrito','rgb(248,113,113)','%',{min:40,max:50});
 }
 
 
@@ -2358,10 +2693,16 @@ function kc(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
 const cO={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#162840',titleColor:'#e8f4fd',bodyColor:'#8badc4',borderColor:'rgba(0,212,170,0.3)',borderWidth:1}},scales:{x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9}}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9}}}}};
 
 function renderGymWeekChart(weekLogs){
-  kc('gymWeek');const el=document.getElementById('cGymWeek');if(!el)return;
+  const el=document.getElementById('cGymWeek');if(!el)return;
+  kc('gymWeek');
   const ws=getWeekStart();const dias=['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
-  const data=dias.map((d,i)=>{const dt=new Date(ws);dt.setDate(ws.getDate()+i);const ds=dt.toISOString().split('T')[0];return weekLogs.filter(g=>g.date===ds).reduce((a,g)=>a+g.totalMin,0);});
-  charts.gymWeek=new Chart(el,{type:'bar',data:{labels:dias,datasets:[{data,backgroundColor:data.map(v=>v>0?'rgba(52,211,153,0.7)':'rgba(255,255,255,0.06)'),borderRadius:4}]},options:cO});
+  const data=dias.map((d,i)=>{
+    const dt=new Date(ws);dt.setDate(ws.getDate()+i);
+    const ds=dt.toISOString().split('T')[0];
+    return weekLogs.filter(g=>g.date===ds).reduce((a,g)=>a+g.totalMin,0);
+  });
+  // y-axis começa em 0 e mostra inteiros
+  charts.gymWeek=new Chart(el,{type:'bar',data:{labels:dias,datasets:[{data,backgroundColor:data.map(v=>v>0?'rgba(52,211,153,0.7)':'rgba(255,255,255,0.06)'),borderRadius:4}]},options:{...cO,scales:{x:{...cO.scales.x},y:{...cO.scales.y,beginAtZero:true,ticks:{...cO.scales.y.ticks,precision:0}}}}});
 }
 
 function renderCharts(){
@@ -2427,10 +2768,15 @@ function renderCharts(){
   const cWaterEl=document.getElementById('cWater');
   kc('water');const last7=[];for(let i=13;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const k=d.toISOString().split('T')[0];last7.push({label:d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}),val:waterLog[k]||0});}
   if(cWaterEl)charts.water=new Chart(cWaterEl,{type:'bar',data:{labels:last7.map(x=>x.label),datasets:[{data:last7.map(x=>x.val),backgroundColor:last7.map(x=>x.val>=waterGoal?'rgba(52,211,153,0.7)':'rgba(74,158,255,0.5)'),borderRadius:4}]},options:cO});
-  // GYM — last 8 weeks
-  kc('gym');const weeks=[];for(let w=7;w>=0;w--){const now2=new Date();const dow=now2.getDay();const diff=dow===0?-6:1-dow;const ws=new Date(now2);ws.setDate(now2.getDate()+diff-(w*7));const we=new Date(ws);we.setDate(ws.getDate()+6);const wMin=gymLog.filter(g=>{const gd=new Date(g.date+'T12:00:00');return gd>=ws&&gd<=we;}).reduce((a,g)=>a+g.totalMin,0);const wDays=new Set(gymLog.filter(g=>{const gd=new Date(g.date+'T12:00:00');return gd>=ws&&gd<=we;}).map(g=>g.date)).size;weeks.push({label:ws.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}),val:wMin,days:wDays});}
+  // GYM — todos os dias registrados (agregando minutos por dia)
+  kc('gym');
+  const gymByDay={};
+  gymLog.forEach(g=>{gymByDay[g.date]=(gymByDay[g.date]||0)+g.totalMin;});
+  const gymDays=Object.keys(gymByDay).sort();
+  const gymLabels=gymDays.map(d=>{const dt=new Date(d+'T12:00:00');return dt.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});});
+  const gymData=gymDays.map(d=>gymByDay[d]);
   const cGymEl=document.getElementById('cGym');
-  if(cGymEl)charts.gym=new Chart(cGymEl,{type:'bar',data:{labels:weeks.map(x=>x.label),datasets:[{data:weeks.map(x=>x.val),backgroundColor:weeks.map(x=>x.val>0?'rgba(52,211,153,0.65)':'rgba(255,255,255,0.04)'),borderRadius:4}]},options:{...cO,plugins:{...cO.plugins,tooltip:{...cO.plugins.tooltip,callbacks:{label:ctx=>`${ctx.parsed.y} min · ${weeks[ctx.dataIndex].days} dia(s)`}}}}});
+  if(cGymEl)charts.gym=new Chart(cGymEl,{type:'bar',data:{labels:gymLabels.length?gymLabels:['Sem dados'],datasets:[{data:gymData.length?gymData:[0],backgroundColor:'rgba(52,211,153,0.65)',borderColor:'var(--green)',borderWidth:1,borderRadius:4}]},options:{...cO,plugins:{...cO.plugins,tooltip:{...cO.plugins.tooltip,callbacks:{title:items=>{const i=items[0].dataIndex;const dt=new Date(gymDays[i]+'T12:00:00');return dt.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'});},label:ctx=>` ${ctx.parsed.y} min`}}},scales:{x:{...cO.scales.x},y:{...cO.scales.y,beginAtZero:true,ticks:{...cO.scales.y.ticks,precision:0}}}}});
   // SUPL
   // Med chart — barras verticais por medicamento (contagem de registros)
   kc('med');
@@ -2556,7 +2902,7 @@ function doLogin(){
   document.getElementById('topUserAvatar').textContent = initials;
   document.getElementById('topUserName').textContent   = u.name.split(' ')[0];
   // Init app
-  applyTheme();setDates();setGymDate();fillRegSelects();renderHome();renderCats();renderStocks();renderKlowStocks();renderBodyCharts();renderExames();renderMetas();
+  applyTheme();setDates();setGymDate();fillRegSelects();renderHome();renderCats();renderStocks();renderKlowStocks();renderBodyCharts();renderExames();renderMetas();renderCustomHormones();renderCustomRegisterCards();
   const bi=document.getElementById('backup-info');
   if(bi)bi.textContent='Exporte periodicamente para não perder seus dados';
 }
