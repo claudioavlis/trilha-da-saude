@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Trilha da Saúde">
 <title>Trilha da Saúde</title>
 <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" id="appIcon" href="">
+<link rel="apple-touch-icon" href="icon-192.png">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 /* ── DARK MODE (padrão) ── */
@@ -3104,7 +3104,7 @@ function initAppIcon(){
   const ai=document.getElementById('appIcon');
   if(ai)ai.href=dataUrl;
   // Inject manifest dynamically with generated icon
-  injectManifest(dataUrl,buildIcon(512));
+  // injectManifest desativado: usamos manifest.json real para PWABuilder/Play Store
 }
 
 function injectManifest(icon192,icon512){
@@ -3129,6 +3129,14 @@ function injectManifest(icon192,icon512){
   link.href=url;
 }
 
+</script>
+<script>
+// Registro do Service Worker (necessário para PWA / Play Store)
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('service-worker.js').catch(e=>console.log('SW falhou:',e));
+  });
+}
 </script>
 </body>
 </html>
