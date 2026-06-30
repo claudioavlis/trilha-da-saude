@@ -461,21 +461,24 @@ body{display:flex;flex-direction:column}
     <div class="hint" id="r-test-hint"></div>
     <div class="fg"><label>Data e Hora</label><input type="datetime-local" id="r-test-date"></div>
     <div class="fg"><label>Local de aplicação</label><select id="r-test-local"><option value="">Selecionar...</option><option>Glúteo esquerdo</option><option>Glúteo direito</option><option>Coxa esquerda</option><option>Coxa direita</option><option>Deltoide esquerdo</option><option>Deltoide direito</option></select></div>
-    <div style="background:rgba(74,158,255,0.06);border:1px solid rgba(74,158,255,0.18);border-radius:var(--rs);padding:10px;margin-bottom:9px">
-      <div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.8px">📏 Medidas Corporais</div>
-      <div class="frow">
-        <div class="fg"><label>Peso (kg)</label><input type="number" id="r-test-peso" placeholder="ex: 95.5" step="0.1" min="30" oninput="calcTestIMC()"></div>
-        <div class="fg"><label>Cintura (cm)</label><input type="number" id="r-test-cintura" placeholder="ex: 95" step="0.5" min="40"></div>
-      </div>
-      <div class="frow">
-        <div class="fg"><label>Altura (cm)</label><input type="number" id="r-test-altura" placeholder="ex: 175" step="0.5" min="100" oninput="calcTestIMC()"></div>
-        <div class="fg"><label>IMC (calculado)</label>
-          <div style="display:flex;align-items:center;gap:8px"><input type="text" id="r-test-imc" readonly style="opacity:0.7;flex:1"><span id="r-test-imc-label" style="font-size:10px;font-weight:600;white-space:nowrap"></span></div>
-        </div>
+    <div class="fg"><label>Observações</label><textarea id="r-test-obs" placeholder="Reações, sensações..."></textarea></div>
+    <button class="btn btn-b" onclick="saveTestDose()">🧪 Registrar Testosterona</button>
+  </div>
+
+  <div class="st">⚖️ Medidas Corporais</div>
+  <div class="card">
+    <div class="frow">
+      <div class="fg"><label>Peso (kg)</label><input type="number" id="r-medida-peso" placeholder="ex: 95.5" step="0.1" min="30" oninput="calcIndepIMC()"></div>
+      <div class="fg"><label>Cintura (cm)</label><input type="number" id="r-medida-cintura" placeholder="ex: 95" step="0.5" min="40"></div>
+    </div>
+    <div class="frow">
+      <div class="fg"><label>Altura (cm)</label><input type="number" id="r-medida-altura" placeholder="ex: 175" step="0.5" min="100" oninput="calcIndepIMC()"></div>
+      <div class="fg"><label>IMC (calculado)</label>
+        <div style="display:flex;align-items:center;gap:8px"><input type="text" id="r-medida-imc" readonly style="opacity:0.7;flex:1"><span id="r-medida-imc-label" style="font-size:10px;font-weight:600;white-space:nowrap"></span></div>
       </div>
     </div>
-    <div class="fg"><label>Observações</label><textarea id="r-test-obs" placeholder="Reações, sensações..."></textarea></div>
-    <button class="btn btn-b" onclick="saveTestDose()">🧪 Registrar Aplicação</button>
+    <div class="fg"><label>Data e Hora</label><input type="datetime-local" id="r-medida-date"></div>
+    <button class="btn btn-pk" onclick="saveMedidaIndep()">⚖️ Registrar Medidas</button>
   </div>
 
   <div id="customRegisterCards"></div>
@@ -515,6 +518,32 @@ body{display:flex;flex-direction:column}
       <button class="water-btn" style="background:rgba(74,158,255,0.3);color:var(--blue)" onclick="document.getElementById('r-water-ml').value=1000">1L</button>
     </div>
     <button class="btn btn-b" onclick="saveWaterLog()">💧 Registrar Água</button>
+  </div>
+
+  <div class="st">😴 Sono</div>
+  <div class="card">
+    <div style="background:rgba(167,139,250,0.07);border:1px solid rgba(167,139,250,0.18);border-radius:var(--rs);padding:10px;margin-bottom:9px">
+      <div style="font-size:11px;font-weight:700;color:var(--purple);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.8px">🌙 Horários de Sono</div>
+      <div class="frow">
+        <div class="fg"><label>Hora que dormiu</label><input type="time" id="r-sleep-start" oninput="updateSleepHint()"></div>
+        <div class="fg"><label>Hora que acordou</label><input type="time" id="r-sleep-end" oninput="updateSleepHint()"></div>
+      </div>
+      <div class="fg"><label>Data (dia que acordou)</label><input type="date" id="r-sleep-date"></div>
+      <div class="hint" id="r-sleep-hint" style="color:var(--purple)"></div>
+    </div>
+    <div class="fg">
+      <label>Qualidade do Sono</label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
+        <button type="button" class="water-btn sleep-q-btn" data-q="1" style="background:rgba(248,113,113,0.15);color:var(--red)" onclick="selectSleepQuality(1)">😫 Péssimo</button>
+        <button type="button" class="water-btn sleep-q-btn" data-q="2" style="background:rgba(245,158,11,0.15);color:var(--amber)" onclick="selectSleepQuality(2)">😕 Ruim</button>
+        <button type="button" class="water-btn sleep-q-btn" data-q="3" style="background:rgba(74,158,255,0.15);color:var(--blue)" onclick="selectSleepQuality(3)">😐 Regular</button>
+        <button type="button" class="water-btn sleep-q-btn" data-q="4" style="background:rgba(52,211,153,0.15);color:var(--green)" onclick="selectSleepQuality(4)">😊 Bom</button>
+        <button type="button" class="water-btn sleep-q-btn" data-q="5" style="background:rgba(0,212,170,0.15);color:var(--teal)" onclick="selectSleepQuality(5)">😴 Ótimo</button>
+      </div>
+      <input type="hidden" id="r-sleep-quality" value="">
+    </div>
+    <div class="fg"><label>Observações</label><textarea id="r-sleep-obs" placeholder="Acordou durante a noite, sonhos, etc..."></textarea></div>
+    <button class="btn" style="background:rgba(167,139,250,0.2);color:var(--purple);border:1px solid rgba(167,139,250,0.3)" onclick="saveSleepLog()">😴 Registrar Sono</button>
   </div>
 </div>
 
@@ -722,12 +751,13 @@ body{display:flex;flex-direction:column}
           <button type="button" class="btn-sm" style="flex:1;background:rgba(74,158,255,0.15);color:var(--blue);padding:9px" onclick="timerStop('cardio')" id="gym-cardio-btn-stop">⏹ Concluir</button>
         </div>
         <div style="font-size:10px;color:var(--t3);text-align:center;margin-top:6px">Duração: <b id="gym-cardio-min-display" style="color:var(--blue)">0 min</b> · ou digite manualmente abaixo</div>
-        <input type="number" id="gym-cardio-min" placeholder="minutos (manual)" min="0" step="1" style="margin-top:6px;text-align:center">
+        <input type="number" id="gym-cardio-min" placeholder="minutos (manual)" min="0" step="1" style="margin-top:6px;text-align:center" oninput="calcGymCal('cardio')">
       </div>
       <div class="frow">
         <div class="fg"><label>❤️ Batimentos (bpm)</label><input type="number" id="gym-cardio-bpm" placeholder="ex: 145" min="30" max="230" step="1"></div>
         <div class="fg"><label>📏 Distância (km)</label><input type="number" id="gym-cardio-km" placeholder="ex: 5.0" min="0" step="0.1"></div>
       </div>
+      <div class="fg"><label>🔥 Calorias Estimadas (kcal)</label><input type="number" id="gym-cardio-cal" placeholder="calculado" step="1"></div>
     </div>
     <div id="musculacao-section" style="display:none">
       <div style="font-size:11px;font-weight:700;color:var(--purple);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.8px">💪 Musculação</div>
@@ -754,9 +784,12 @@ body{display:flex;flex-direction:column}
           <button type="button" class="btn-sm" style="flex:1;background:rgba(74,158,255,0.15);color:var(--blue);padding:9px" onclick="timerStop('musc')" id="gym-musc-btn-stop">⏹ Concluir</button>
         </div>
         <div style="font-size:10px;color:var(--t3);text-align:center;margin-top:6px">Duração: <b id="gym-musc-min-display" style="color:var(--purple)">0 min</b> · ou digite manualmente abaixo</div>
-        <input type="number" id="gym-musc-min" placeholder="minutos (manual)" min="0" step="1" style="margin-top:6px;text-align:center">
+        <input type="number" id="gym-musc-min" placeholder="minutos (manual)" min="0" step="1" style="margin-top:6px;text-align:center" oninput="calcGymCal('musc')">
       </div>
-      <div class="fg"><label>❤️ Batimentos (bpm)</label><input type="number" id="gym-musc-bpm" placeholder="ex: 120" min="30" max="230" step="1"></div>
+      <div class="frow">
+        <div class="fg"><label>❤️ Batimentos (bpm)</label><input type="number" id="gym-musc-bpm" placeholder="ex: 120" min="30" max="230" step="1"></div>
+        <div class="fg"><label>🔥 Calorias (kcal)</label><input type="number" id="gym-musc-cal" placeholder="calculado" step="1"></div>
+      </div>
     </div>
     <div id="luta-section" style="display:none">
       <div style="font-size:11px;font-weight:700;color:var(--red);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.8px">🥊 Luta</div>
@@ -783,9 +816,12 @@ body{display:flex;flex-direction:column}
           <button type="button" class="btn-sm" style="flex:1;background:rgba(74,158,255,0.15);color:var(--blue);padding:9px" onclick="timerStop('luta')" id="gym-luta-btn-stop">⏹ Concluir</button>
         </div>
         <div style="font-size:10px;color:var(--t3);text-align:center;margin-top:6px">Duração: <b id="gym-luta-min-display" style="color:var(--red)">0 min</b> · ou digite manualmente abaixo</div>
-        <input type="number" id="gym-luta-min" placeholder="minutos (manual)" min="0" step="1" style="margin-top:6px;text-align:center">
+        <input type="number" id="gym-luta-min" placeholder="minutos (manual)" min="0" step="1" style="margin-top:6px;text-align:center" oninput="calcGymCal('luta')">
       </div>
-      <div class="fg"><label>❤️ Batimentos (bpm)</label><input type="number" id="gym-luta-bpm" placeholder="ex: 150" min="30" max="230" step="1"></div>
+      <div class="frow">
+        <div class="fg"><label>❤️ Batimentos (bpm)</label><input type="number" id="gym-luta-bpm" placeholder="ex: 150" min="30" max="230" step="1"></div>
+        <div class="fg"><label>🔥 Calorias (kcal)</label><input type="number" id="gym-luta-cal" placeholder="calculado" step="1"></div>
+      </div>
     </div>
     <div id="outros-section" style="display:none">
       <div style="font-size:11px;font-weight:700;color:var(--amber);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.8px">⚡ Outros</div>
@@ -812,12 +848,13 @@ body{display:flex;flex-direction:column}
           <button type="button" class="btn-sm" style="flex:1;background:rgba(74,158,255,0.15);color:var(--blue);padding:9px" onclick="timerStop('outros')" id="gym-outros-btn-stop">⏹ Concluir</button>
         </div>
         <div style="font-size:10px;color:var(--t3);text-align:center;margin-top:6px">Duração: <b id="gym-outros-min-display" style="color:var(--amber)">0 min</b> · ou digite manualmente abaixo</div>
-        <input type="number" id="gym-outros-min" placeholder="minutos (manual)" min="0" step="1" style="margin-top:6px;text-align:center">
+        <input type="number" id="gym-outros-min" placeholder="minutos (manual)" min="0" step="1" style="margin-top:6px;text-align:center" oninput="calcGymCal('outros')">
       </div>
       <div class="frow">
         <div class="fg"><label>❤️ Batimentos (bpm)</label><input type="number" id="gym-outros-bpm" placeholder="ex: 110" min="30" max="230" step="1"></div>
         <div class="fg"><label>📏 Distância (km)</label><input type="number" id="gym-outros-km" placeholder="opcional" min="0" step="0.1"></div>
       </div>
+      <div class="fg"><label>🔥 Calorias (kcal)</label><input type="number" id="gym-outros-cal" placeholder="calculado" step="1"></div>
     </div>
     <div class="fg"><label>Observações</label><textarea id="gym-obs" placeholder="Como foi o treino, peso corporal..."></textarea></div>
     <div class="fg"><label>Peso corporal (kg) — opcional</label><input type="number" id="gym-peso" placeholder="ex: 95.5" step="0.1"></div>
@@ -894,6 +931,17 @@ body{display:flex;flex-direction:column}
     <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🌿 Suplementos — frequência</span></div>
     <div class="card"><div class="chart-wrap"><canvas id="cSupl"></canvas></div></div>
   </div>
+  <div class="chart-block" data-chart="cSleep" draggable="true">
+    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">😴 Sono — horas dormidas (meta: 8h)</span></div>
+    <div class="card">
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;font-size:10px">
+        <span style="background:rgba(52,211,153,0.15);color:var(--green);padding:2px 8px;border-radius:8px;font-weight:600">≥8h Meta atingida</span>
+        <span style="background:rgba(245,158,11,0.15);color:var(--amber);padding:2px 8px;border-radius:8px;font-weight:600">6–8h Aceitável</span>
+        <span style="background:rgba(248,113,113,0.15);color:var(--red);padding:2px 8px;border-radius:8px;font-weight:600">&lt;6h Insuficiente</span>
+      </div>
+      <div class="chart-wrap"><canvas id="cSleep"></canvas></div>
+    </div>
+  </div>
   </div>
   <div class="st">Estatísticas</div>
   <div class="sgrid">
@@ -906,6 +954,8 @@ body{display:flex;flex-direction:column}
     <div class="sc"><div class="sl">⚖️ Último peso</div><div class="sv" id="s-peso" style="color:var(--teal)">—</div><div class="ss" id="s-peso-d">sem registro</div></div>
     <div class="sc"><div class="sl">📐 Última cintura</div><div class="sv" id="s-cintura" style="color:var(--blue)">—</div><div class="ss" id="s-cintura-d">sem registro</div></div>
     <div class="sc" style="grid-column:span 2"><div class="sl">🔢 Último IMC</div><div style="display:flex;align-items:center;gap:10px;margin-top:4px"><div class="sv" id="s-imc" style="color:var(--amber)">—</div><span id="s-imc-label" style="font-size:11px;font-weight:600"></span></div></div>
+    <div class="sc"><div class="sl">😴 Sono hoje</div><div class="sv" id="s-sleep" style="color:var(--purple)">—</div><div class="ss" id="s-sleep-d">sem registro</div></div>
+    <div class="sc"><div class="sl">😴 Média 7 dias</div><div class="sv" id="s-sleep-avg" style="color:var(--purple)">—</div><div class="ss">h/noite</div></div>
   </div>
 </div>
 
@@ -1015,8 +1065,12 @@ function renderBodyCharts(){
   if(!window.charts) window.charts={};
   ['homePeso','homeCintura'].forEach(k=>{if(window.charts[k]){try{window.charts[k].destroy();}catch(e){} delete window.charts[k];}});
 
-  const medDoses=doses.filter(d=>(d.tipo==='tirz'||d.tipo==='test')&&(d.peso||d.cintura)).sort((a,b)=>new Date(a.date)-new Date(b.date));
-  const medLabels=medDoses.map(d=>fmtDT(d.date).split(' ')[0]);
+  const allMedData = [];
+  doses.forEach(d => { if(d.peso || d.cintura) allMedData.push(d); });
+  gymLog.forEach(g => { if(g.peso) allMedData.push({date: g.date, peso: g.peso}); });
+  allMedData.sort((a,b) => new Date(a.date) - new Date(b.date));
+  
+  const medLabels=allMedData.map(d=>fmtDT(d.date).split(' ')[0]);
 
   const cO2={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#162840',titleColor:'#e8f4fd',bodyColor:'#8badc4',borderColor:'rgba(0,212,170,0.3)',borderWidth:1}},scales:{x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9}}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9}}}}};
 
@@ -1029,15 +1083,15 @@ function renderBodyCharts(){
     const ready=ep.clientWidth>0;
     if(!ready&&attempt<20){requestAnimationFrame(()=>drawHomeCharts(attempt+1));return;}
     // Meta line for peso: para cada ponto, a meta vigente naquela data
-    const pesoMetaLine=medDoses.map(d=>{const m=getMetaVigente(metasPeso,d.date.split('T')[0]);return m?m.val:null;});
-    const cinMetaLine=medDoses.map(d=>{const m=getMetaVigente(metasCintura,d.date.split('T')[0]);return m?m.val:null;});
+    const pesoMetaLine=allMedData.map(d=>{const m=getMetaVigente(metasPeso,d.date.split('T')[0]);return m?m.val:null;});
+    const cinMetaLine=allMedData.map(d=>{const m=getMetaVigente(metasCintura,d.date.split('T')[0]);return m?m.val:null;});
     try{
-      const pesoDs=[{label:'Peso',data:medDoses.map(d=>d.peso||null),borderColor:'#00d4aa',backgroundColor:'rgba(0,212,170,0.08)',tension:0.4,fill:true,pointBackgroundColor:'#00d4aa',pointRadius:4,spanGaps:true}];
+      const pesoDs=[{label:'Peso',data:allMedData.map(d=>d.peso||null),borderColor:'#00d4aa',backgroundColor:'rgba(0,212,170,0.08)',tension:0.4,fill:true,pointBackgroundColor:'#00d4aa',pointRadius:4,spanGaps:true}];
       if(pesoMetaLine.some(v=>v!=null))pesoDs.push({label:'Meta',data:pesoMetaLine,borderColor:'#f59e0b',borderDash:[6,4],backgroundColor:'transparent',tension:0,fill:false,pointRadius:0,spanGaps:true,borderWidth:2});
       window.charts.homePeso=new Chart(ep,{type:'line',data:{labels:medLabels,datasets:pesoDs},options:{...cO2,plugins:{...cO2.plugins,legend:{display:pesoMetaLine.some(v=>v!=null),labels:{color:'#8badc4',font:{size:9},boxWidth:10}}}}});
     }catch(e){}
     try{
-      const cinDs=[{label:'Cintura',data:medDoses.map(d=>d.cintura||null),borderColor:'#4a9eff',backgroundColor:'rgba(74,158,255,0.08)',tension:0.4,fill:true,pointBackgroundColor:'#4a9eff',pointRadius:4,spanGaps:true}];
+      const cinDs=[{label:'Cintura',data:allMedData.map(d=>d.cintura||null),borderColor:'#4a9eff',backgroundColor:'rgba(74,158,255,0.08)',tension:0.4,fill:true,pointBackgroundColor:'#4a9eff',pointRadius:4,spanGaps:true}];
       if(cinMetaLine.some(v=>v!=null))cinDs.push({label:'Meta',data:cinMetaLine,borderColor:'#f59e0b',borderDash:[6,4],backgroundColor:'transparent',tension:0,fill:false,pointRadius:0,spanGaps:true,borderWidth:2});
       window.charts.homeCintura=new Chart(ec,{type:'line',data:{labels:medLabels,datasets:cinDs},options:{...cO2,plugins:{...cO2.plugins,legend:{display:cinMetaLine.some(v=>v!=null),labels:{color:'#8badc4',font:{size:9},boxWidth:10}}}}});
     }catch(e){}
@@ -1106,12 +1160,13 @@ let exames      = DB.get('tds_exames',[]);
 let metasPeso   = DB.get('tds_metas_peso',[]);
 let metasCintura= DB.get('tds_metas_cintura',[]);
 let chartOrder  = DB.get('tds_chart_order',[]);
+let sleepLog    = DB.get('tds_sleep',[]);
 let userProfiles= DB.get('tds_profiles',{});
 
 function save(){
   DB.set('tds_doses',doses);DB.set('tds_tirz',tirzStocks);DB.set('tds_test',testStocks);
   DB.set('tds_supl',suplCat);DB.set('tds_med',medCat);DB.set('tds_water',waterLog);
-  DB.set('tds_wgoal',waterGoal);DB.set('tds_ag',agCfg);DB.set('tds_gym',gymLog);DB.set('tds_klow',klowStocks);DB.set('tds_profiles',userProfiles);DB.set('tds_exames',exames);DB.set('tds_metas_peso',metasPeso);DB.set('tds_metas_cintura',metasCintura);DB.set('tds_chart_order',chartOrder);DB.set('tds_customhorm',customHormones);DB.set('tds_customstock',customStocks);
+  DB.set('tds_wgoal',waterGoal);DB.set('tds_ag',agCfg);DB.set('tds_gym',gymLog);DB.set('tds_klow',klowStocks);DB.set('tds_profiles',userProfiles);DB.set('tds_exames',exames);DB.set('tds_metas_peso',metasPeso);DB.set('tds_metas_cintura',metasCintura);DB.set('tds_chart_order',chartOrder);DB.set('tds_customhorm',customHormones);DB.set('tds_customstock',customStocks);DB.set('tds_sleep',sleepLog);
 }
 
 // ═══════════════════════════════════════════════════
@@ -1132,7 +1187,7 @@ function getWeekEndStr(){const d=getWeekStart();d.setDate(d.getDate()+6);return 
 // ═══════════════════════════════════════════════════
 // NAVIGATION
 // ═══════════════════════════════════════════════════
-function setDates(){const n=nowLocal();['r-tirz-date','r-test-date','r-supl-date','r-med-date','r-water-date'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=n;});}
+function setDates(){const n=nowLocal();['r-tirz-date','r-test-date','r-supl-date','r-med-date','r-water-date','r-medida-date'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=n;});const sd=document.getElementById('r-sleep-date');if(sd&&!sd.value)sd.value=today();}
 function setGymDate(){const e=document.getElementById('gym-date');if(e&&!e.value)e.value=today();}
 
 // ═══════════════════════════════════════════════════
@@ -1710,16 +1765,32 @@ function saveTestDose(){
     if(ml>(s.totalMl-s.usedMl)+0.001){toast('⚠️ Dose excede estoque disponível!','#f87171');return;}
     s.usedMl=+(s.usedMl+ml).toFixed(4);s.usedMg=+(s.usedMg+dose).toFixed(4);
   }
-  const pesoT=parseFloat(document.getElementById('r-test-peso').value)||null;
-  const cinturaT=parseFloat(document.getElementById('r-test-cintura').value)||null;
-  const alturaT=parseFloat(document.getElementById('r-test-altura').value)||null;
-  const imcT=pesoT&&alturaT?+(pesoT/((alturaT/100)**2)).toFixed(1):null;
-  doses.unshift({id:uid(),tipo:'test',nome:'Testosterona'+(s?' '+s.comp:''),dose,ml:ml?+ml.toFixed(4):null,stockId:s?s.id:null,date:document.getElementById('r-test-date').value||nowLocal(),local:document.getElementById('r-test-local').value,obs:document.getElementById('r-test-obs').value,peso:pesoT,cintura:cinturaT,altura:alturaT,imc:imcT});
+  doses.unshift({id:uid(),tipo:'test',nome:'Testosterona'+(s?' '+s.comp:''),dose,ml:ml?+ml.toFixed(4):null,stockId:s?s.id:null,date:document.getElementById('r-test-date').value||nowLocal(),local:document.getElementById('r-test-local').value,obs:document.getElementById('r-test-obs').value});
   save();document.getElementById('r-test-dose').value='';document.getElementById('r-test-ml').value='';document.getElementById('r-test-obs').value='';
-  document.getElementById('r-test-peso').value='';document.getElementById('r-test-cintura').value='';
-  document.getElementById('r-test-imc').value='';document.getElementById('r-test-imc-label').textContent='';
   onTestStock();renderHome();toast('✅ Testosterona registrada!');
-  prefillMedidas('test');
+}
+
+function calcIndepIMC(){
+  const p=parseFloat(document.getElementById('r-medida-peso').value);
+  const a=parseFloat(document.getElementById('r-medida-altura').value)/100;
+  const el=document.getElementById('r-medida-imc');
+  const lbl=document.getElementById('r-medida-imc-label');
+  if(p&&a&&a>0.5){const imc=(p/(a*a)).toFixed(1);el.value=imc;const info=imcInfo(imc);lbl.textContent=info.label;lbl.style.color=info.color;}
+  else{el.value='';lbl.textContent='';}
+}
+
+function saveMedidaIndep(){
+  const peso=parseFloat(document.getElementById('r-medida-peso').value);
+  const cintura=parseFloat(document.getElementById('r-medida-cintura').value);
+  const altura=parseFloat(document.getElementById('r-medida-altura').value);
+  const imc=parseFloat(document.getElementById('r-medida-imc').value);
+  const date=document.getElementById('r-medida-date').value || nowLocal();
+  if(!peso && !cintura){toast('⚠️ Informe ao menos o peso ou cintura!','#f59e0b');return;}
+  doses.unshift({id:uid(),tipo:'medida',nome:'Medidas Corporais',date,peso:peso||null,cintura:cintura||null,altura:altura||null,imc:imc||null});
+  save();
+  ['r-medida-peso','r-medida-cintura','r-medida-altura','r-medida-imc'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('r-medida-imc-label').textContent='';
+  renderHome();toast('⚖️ Medidas registradas!');
 }
 
 
@@ -1887,6 +1958,26 @@ function updateTimerDisplay(tipo){
   const minEl=document.getElementById('gym-'+tipo+'-min-display');
   if(minEl)minEl.textContent=Math.round(t.elapsed/60)+' min';
   updateTimerProgress(tipo);
+  calcGymCal(tipo);
+}
+
+function calcGymCal(tipo){
+  const t=gymTimers[tipo];
+  const manual=parseInt(document.getElementById('gym-'+tipo+'-min').value);
+  const min=manual || Math.round(t.elapsed/60);
+  if(!min)return;
+  const lastPeso = doses.find(d=>(d.tipo==='tirz'||d.tipo==='test')&&d.peso)?.peso || 80;
+  let met=5;
+  if(tipo==='cardio'){
+    const mod=document.getElementById('gym-cardio-modal').value;
+    const mets={Esteira:9,Bicicleta:8,'Elíptico':7,'Corrida ao ar livre':10,Natação:8,'Pular corda':12,Outro:6};
+    met=mets[mod]||7;
+  } else if(tipo==='musculacao'){ met=5; }
+  else if(tipo==='luta'){ met=10; }
+  else { met=4; }
+  const cal = Math.round(met * lastPeso * (min/60));
+  const el=document.getElementById('gym-'+tipo+'-cal');
+  if(el) el.value = cal;
 }
 
 function updateTimerProgress(tipo){
@@ -1971,24 +2062,32 @@ function saveGym(){
     const min=getMin('cardio');
     const bpm=parseInt(document.getElementById('gym-cardio-bpm').value)||null;
     const km=parseFloat(document.getElementById('gym-cardio-km').value)||null;
-    const goal=parseFloat(document.getElementById('gym-cardio-goal').value)||null;treinos.push({tipo:'cardio',label:'Cardio',modal:document.getElementById('gym-cardio-modal').value,min,bpm,km,goal,icon:'🏃',color:'var(--blue)'});
+    const goal=parseFloat(document.getElementById('gym-cardio-goal').value)||null;
+    const cal=parseInt(document.getElementById('gym-cardio-cal').value)||0;
+    treinos.push({tipo:'cardio',label:'Cardio',modal:document.getElementById('gym-cardio-modal').value,min,bpm,km,goal,cal,icon:'🏃',color:'var(--blue)'});
   }
   if(muscBtn&&muscBtn.classList.contains('sel')){
     const min=getMin('musc');
     const bpm=parseInt(document.getElementById('gym-musc-bpm').value)||null;
-    const goal=parseFloat(document.getElementById('gym-musc-goal').value)||null;treinos.push({tipo:'musculacao',label:'Musculação',modal:document.getElementById('gym-musc-foco').value,min,bpm,goal,icon:'💪',color:'var(--purple)'});
+    const goal=parseFloat(document.getElementById('gym-musc-goal').value)||null;
+    const cal=parseInt(document.getElementById('gym-musc-cal').value)||0;
+    treinos.push({tipo:'musculacao',label:'Musculação',modal:document.getElementById('gym-musc-foco').value,min,bpm,goal,cal,icon:'💪',color:'var(--purple)'});
   }
   if(lutaBtn&&lutaBtn.classList.contains('sel')){
     const min=getMin('luta');
     const bpm=parseInt(document.getElementById('gym-luta-bpm').value)||null;
-    const goal=parseFloat(document.getElementById('gym-luta-goal').value)||null;treinos.push({tipo:'luta',label:'Luta',modal:document.getElementById('gym-luta-modal').value,min,bpm,goal,icon:'🥊',color:'var(--red)'});
+    const goal=parseFloat(document.getElementById('gym-luta-goal').value)||null;
+    const cal=parseInt(document.getElementById('gym-luta-cal').value)||0;
+    treinos.push({tipo:'luta',label:'Luta',modal:document.getElementById('gym-luta-modal').value,min,bpm,goal,cal,icon:'🥊',color:'var(--red)'});
   }
   if(outrosBtn&&outrosBtn.classList.contains('sel')){
     const min=getMin('outros');
     const bpm=parseInt(document.getElementById('gym-outros-bpm').value)||null;
     const km=parseFloat(document.getElementById('gym-outros-km').value)||null;
     const desc=document.getElementById('gym-outros-desc').value;
-    const goal=parseFloat(document.getElementById('gym-outros-goal').value)||null;treinos.push({tipo:'outros',label:desc||'Outros',modal:desc,min,bpm,km,goal,icon:'⚡',color:'var(--amber)'});
+    const goal=parseFloat(document.getElementById('gym-outros-goal').value)||null;
+    const cal=parseInt(document.getElementById('gym-outros-cal').value)||0;
+    treinos.push({tipo:'outros',label:desc||'Outros',modal:desc,min,bpm,km,goal,cal,icon:'⚡',color:'var(--amber)'});
   }
   if(!treinos.length){toast('⚠️ Selecione pelo menos um tipo de treino','#f59e0b');return;}
   const totalMin=treinos.reduce((acc,t)=>acc+t.min,0);
@@ -2177,9 +2276,15 @@ function renderHome(){
   if(lt){e('h-tirz').innerHTML=lt.dose+'<span style="font-size:10px;color:var(--t2);margin-left:2px">mg</span>';e('h-tirz-d').textContent=fmtDT(lt.date);}
   const lte=doses.find(d=>d.tipo==='test');
   if(lte){e('h-test').innerHTML=lte.dose+'<span style="font-size:10px;color:var(--t2);margin-left:2px">mg</span>';e('h-test-d').textContent=fmtDT(lte.date);}
+  
+  // Coleta dados de todas as fontes
+  const allMedData = [];
+  doses.forEach(d => { if(d.peso || d.cintura) allMedData.push(d); });
+  gymLog.forEach(g => { if(g.peso) allMedData.push({date: g.date, peso: g.peso}); });
+
   // Último peso/cintura
   // Peso: inicial (mais antigo) e atual (mais recente)
-  const allPeso=doses.filter(d=>(d.tipo==='tirz'||d.tipo==='test')&&d.peso).sort((a,b)=>new Date(a.date)-new Date(b.date));
+  const allPeso=allMedData.filter(d=>d.peso).sort((a,b)=>new Date(a.date)-new Date(b.date));
   if(allPeso.length){
     const pIni=allPeso[0].peso, pAtual=allPeso[allPeso.length-1].peso;
     const pDiff=+(pAtual-pIni).toFixed(1);
@@ -2203,7 +2308,6 @@ function renderHome(){
       let prog=total!==0?(done/total*100):100;
       prog=Math.max(0,Math.min(100,prog));
       e('h-peso-prog-bar').style.width=prog+'%';
-      e('h-peso-prog-pct').textContent=prog.toFixed(0)+'%';
       const reached=(total>0&&pAtual<=mPeso.val)||(total<0&&pAtual>=mPeso.val);
       e('h-peso-prog-bar').style.background=reached?'var(--green)':'var(--teal)';
       e('h-peso-prog-pct').textContent=(reached?'🎯 ':'')+prog.toFixed(0)+'%';
@@ -2211,7 +2315,7 @@ function renderHome(){
     const lp=allPeso[allPeso.length-1];
     if(e('h-peso-d'))e('h-peso-d').textContent='Atualizado: '+fmtDT(lp.date).split(' ')[0]+(lp.imc?' · IMC '+lp.imc:'');
   }
-  const allCin=doses.filter(d=>(d.tipo==='tirz'||d.tipo==='test')&&d.cintura).sort((a,b)=>new Date(a.date)-new Date(b.date));
+  const allCin=allMedData.filter(d=>d.cintura).sort((a,b)=>new Date(a.date)-new Date(b.date));
   if(allCin.length){
     const cIni=allCin[0].cintura, cAtual=allCin[allCin.length-1].cintura;
     const cDiff=+(cAtual-cIni).toFixed(1);
@@ -2357,7 +2461,7 @@ function exportBackup(){
     version:2,
     exportDate:new Date().toISOString(),
     appName:'Trilha da Saúde',
-    doses,tirzStocks,testStocks,klowStocks,suplCat,medCat,waterLog,waterGoal,agCfg,gymLog,userProfiles,exames,metasPeso,metasCintura,chartOrder,customHormones,customStocks
+    doses,tirzStocks,testStocks,klowStocks,suplCat,medCat,waterLog,waterGoal,agCfg,gymLog,userProfiles,exames,metasPeso,metasCintura,chartOrder,customHormones,customStocks,sleepLog
   };
   const json=JSON.stringify(data,null,2);
   const blob=new Blob([json],{type:'application/json'});
@@ -2397,6 +2501,7 @@ function importBackup(event){
       if(data.chartOrder)chartOrder=data.chartOrder;
       if(data.customHormones)customHormones=data.customHormones;
       if(data.customStocks)customStocks=data.customStocks;
+      if(data.sleepLog)sleepLog=data.sleepLog;
       save();renderHome();fillRegSelects();renderCats();renderStocks();
       const bi=document.getElementById('backup-info');
       if(bi)bi.textContent='Backup importado: '+new Date().toLocaleString('pt-BR');
@@ -2705,6 +2810,66 @@ function renderGymWeekChart(weekLogs){
   charts.gymWeek=new Chart(el,{type:'bar',data:{labels:dias,datasets:[{data,backgroundColor:data.map(v=>v>0?'rgba(52,211,153,0.7)':'rgba(255,255,255,0.06)'),borderRadius:4}]},options:{...cO,scales:{x:{...cO.scales.x},y:{...cO.scales.y,beginAtZero:true,ticks:{...cO.scales.y.ticks,precision:0}}}}});
 }
 
+
+// ═══════════════════════════════════════════════════
+// SONO
+// ═══════════════════════════════════════════════════
+let selectedSleepQuality = 0;
+
+function selectSleepQuality(q){
+  selectedSleepQuality = q;
+  document.getElementById('r-sleep-quality').value = q;
+  document.querySelectorAll('.sleep-q-btn').forEach(btn=>{
+    const bq = parseInt(btn.getAttribute('data-q'));
+    btn.style.opacity = bq === q ? '1' : '0.45';
+    btn.style.fontWeight = bq === q ? '700' : '400';
+  });
+}
+
+function calcSleepHours(start, end){
+  const [sh,sm] = start.split(':').map(Number);
+  const [eh,em] = end.split(':').map(Number);
+  let mins = (eh*60+em) - (sh*60+sm);
+  if(mins <= 0) mins += 24*60;
+  return mins/60;
+}
+
+function updateSleepHint(){
+  const s = document.getElementById('r-sleep-start').value;
+  const e = document.getElementById('r-sleep-end').value;
+  const hint = document.getElementById('r-sleep-hint');
+  if(!s || !e){ hint.textContent=''; return; }
+  const h = calcSleepHours(s, e);
+  const hStr = h.toFixed(1).replace('.',',');
+  if(h >= 8){ hint.textContent='✅ '+hStr+'h — Meta de 8h atingida!'; hint.style.color='var(--teal)'; }
+  else if(h >= 6){ hint.textContent='⚠️ '+hStr+'h — Abaixo da meta de 8h'; hint.style.color='var(--amber)'; }
+  else { hint.textContent='❌ '+hStr+'h — Sono insuficiente!'; hint.style.color='var(--red)'; }
+}
+
+function saveSleepLog(){
+  const start   = document.getElementById('r-sleep-start').value;
+  const end     = document.getElementById('r-sleep-end').value;
+  const date    = document.getElementById('r-sleep-date').value;
+  const obs     = document.getElementById('r-sleep-obs').value;
+  const quality = selectedSleepQuality || 0;
+  if(!start || !end){ toast('⚠️ Informe os horários de sono','#f59e0b'); return; }
+  if(!date){ toast('⚠️ Informe a data','#f59e0b'); return; }
+  const hours = calcSleepHours(start, end);
+  sleepLog.unshift({id:uid(), date, start, end, hours:+hours.toFixed(2), quality, obs});
+  save();
+  renderHome();
+  // Reset form
+  document.getElementById('r-sleep-start').value='';
+  document.getElementById('r-sleep-end').value='';
+  document.getElementById('r-sleep-obs').value='';
+  document.getElementById('r-sleep-hint').textContent='';
+  document.getElementById('r-sleep-quality').value='';
+  selectedSleepQuality=0;
+  document.querySelectorAll('.sleep-q-btn').forEach(btn=>{ btn.style.opacity='1'; btn.style.fontWeight='400'; });
+  const hStr=hours.toFixed(1).replace('.',',');
+  toast('😴 Sono registrado! '+hStr+'h'+(hours>=8?' ✅':hours>=6?' ⚠️':' ❌'));
+}
+
 function renderCharts(){
   // Medidas corporais — para o gráfico de IMC (peso e cintura ficam na Início)
   const medDoses=doses.filter(d=>(d.tipo==='tirz'||d.tipo==='test')&&(d.peso||d.imc||d.cintura)).sort((a,b)=>new Date(a.date)-new Date(b.date));
@@ -2815,6 +2980,45 @@ function renderCharts(){
   const cols=['rgba(167,139,250,0.8)','rgba(0,212,170,0.8)','rgba(74,158,255,0.8)','rgba(245,158,11,0.8)','rgba(248,113,113,0.8)','rgba(52,211,153,0.8)'];
   const cSuplEl=document.getElementById('cSupl');
   if(cSuplEl)charts.supl=new Chart(cSuplEl,{type:'doughnut',data:{labels:sn.length?sn:['Sem dados'],datasets:[{data:sn.length?sn.map(n=>sm[n]):[1],backgroundColor:cols,borderColor:'#111f35',borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#8badc4',font:{size:10},padding:10}},tooltip:cO.plugins.tooltip}}});
+
+  // SLEEP — últimos 14 dias com meta de 8h
+  kc('sleep');
+  const sleepLast14=[];
+  for(let i=13;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const k=d.toISOString().split('T')[0];const entry=sleepLog.find(s=>s.date===k);sleepLast14.push({label:d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}),val:entry?entry.hours:null});}
+  const cSleepEl=document.getElementById('cSleep');
+  if(cSleepEl){
+    const sleepBg=sleepLast14.map(x=>{if(x.val===null)return'rgba(255,255,255,0.06)';if(x.val>=8)return'rgba(52,211,153,0.75)';if(x.val>=6)return'rgba(245,158,11,0.75)';return'rgba(248,113,113,0.75)';});
+    charts.sleep=new Chart(cSleepEl,{
+      type:'bar',
+      data:{
+        labels:sleepLast14.map(x=>x.label),
+        datasets:[
+          {label:'Horas dormidas',data:sleepLast14.map(x=>x.val),backgroundColor:sleepBg,borderRadius:4},
+          {label:'Meta (8h)',data:Array(14).fill(8),type:'line',borderColor:'rgba(167,139,250,0.65)',borderDash:[5,4],borderWidth:1.5,pointRadius:0,fill:false,tension:0,order:0}
+        ]
+      },
+      options:{
+        responsive:true,maintainAspectRatio:false,
+        plugins:{
+          legend:{display:true,labels:{color:'#8badc4',font:{size:10},boxWidth:10}},
+          tooltip:{backgroundColor:'#162840',titleColor:'#e8f4fd',bodyColor:'#8badc4',borderColor:'rgba(167,139,250,0.3)',borderWidth:1,
+            callbacks:{label:ctx=>{
+              if(ctx.datasetIndex===1)return' Meta: 8h';
+              const v=ctx.parsed.y;if(v===null||v===0)return' Sem registro';
+              const h=Math.floor(v),m=Math.round((v-h)*60);
+              const dur=h+'h'+(m>0?m+'min':'');
+              return' '+dur+(v>=8?' ✅ Meta atingida':v>=6?' ⚠️ Aceitável':' ❌ Insuficiente');
+            }}
+          }
+        },
+        scales:{
+          x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9}}},
+          y:{beginAtZero:true,max:12,grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9},callback:v=>v+'h'},title:{display:true,text:'horas',color:'#4a6b82',font:{size:9}}}
+        }
+      }
+    });
+  }
+
   // Exames charts
   renderExamesCharts();
   // Stats
@@ -2826,24 +3030,45 @@ function renderCharts(){
   document.getElementById('s-water').textContent=getTodayWater();
   document.getElementById('s-gym').textContent=new Set(wkLogs.map(g=>g.date)).size;
   document.getElementById('s-gym-min').textContent=wkLogs.reduce((a,g)=>a+g.totalMin,0);
-  // Medidas — última registrada
-  const lastMed=doses.find(d=>(d.tipo==='tirz'||d.tipo==='test')&&d.peso);
-  if(lastMed){
-    document.getElementById('s-peso').innerHTML=lastMed.peso+'<span style="font-size:11px;color:var(--t2)"> kg</span>';
-    document.getElementById('s-peso-d').textContent=fmtDT(lastMed.date).split(' ')[0];
+  // Medidas — última registrada (de qualquer fonte)
+  const allMedDataStats = [];
+  doses.forEach(d => { if(d.peso || d.cintura || d.imc) allMedDataStats.push(d); });
+  gymLog.forEach(g => { if(g.peso) allMedDataStats.push({date: g.date, peso: g.peso}); });
+  allMedDataStats.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+  const lastPesoObj = allMedDataStats.find(d => d.peso);
+  if(lastPesoObj){
+    document.getElementById('s-peso').innerHTML=lastPesoObj.peso+'<span style="font-size:11px;color:var(--t2)"> kg</span>';
+    document.getElementById('s-peso-d').textContent=fmtDT(lastPesoObj.date).split(' ')[0];
   }
-  const lastCin=doses.find(d=>(d.tipo==='tirz'||d.tipo==='test')&&d.cintura);
-  if(lastCin){
-    document.getElementById('s-cintura').innerHTML=lastCin.cintura+'<span style="font-size:11px;color:var(--t2)"> cm</span>';
-    document.getElementById('s-cintura-d').textContent=fmtDT(lastCin.date).split(' ')[0];
+  const lastCinObj = allMedDataStats.find(d => d.cintura);
+  if(lastCinObj){
+    document.getElementById('s-cintura').innerHTML=lastCinObj.cintura+'<span style="font-size:11px;color:var(--t2)"> cm</span>';
+    document.getElementById('s-cintura-d').textContent=fmtDT(lastCinObj.date).split(' ')[0];
   }
-  const lastIMC=doses.find(d=>(d.tipo==='tirz'||d.tipo==='test')&&d.imc);
-  if(lastIMC){
-    const info=imcInfo(lastIMC.imc);
-    document.getElementById('s-imc').textContent=lastIMC.imc;
+  const lastIMCObj = allMedDataStats.find(d => d.imc);
+  if(lastIMCObj){
+    const info=imcInfo(lastIMCObj.imc);
+    document.getElementById('s-imc').textContent=lastIMCObj.imc;
     document.getElementById('s-imc').style.color=info.color;
     document.getElementById('s-imc-label').textContent=info.label;
     document.getElementById('s-imc-label').style.color=info.color;
+  }
+  // Sleep stats
+  const todaySleep=sleepLog.find(s=>s.date===today());
+  const sSleepEl=document.getElementById('s-sleep');
+  const sSleepD=document.getElementById('s-sleep-d');
+  if(todaySleep&&sSleepEl){
+    const h=Math.floor(todaySleep.hours),m=Math.round((todaySleep.hours-h)*60);
+    sSleepEl.innerHTML=h+'<span style="font-size:11px;color:var(--t2)">h'+(m>0?m+'m':'')+'</span>';
+    sSleepD.textContent=todaySleep.hours>=8?'✅ Meta atingida':todaySleep.hours>=6?'⚠️ Aceitável':'❌ Insuficiente';
+  }
+  const sSleepAvg=document.getElementById('s-sleep-avg');
+  if(sSleepAvg){
+    const last7Days=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);last7Days.push(d.toISOString().split('T')[0]);}
+    const validSleep=last7Days.map(k=>sleepLog.find(s=>s.date===k)).filter(Boolean);
+    if(validSleep.length){const avg=validSleep.reduce((s,x)=>s+x.hours,0)/validSleep.length;const ah=Math.floor(avg),am=Math.round((avg-ah)*60);sSleepAvg.innerHTML=ah+'<span style="font-size:11px;color:var(--t2)">h'+(am>0?am+'m':'')+'</span>';}
+    else sSleepAvg.textContent='—';
   }
 }
 
