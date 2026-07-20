@@ -421,6 +421,10 @@ body{display:flex;flex-direction:column}
 
 <!-- ════ TAB: REGISTRAR ════ -->
 <div class="tab" id="tab-register">
+  <div id="editDoseBanner" style="display:none;background:rgba(74,158,255,0.1);border:1px solid rgba(74,158,255,0.3);border-radius:var(--rs);padding:10px 12px;margin-bottom:12px;align-items:center;justify-content:space-between;gap:8px">
+    <div style="font-size:12px;color:var(--blue)"><b>✏️ Editando registro</b> <span id="editDoseBannerText" style="color:var(--t2)"></span></div>
+    <button class="btn-sm" style="background:rgba(248,113,113,0.15);color:var(--red);white-space:nowrap" onclick="cancelEditDose()">✕ Cancelar</button>
+  </div>
   <div class="st">💉 Tirzepetida</div>
   <div class="card">
     <div class="fg"><label>Selecionar Estoque</label><select id="r-tirz-stock" onchange="onTirzStock()"><option value="">— Selecione o estoque —</option></select></div>
@@ -1517,6 +1521,7 @@ let doses       = DB.get('tds_doses',[]);
 let tirzStocks  = DB.get('tds_tirz',[]);
 let editingStock = {tirz:null,test:null,klow:null,custom:null,customH:null};
 let editingExameId = null;
+let editingDoseId = null;
 let customHormones = DB.get('tds_customhorm',[]); // [{id,nome,cor}]
 let customStocks   = DB.get('tds_customstock',[]); // [{id,hormoneId,tipo,comp,conc,vol,qty,totalMl,totalMg,usedMl,usedMg,val,obs,date}]
 let testStocks  = DB.get('tds_test',[]);
@@ -1928,12 +1933,32 @@ function saveCustomDose(hid){
   const h=customHormones.find(x=>x.id===hid);if(!h)return;
   const s=getCustomS(hid);const dose=parseFloat(document.getElementById('rc-'+hid+'-dose').value);
   if(!dose){toast('⚠️ Informe a dose!','#f59e0b');return;}
+  const isEditing=editingDoseId?doses.find(x=>x.id===editingDoseId&&x.tipo==='custom'&&x.hormoneId===hid):null;
+  const oldStock=isEditing&&isEditing.stockId?customStocks.find(x=>x.id===isEditing.stockId):null;
+  const freedMl=(oldStock&&s&&oldStock.id===s.id)?(isEditing.ml||0):0;
   let ml=null;
-  if(s){ml=dose/s.conc;if(ml>(s.totalMl-s.usedMl)+0.001){toast('⚠️ Dose excede estoque!','#f87171');return;}s.usedMl=+(s.usedMl+ml).toFixed(4);s.usedMg=+(s.usedMg+dose).toFixed(4);}
-  doses.unshift({id:uid(),tipo:'custom',hormoneId:hid,nome:h.nome+(s&&s.comp?' '+s.comp:''),dose,ml:ml?+ml.toFixed(4):null,stockId:s?s.id:null,cor:h.cor,date:document.getElementById('rc-'+hid+'-date').value||nowLocal(),local:document.getElementById('rc-'+hid+'-local').value,obs:document.getElementById('rc-'+hid+'-obs').value});
+  if(s){
+    ml=dose/s.conc;
+    const availableMl=(s.totalMl-s.usedMl)+freedMl;
+    if(ml>availableMl+0.001){toast('⚠️ Dose excede estoque!','#f87171');return;}
+  }
+  if(isEditing)reverseDoseStock(isEditing);
+  if(s){s.usedMl=+(s.usedMl+ml).toFixed(4);s.usedMg=+(s.usedMg+dose).toFixed(4);}
+  const novo={tipo:'custom',hormoneId:hid,nome:h.nome+(s&&s.comp?' '+s.comp:''),dose,ml:ml?+ml.toFixed(4):null,stockId:s?s.id:null,cor:h.cor,date:document.getElementById('rc-'+hid+'-date').value||nowLocal(),local:document.getElementById('rc-'+hid+'-local').value,obs:document.getElementById('rc-'+hid+'-obs').value};
+  if(isEditing){
+    novo.id=isEditing.id;
+    const idx=doses.findIndex(x=>x.id===isEditing.id);
+    doses[idx]=novo;
+    editingDoseId=null;hideEditDoseBanner();
+    const btn=document.querySelector('button[onclick="saveCustomDose(\''+hid+'\')"]');if(btn)btn.textContent='💉 Registrar '+h.nome;
+    toast('✅ Registro atualizado!');
+  } else {
+    doses.unshift({id:uid(),...novo});
+    toast('✅ '+h.nome+' registrado!');
+  }
   save();
   document.getElementById('rc-'+hid+'-dose').value='';document.getElementById('rc-'+hid+'-ml').value='';document.getElementById('rc-'+hid+'-obs').value='';
-  onCustomStock(hid);renderHome();toast('✅ '+h.nome+' registrado!');
+  onCustomStock(hid);renderHome();renderHistory();fillRegSelects();
 }
 
 // ═══════════════════════════════════════════════════
@@ -2094,20 +2119,38 @@ function calcTirzFromUI(){
 function saveTirzDose(){
   const s=getTirzS();const dose=parseFloat(document.getElementById('r-tirz-dose').value);const ui=parseFloat(document.getElementById('r-tirz-ui').value);
   if(!dose){toast('⚠️ Informe a dose!','#f59e0b');return;}
+  const isEditing=editingDoseId?doses.find(x=>x.id===editingDoseId&&x.tipo==='tirz'):null;
+  // Calcula quanto será "liberado" do estoque antigo (só conta se for o MESMO estoque selecionado agora)
+  const oldStock=isEditing&&isEditing.stockId?tirzStocks.find(x=>x.id===isEditing.stockId):null;
+  const freedMl=(oldStock&&s&&oldStock.id===s.id)?(isEditing.ml||0):0;
   if(s){
     const ml=dose/s.conc;
-    if(ml>(s.totalMl-s.usedMl)+0.001){toast('⚠️ Dose excede estoque disponível!','#f87171');return;}
-    s.usedMl=+(s.usedMl+ml).toFixed(4);s.usedMg=+(s.usedMg+dose).toFixed(4);
+    const availableMl=(s.totalMl-s.usedMl)+freedMl;
+    if(ml>availableMl+0.001){toast('⚠️ Dose excede estoque disponível!','#f87171');return;}
   }
+  // Validação passou — agora aplica: primeiro reverte o antigo (se houver), depois consome o novo
+  if(isEditing)reverseDoseStock(isEditing);
+  if(s){const ml=dose/s.conc;s.usedMl=+(s.usedMl+ml).toFixed(4);s.usedMg=+(s.usedMg+dose).toFixed(4);}
   const peso=parseFloat(document.getElementById('r-tirz-peso').value)||null;
   const cintura=parseFloat(document.getElementById('r-tirz-cintura').value)||null;
   const altura=parseFloat(document.getElementById('r-tirz-altura').value)||null;
   const imc=peso&&altura?+(peso/((altura/100)**2)).toFixed(1):null;
-  doses.unshift({id:uid(),tipo:'tirz',nome:'Tirzepetida',dose,ui:ui||null,ml:s?+(dose/s.conc).toFixed(4):null,stockId:s?s.id:null,date:document.getElementById('r-tirz-date').value||nowLocal(),local:document.getElementById('r-tirz-local').value,obs:document.getElementById('r-tirz-obs').value,peso,cintura,altura,imc});
+  const novo={tipo:'tirz',nome:'Tirzepetida',dose,ui:ui||null,ml:s?+(dose/s.conc).toFixed(4):null,stockId:s?s.id:null,date:document.getElementById('r-tirz-date').value||nowLocal(),local:document.getElementById('r-tirz-local').value,obs:document.getElementById('r-tirz-obs').value,peso,cintura,altura,imc};
+  if(isEditing){
+    novo.id=isEditing.id;
+    const idx=doses.findIndex(x=>x.id===isEditing.id);
+    doses[idx]=novo;
+    editingDoseId=null;hideEditDoseBanner();
+    const btn=document.querySelector('button[onclick="saveTirzDose()"]');if(btn)btn.textContent='💉 Registrar Aplicação';
+    toast('✅ Registro atualizado!');
+  } else {
+    doses.unshift({id:uid(),...novo});
+    toast('✅ Tirzepetida registrada!');
+  }
   save();document.getElementById('r-tirz-dose').value='';document.getElementById('r-tirz-ui').value='';document.getElementById('r-tirz-obs').value='';
   document.getElementById('r-tirz-peso').value='';document.getElementById('r-tirz-cintura').value='';
   document.getElementById('r-tirz-imc').value='';document.getElementById('r-tirz-imc-label').textContent='';
-  onTirzStock();renderHome();toast('✅ Tirzepetida registrada!');
+  onTirzStock();renderHome();renderHistory();
   prefillMedidas('tirz');
 }
 
@@ -2134,15 +2177,31 @@ function calcTestML(){
 function saveTestDose(){
   const s=getTestS();const dose=parseFloat(document.getElementById('r-test-dose').value);
   if(!dose){toast('⚠️ Informe a dose!','#f59e0b');return;}
+  const isEditing=editingDoseId?doses.find(x=>x.id===editingDoseId&&x.tipo==='test'):null;
+  const oldStock=isEditing&&isEditing.stockId?testStocks.find(x=>x.id===isEditing.stockId):null;
+  const freedMl=(oldStock&&s&&oldStock.id===s.id)?(isEditing.ml||0):0;
   let ml=null;
   if(s){
     ml=dose/s.conc;
-    if(ml>(s.totalMl-s.usedMl)+0.001){toast('⚠️ Dose excede estoque disponível!','#f87171');return;}
-    s.usedMl=+(s.usedMl+ml).toFixed(4);s.usedMg=+(s.usedMg+dose).toFixed(4);
+    const availableMl=(s.totalMl-s.usedMl)+freedMl;
+    if(ml>availableMl+0.001){toast('⚠️ Dose excede estoque disponível!','#f87171');return;}
   }
-  doses.unshift({id:uid(),tipo:'test',nome:'Testosterona'+(s?' '+s.comp:''),dose,ml:ml?+ml.toFixed(4):null,stockId:s?s.id:null,date:document.getElementById('r-test-date').value||nowLocal(),local:document.getElementById('r-test-local').value,obs:document.getElementById('r-test-obs').value});
+  if(isEditing)reverseDoseStock(isEditing);
+  if(s){s.usedMl=+(s.usedMl+ml).toFixed(4);s.usedMg=+(s.usedMg+dose).toFixed(4);}
+  const novo={tipo:'test',nome:'Testosterona'+(s?' '+s.comp:''),dose,ml:ml?+ml.toFixed(4):null,stockId:s?s.id:null,date:document.getElementById('r-test-date').value||nowLocal(),local:document.getElementById('r-test-local').value,obs:document.getElementById('r-test-obs').value};
+  if(isEditing){
+    novo.id=isEditing.id;
+    const idx=doses.findIndex(x=>x.id===isEditing.id);
+    doses[idx]=novo;
+    editingDoseId=null;hideEditDoseBanner();
+    const btn=document.querySelector('button[onclick="saveTestDose()"]');if(btn)btn.textContent='🧪 Registrar Testosterona';
+    toast('✅ Registro atualizado!');
+  } else {
+    doses.unshift({id:uid(),...novo});
+    toast('✅ Testosterona registrada!');
+  }
   save();document.getElementById('r-test-dose').value='';document.getElementById('r-test-ml').value='';document.getElementById('r-test-obs').value='';
-  onTestStock();renderHome();toast('✅ Testosterona registrada!');
+  onTestStock();renderHome();renderHistory();
 }
 
 function calcIndepIMC(){
@@ -2161,11 +2220,23 @@ function saveMedidaIndep(){
   const imc=parseFloat(document.getElementById('r-medida-imc').value);
   const date=document.getElementById('r-medida-date').value || nowLocal();
   if(!peso && !cintura){toast('⚠️ Informe ao menos o peso ou cintura!','#f59e0b');return;}
-  doses.unshift({id:uid(),tipo:'medida',nome:'Medidas Corporais',date,peso:peso||null,cintura:cintura||null,altura:altura||null,imc:imc||null});
+  const isEditing=editingDoseId?doses.find(x=>x.id===editingDoseId&&x.tipo==='medida'):null;
+  const novo={tipo:'medida',nome:'Medidas Corporais',date,peso:peso||null,cintura:cintura||null,altura:altura||null,imc:imc||null};
+  if(isEditing){
+    novo.id=isEditing.id;
+    const idx=doses.findIndex(x=>x.id===isEditing.id);
+    doses[idx]=novo;
+    editingDoseId=null;hideEditDoseBanner();
+    const btn=document.querySelector('button[onclick="saveMedidaIndep()"]');if(btn)btn.textContent='⚖️ Registrar Medidas';
+    toast('✅ Registro atualizado!');
+  } else {
+    doses.unshift({id:uid(),...novo});
+    toast('⚖️ Medidas registradas!');
+  }
   save();
   ['r-medida-peso','r-medida-cintura','r-medida-altura','r-medida-imc'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('r-medida-imc-label').textContent='';
-  renderHome();toast('⚖️ Medidas registradas!');
+  renderHome();renderHistory();
 }
 
 
@@ -2264,10 +2335,30 @@ function calcKlowFromUI(){
 function saveKlowDose(){
   const s=getKlowS();const dose=parseFloat(document.getElementById('r-klow-dose').value);const ui=parseFloat(document.getElementById('r-klow-ui').value);
   if(!dose){toast('⚠️ Informe a dose!','#f59e0b');return;}
-  if(s){const ml=dose/s.conc;if(ml>(s.totalMl-s.usedMl)+0.001){toast('⚠️ Dose excede estoque!','#f87171');return;}s.usedMl=+(s.usedMl+ml).toFixed(4);s.usedMg=+(s.usedMg+dose).toFixed(4);}
-  doses.unshift({id:uid(),tipo:'klow',nome:'Klow',dose,ui:ui||null,ml:s?+(dose/s.conc).toFixed(4):null,stockId:s?s.id:null,date:document.getElementById('r-klow-date').value||nowLocal(),local:document.getElementById('r-klow-local').value,obs:document.getElementById('r-klow-obs').value});
+  const isEditing=editingDoseId?doses.find(x=>x.id===editingDoseId&&x.tipo==='klow'):null;
+  const oldStock=isEditing&&isEditing.stockId?klowStocks.find(x=>x.id===isEditing.stockId):null;
+  const freedMl=(oldStock&&s&&oldStock.id===s.id)?(isEditing.ml||0):0;
+  if(s){
+    const ml=dose/s.conc;
+    const availableMl=(s.totalMl-s.usedMl)+freedMl;
+    if(ml>availableMl+0.001){toast('⚠️ Dose excede estoque!','#f87171');return;}
+  }
+  if(isEditing)reverseDoseStock(isEditing);
+  if(s){const ml=dose/s.conc;s.usedMl=+(s.usedMl+ml).toFixed(4);s.usedMg=+(s.usedMg+dose).toFixed(4);}
+  const novo={tipo:'klow',nome:'Klow',dose,ui:ui||null,ml:s?+(dose/s.conc).toFixed(4):null,stockId:s?s.id:null,date:document.getElementById('r-klow-date').value||nowLocal(),local:document.getElementById('r-klow-local').value,obs:document.getElementById('r-klow-obs').value};
+  if(isEditing){
+    novo.id=isEditing.id;
+    const idx=doses.findIndex(x=>x.id===isEditing.id);
+    doses[idx]=novo;
+    editingDoseId=null;hideEditDoseBanner();
+    const btn=document.querySelector('button[onclick="saveKlowDose()"]');if(btn)btn.textContent='💚 Registrar Klow';
+    toast('✅ Registro atualizado!');
+  } else {
+    doses.unshift({id:uid(),...novo});
+    toast('✅ Klow registrado!');
+  }
   save();document.getElementById('r-klow-dose').value='';document.getElementById('r-klow-ui').value='';document.getElementById('r-klow-obs').value='';
-  onKlowStock();renderHome();toast('✅ Klow registrado!');
+  onKlowStock();renderHome();renderHistory();
 }
 
 // ═══════════════════════════════════════════════════
@@ -2277,15 +2368,39 @@ function onSuplCat(){const s=suplCat.find(x=>x.id===document.getElementById('r-s
 function saveSuplDose(){
   const cat=suplCat.find(x=>x.id===document.getElementById('r-supl-cat').value);
   if(!cat){toast('⚠️ Selecione o suplemento','#f59e0b');return;}
-  doses.unshift({id:uid(),tipo:'supl',nome:cat.nome,dose:parseFloat(document.getElementById('r-supl-dose').value)||cat.dose,unit:document.getElementById('r-supl-unit').value,date:document.getElementById('r-supl-date').value||nowLocal()});
-  save();renderHome();toast('✅ '+cat.nome+' registrado!');
+  const isEditing=editingDoseId?doses.find(x=>x.id===editingDoseId&&x.tipo==='supl'):null;
+  const novo={tipo:'supl',nome:cat.nome,dose:parseFloat(document.getElementById('r-supl-dose').value)||cat.dose,unit:document.getElementById('r-supl-unit').value,date:document.getElementById('r-supl-date').value||nowLocal()};
+  if(isEditing){
+    novo.id=isEditing.id;
+    const idx=doses.findIndex(x=>x.id===isEditing.id);
+    doses[idx]=novo;
+    editingDoseId=null;hideEditDoseBanner();
+    const btn=document.querySelector('button[onclick="saveSuplDose()"]');if(btn)btn.textContent='🌿 Registrar Suplemento';
+    toast('✅ Registro atualizado!');
+  } else {
+    doses.unshift({id:uid(),...novo});
+    toast('✅ '+cat.nome+' registrado!');
+  }
+  save();renderHome();renderHistory();
 }
 function onMedCat(){const s=medCat.find(x=>x.id===document.getElementById('r-med-cat').value);if(s){document.getElementById('r-med-dose').value=s.dose;document.getElementById('r-med-unit').value=s.unit;}}
 function saveMedDose(){
   const cat=medCat.find(x=>x.id===document.getElementById('r-med-cat').value);
   if(!cat){toast('⚠️ Selecione o medicamento','#f59e0b');return;}
-  doses.unshift({id:uid(),tipo:'med',nome:cat.nome,dose:parseFloat(document.getElementById('r-med-dose').value)||cat.dose,unit:document.getElementById('r-med-unit').value,date:document.getElementById('r-med-date').value||nowLocal()});
-  save();renderHome();toast('✅ '+cat.nome+' registrado!');
+  const isEditing=editingDoseId?doses.find(x=>x.id===editingDoseId&&x.tipo==='med'):null;
+  const novo={tipo:'med',nome:cat.nome,dose:parseFloat(document.getElementById('r-med-dose').value)||cat.dose,unit:document.getElementById('r-med-unit').value,date:document.getElementById('r-med-date').value||nowLocal()};
+  if(isEditing){
+    novo.id=isEditing.id;
+    const idx=doses.findIndex(x=>x.id===isEditing.id);
+    doses[idx]=novo;
+    editingDoseId=null;hideEditDoseBanner();
+    const btn=document.querySelector('button[onclick="saveMedDose()"]');if(btn)btn.textContent='💊 Registrar Medicamento';
+    toast('✅ Registro atualizado!');
+  } else {
+    doses.unshift({id:uid(),...novo});
+    toast('✅ '+cat.nome+' registrado!');
+  }
+  save();renderHome();renderHistory();
 }
 
 // ═══════════════════════════════════════════════════
@@ -2672,6 +2787,7 @@ function dInfo(d){
   if(d.tipo==='med')return{icon:'💊',bg:'rgba(245,158,11,0.12)'};
   if(d.tipo==='water')return{icon:'💧',bg:'rgba(74,158,255,0.12)'};
   if(d.tipo==='custom')return{icon:'💉',bg:'rgba(167,139,250,0.12)'};
+  if(d.tipo==='medida')return{icon:'⚖️',bg:'rgba(0,212,170,0.12)'};
   return{icon:'📋',bg:'rgba(255,255,255,0.05)'};
 }
 function renderHome(){
@@ -2765,17 +2881,128 @@ function renderHome(){
 // ═══════════════════════════════════════════════════
 // HISTORY
 // ═══════════════════════════════════════════════════
-function deleteDose(id){
-  const d=doses.find(x=>x.id===id);
-  if(d&&(d.tipo==='klow')){const s=klowStocks.find(x=>x.id===d.stockId);if(s&&d.ml){s.usedMl=Math.max(0,+(s.usedMl-d.ml).toFixed(4));s.usedMg=Math.max(0,+(s.usedMg-d.dose).toFixed(4));}}
-  if(d&&(d.tipo==='tirz'||d.tipo==='test')){
+// Reverte o consumo de estoque de uma dose (usado ao excluir ou ao editar antes de recalcular)
+function reverseDoseStock(d){
+  if(!d)return;
+  if(d.tipo==='klow'){const s=klowStocks.find(x=>x.id===d.stockId);if(s&&d.ml){s.usedMl=Math.max(0,+(s.usedMl-d.ml).toFixed(4));s.usedMg=Math.max(0,+(s.usedMg-d.dose).toFixed(4));}}
+  if(d.tipo==='tirz'||d.tipo==='test'){
     const arr=d.tipo==='tirz'?tirzStocks:testStocks;const s=arr.find(x=>x.id===d.stockId);
     if(s&&d.ml){s.usedMl=Math.max(0,+(s.usedMl-d.ml).toFixed(4));s.usedMg=Math.max(0,+(s.usedMg-d.dose).toFixed(4));}
   }
-  if(d&&d.tipo==='custom'){const s=customStocks.find(x=>x.id===d.stockId);if(s&&d.ml){s.usedMl=Math.max(0,+(s.usedMl-d.ml).toFixed(4));s.usedMg=Math.max(0,+(s.usedMg-d.dose).toFixed(4));}}
+  if(d.tipo==='custom'){const s=customStocks.find(x=>x.id===d.stockId);if(s&&d.ml){s.usedMl=Math.max(0,+(s.usedMl-d.ml).toFixed(4));s.usedMg=Math.max(0,+(s.usedMg-d.dose).toFixed(4));}}
+}
+function deleteDose(id){
+  const d=doses.find(x=>x.id===id);
+  reverseDoseStock(d);
   doses=doses.filter(x=>x.id!==id);save();renderHistory();renderHome();toast('🗑 Removido');
 }
 function clearAllDoses(){if(confirm('Apagar TODOS os registros de doses?\n(Estoques e cadastros são mantidos)')){doses=[];save();renderHistory();renderHome();toast('🗑 Doses apagadas');}}
+
+// ═══════════════════════════════════════════════════
+// EDITAR REGISTROS DO HISTÓRICO
+// ═══════════════════════════════════════════════════
+function showEditDoseBanner(text){
+  const b=document.getElementById('editDoseBanner');
+  const t=document.getElementById('editDoseBannerText');
+  if(t)t.textContent=text;
+  if(b)b.style.display='flex';
+}
+function hideEditDoseBanner(){
+  const b=document.getElementById('editDoseBanner');
+  if(b)b.style.display='none';
+}
+function cancelEditDose(){
+  editingDoseId=null;
+  hideEditDoseBanner();
+  // Restaura os textos padrão dos botões de registrar
+  const btns={
+    'tab-register':null // placeholder, botões resetados individualmente abaixo
+  };
+  const resetBtn=(sel,txt)=>{const el=document.querySelector(sel);if(el)el.textContent=txt;};
+  resetBtn('button[onclick="saveTirzDose()"]','💉 Registrar Aplicação');
+  resetBtn('button[onclick="saveTestDose()"]','🧪 Registrar Testosterona');
+  resetBtn('button[onclick="saveKlowDose()"]','💚 Registrar Klow');
+  resetBtn('button[onclick="saveMedidaIndep()"]','⚖️ Registrar Medidas');
+  resetBtn('button[onclick="saveSuplDose()"]','🌿 Registrar Suplemento');
+  resetBtn('button[onclick="saveMedDose()"]','💊 Registrar Medicamento');
+  // Botões dinâmicos dos hormônios personalizados
+  customHormones.forEach(h=>{
+    const btn=document.querySelector('button[onclick="saveCustomDose(\''+h.id+'\')"]');
+    if(btn)btn.textContent='💉 Registrar '+h.nome;
+  });
+  toast('Edição cancelada');
+}
+
+function editDose(id){
+  const d=doses.find(x=>x.id===id);
+  if(!d)return;
+  editingDoseId=id;
+  goTab('register',null);
+
+  const setV=(elId,val)=>{const el=document.getElementById(elId);if(el)el.value=val!=null?val:'';};
+
+  if(d.tipo==='tirz'){
+    setV('r-tirz-stock',d.stockId);onTirzStock();
+    setV('r-tirz-dose',d.dose);setV('r-tirz-ui',d.ui);
+    setV('r-tirz-date',d.date);setV('r-tirz-local',d.local);setV('r-tirz-obs',d.obs);
+    setV('r-tirz-peso',d.peso);setV('r-tirz-cintura',d.cintura);setV('r-tirz-altura',d.altura);
+    if(typeof calcTirzIMC==='function')calcTirzIMC();
+    const btn=document.querySelector('button[onclick="saveTirzDose()"]');if(btn)btn.textContent='💾 Salvar Alterações';
+    showEditDoseBanner('· Tirzepetida de '+fmtDT(d.date));
+    setTimeout(()=>document.getElementById('r-tirz-stock')?.scrollIntoView({behavior:'smooth',block:'center'}),120);
+  } else if(d.tipo==='test'){
+    setV('r-test-stock',d.stockId);onTestStock();
+    setV('r-test-dose',d.dose);calcTestML();
+    setV('r-test-date',d.date);setV('r-test-local',d.local);setV('r-test-obs',d.obs);
+    const btn=document.querySelector('button[onclick="saveTestDose()"]');if(btn)btn.textContent='💾 Salvar Alterações';
+    showEditDoseBanner('· Testosterona de '+fmtDT(d.date));
+    setTimeout(()=>document.getElementById('r-test-stock')?.scrollIntoView({behavior:'smooth',block:'center'}),120);
+  } else if(d.tipo==='klow'){
+    setV('r-klow-stock',d.stockId);onKlowStock();
+    setV('r-klow-dose',d.dose);setV('r-klow-ui',d.ui);
+    setV('r-klow-date',d.date);setV('r-klow-local',d.local);setV('r-klow-obs',d.obs);
+    const btn=document.querySelector('button[onclick="saveKlowDose()"]');if(btn)btn.textContent='💾 Salvar Alterações';
+    showEditDoseBanner('· Klow de '+fmtDT(d.date));
+    setTimeout(()=>document.getElementById('r-klow-stock')?.scrollIntoView({behavior:'smooth',block:'center'}),120);
+  } else if(d.tipo==='custom'){
+    const hid=d.hormoneId;
+    renderCustomRegisterCards();
+    setTimeout(()=>{
+      setV('rc-'+hid+'-stock',d.stockId);onCustomStock(hid);
+      setV('rc-'+hid+'-dose',d.dose);calcCustomML(hid);
+      setV('rc-'+hid+'-date',d.date);setV('rc-'+hid+'-local',d.local);setV('rc-'+hid+'-obs',d.obs);
+      const btn=document.querySelector('button[onclick="saveCustomDose(\''+hid+'\')"]');if(btn)btn.textContent='💾 Salvar Alterações';
+      document.getElementById('rc-'+hid+'-stock')?.scrollIntoView({behavior:'smooth',block:'center'});
+    },120);
+    showEditDoseBanner('· '+d.nome+' de '+fmtDT(d.date));
+  } else if(d.tipo==='medida'){
+    setV('r-medida-peso',d.peso);setV('r-medida-cintura',d.cintura);setV('r-medida-altura',d.altura);setV('r-medida-imc',d.imc);
+    setV('r-medida-date',d.date);
+    const btn=document.querySelector('button[onclick="saveMedidaIndep()"]');if(btn)btn.textContent='💾 Salvar Alterações';
+    showEditDoseBanner('· Medidas Corporais de '+fmtDT(d.date));
+    setTimeout(()=>document.getElementById('r-medida-peso')?.scrollIntoView({behavior:'smooth',block:'center'}),120);
+  } else if(d.tipo==='supl'){
+    const cat=suplCat.find(c=>c.nome===d.nome);
+    if(cat)setV('r-supl-cat',cat.id);
+    setV('r-supl-dose',d.dose);setV('r-supl-unit',d.unit);
+    setV('r-supl-date',d.date);
+    const btn=document.querySelector('button[onclick="saveSuplDose()"]');if(btn)btn.textContent='💾 Salvar Alterações';
+    showEditDoseBanner('· '+d.nome+' de '+fmtDT(d.date));
+    setTimeout(()=>document.getElementById('r-supl-cat')?.scrollIntoView({behavior:'smooth',block:'center'}),120);
+  } else if(d.tipo==='med'){
+    const cat=medCat.find(c=>c.nome===d.nome);
+    if(cat)setV('r-med-cat',cat.id);
+    setV('r-med-dose',d.dose);setV('r-med-unit',d.unit);
+    setV('r-med-date',d.date);
+    const btn=document.querySelector('button[onclick="saveMedDose()"]');if(btn)btn.textContent='💾 Salvar Alterações';
+    showEditDoseBanner('· '+d.nome+' de '+fmtDT(d.date));
+    setTimeout(()=>document.getElementById('r-med-cat')?.scrollIntoView({behavior:'smooth',block:'center'}),120);
+  } else {
+    editingDoseId=null;
+    toast('⚠️ Este tipo de registro ainda não pode ser editado','#f59e0b');
+  }
+}
+
 function renderHistory(){
   const filter=document.getElementById('h-filter').value;
   const list=filter==='all'?[...doses].sort((a,b)=>new Date(b.date)-new Date(a.date)):doses.filter(d=>d.tipo===filter).sort((a,b)=>new Date(b.date)-new Date(a.date));
@@ -2823,6 +3050,7 @@ function renderHistory(){
             <div style="font-size:12px;font-weight:700">${d.nome}</div>
             <div style="display:flex;align-items:center;gap:6px">
               ${time?`<span style="font-size:10px;color:var(--t3)">${time}</span>`:''}
+              <button class="edit-btn" onclick="editDose('${d.id}')">✏️</button>
               <button class="del-btn" onclick="deleteDose('${d.id}')">✕</button>
             </div>
           </div>
