@@ -269,7 +269,7 @@ body{display:flex;flex-direction:column}
 
     <div class="sb-section">Configuração</div>
     <button class="sb-item" onclick="goTab('cadastro',this)"><span class="sb-icon">📦</span>Cadastro</button>
-    <button class="sb-item" onclick="goTab('gym',this)"><span class="sb-icon">🏋️</span>Academia</button>
+    <button class="sb-item" onclick="goTab('gym',this)"><span class="sb-icon">🏃</span>Atividades Físicas</button>
     <button class="sb-item" onclick="goTab('charts',this)"><span class="sb-icon">📊</span>Gráficos</button>
 
     <div class="sb-section">Sistema</div>
@@ -354,14 +354,40 @@ body{display:flex;flex-direction:column}
     </div>
   </div>
 
-  <!-- GRÁFICOS PESO E CINTURA NA TELA INICIAL -->
+  <!-- GRÁFICO UNIFICADO PESO & CINTURA NA TELA INICIAL -->
   <div class="card">
-    <div class="card-hd"><div class="card-title">⚖️ Evolução de Peso (kg)</div></div>
-    <div class="chart-wrap"><canvas id="cPeso"></canvas></div>
+    <div class="card-hd">
+      <div>
+        <div class="card-title">⚖️ Peso & Cintura</div>
+        <div class="card-sub" id="bodyChartSub">Sem registros ainda</div>
+      </div>
+    </div>
+    <div class="legend" id="bodyChartLegend" style="margin-bottom:2px"></div>
+    <div class="chart-wrap" style="height:220px"><canvas id="cBody"></canvas></div>
   </div>
-  <div class="card">
-    <div class="card-hd"><div class="card-title">📐 Evolução de Cintura (cm)</div></div>
-    <div class="chart-wrap"><canvas id="cCintura"></canvas></div>
+
+  <!-- PERFIL HORMONAL — EVOLUÇÃO -->
+  <div class="card" id="hormonalHomeCard" style="display:none">
+    <div class="card-hd">
+      <div>
+        <div class="card-title">🧬 Perfil Hormonal — Evolução</div>
+        <div class="card-sub">Marcadores-chave ao longo do tempo (% do teto da faixa de referência)</div>
+      </div>
+    </div>
+    <div class="legend" id="hormonalLegend" style="margin-bottom:2px"></div>
+    <div class="chart-wrap" style="height:220px"><canvas id="cHormonalHome"></canvas></div>
+  </div>
+
+  <!-- LIPIDOGRAMA COMPLETO -->
+  <div class="card" id="lipidHomeCard" style="display:none">
+    <div class="card-hd">
+      <div>
+        <div class="card-title">🩸 Lipidograma Completo</div>
+        <div class="card-sub" id="lipidHomeSub"></div>
+      </div>
+    </div>
+    <div class="legend" id="lipidLegend" style="margin-bottom:2px"></div>
+    <div class="chart-wrap" style="height:220px"><canvas id="cLipidHome"></canvas></div>
   </div>
 
   <div class="card">
@@ -383,8 +409,8 @@ body{display:flex;flex-direction:column}
   </div>
 
   <div class="card">
-    <div class="card-hd"><div class="card-title">🏋️ Academia esta semana</div><span class="badge bg2" id="gym-week-badge">0 dias</span></div>
-    <div id="gymWeekSummary"><div class="empty-st">Registre treinos na aba Academia</div></div>
+    <div class="card-hd"><div class="card-title">🏃 Atividades Físicas — esta semana</div><span class="badge bg2" id="gym-week-badge">0 dias</span></div>
+    <div id="gymWeekSummary"><div class="empty-st">Registre atividades na aba Atividades Físicas</div></div>
   </div>
 
   <div class="card">
@@ -565,7 +591,7 @@ body{display:flex;flex-direction:column}
     <button class="btn-sm" style="background:rgba(248,113,113,0.15);color:var(--red);white-space:nowrap" onclick="clearAllDoses()">🗑 Limpar</button>
   </div>
   <div id="histList"></div>
-  <div class="st" style="margin-top:16px">🏋️ Treinos</div>
+  <div class="st" style="margin-top:16px">🏃 Atividades Físicas</div>
   <div id="gymHistList"></div>
 </div>
 
@@ -715,49 +741,181 @@ body{display:flex;flex-direction:column}
 
 <!-- ════ TAB: ACADEMIA ════ -->
 <div class="tab" id="tab-gym">
-  <div class="st">🏋️ Registrar Treino</div>
+  <div class="st">🏃 Registrar Atividade</div>
   <div class="card">
     <div class="fg"><label>Data do treino</label><input type="date" id="gym-date"></div>
     <div class="fg"><label>Tipos de treino</label>
       <div class="gym-type-row" id="gymTypeBtns">
-        <button class="gym-type-btn" data-tipo="cardio" style="background:rgba(74,158,255,0.15);color:var(--blue)" onclick="toggleGymType(this)">🏃 Cardio</button>
+        <button class="gym-type-btn" data-tipo="cardio" style="background:rgba(244,114,182,0.15);color:var(--pink)" onclick="toggleGymType(this)">🔥 Cardio</button>
+        <button class="gym-type-btn" data-tipo="caminhada" style="background:rgba(52,211,153,0.15);color:var(--green)" onclick="toggleGymType(this)">🚶 Caminhada</button>
+        <button class="gym-type-btn" data-tipo="corrida" style="background:rgba(74,158,255,0.15);color:var(--blue)" onclick="toggleGymType(this)">🏃 Corrida</button>
+        <button class="gym-type-btn" data-tipo="ciclismo" style="background:rgba(251,146,60,0.15);color:var(--orange)" onclick="toggleGymType(this)">🚴 Ciclismo</button>
+        <button class="gym-type-btn" data-tipo="natacao" style="background:rgba(0,212,170,0.15);color:var(--teal)" onclick="toggleGymType(this)">🏊 Natação</button>
         <button class="gym-type-btn" data-tipo="musculacao" style="background:rgba(167,139,250,0.15);color:var(--purple)" onclick="toggleGymType(this)">💪 Musculação</button>
         <button class="gym-type-btn" data-tipo="luta" style="background:rgba(248,113,113,0.15);color:var(--red)" onclick="toggleGymType(this)">🥊 Luta</button>
         <button class="gym-type-btn" data-tipo="outros" style="background:rgba(245,158,11,0.15);color:var(--amber)" onclick="toggleGymType(this)">⚡ Outros</button>
       </div>
     </div>
     <div id="cardio-section" style="display:none">
-      <div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.8px">🏃 Cardio</div>
-      <div class="fg"><label>Modalidade</label><select id="gym-cardio-modal"><option>Esteira</option><option>Bicicleta</option><option>Elíptico</option><option>Corrida ao ar livre</option><option>Natação</option><option>Pular corda</option><option>Outro</option></select></div>
+      <div style="font-size:11px;font-weight:700;color:var(--pink);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.8px">🔥 Cardio</div>
+      <div class="fg"><label>Modalidade</label><select id="gym-cardio-modal"><option>Esteira</option><option>Dança</option><option>Escada</option><option>Bicicleta</option><option>Elíptico</option><option>Pular corda</option><option>Outro</option></select></div>
       <div style="background:var(--inp);border-radius:var(--rs);padding:10px;margin-bottom:8px">
         <div style="display:flex;align-items:center;gap:7px;margin-bottom:8px">
           <label style="font-size:10px;color:var(--t2);white-space:nowrap">🎯 Meta (min):</label>
           <input type="number" id="gym-cardio-goal" placeholder="ex: 30" min="1" step="1" style="flex:1;text-align:center;padding:6px 8px" oninput="updateTimerProgress('cardio')">
         </div>
         <div style="text-align:center;margin-bottom:6px">
-          <div style="font-size:32px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--blue)" id="gym-cardio-timer">00:00:00</div>
+          <div style="font-size:32px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--pink)" id="gym-cardio-timer">00:00:00</div>
           <div style="font-size:9px;color:var(--t3);margin-top:2px" id="gym-cardio-timer-status">Cronômetro parado</div>
         </div>
         <div id="gym-cardio-prog-wrap" style="display:none;margin-bottom:8px">
           <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--t3);margin-bottom:3px">
             <span id="gym-cardio-prog-label">0 / 0 min</span>
-            <span id="gym-cardio-prog-pct" style="font-weight:700;color:var(--blue)">0%</span>
+            <span id="gym-cardio-prog-pct" style="font-weight:700;color:var(--pink)">0%</span>
           </div>
-          <div class="prog"><div class="prog-fill" id="gym-cardio-prog-bar" style="background:var(--blue);width:0%"></div></div>
+          <div class="prog"><div class="prog-fill" id="gym-cardio-prog-bar" style="background:var(--pink);width:0%"></div></div>
         </div>
         <div style="display:flex;gap:6px">
           <button type="button" class="btn-sm" style="flex:1;background:rgba(52,211,153,0.15);color:var(--green);padding:9px" onclick="timerStart('cardio')" id="gym-cardio-btn-start">▶ Iniciar</button>
           <button type="button" class="btn-sm" style="flex:1;background:rgba(245,158,11,0.15);color:var(--amber);padding:9px" onclick="timerPause('cardio')" id="gym-cardio-btn-pause">⏸ Pausar</button>
           <button type="button" class="btn-sm" style="flex:1;background:rgba(74,158,255,0.15);color:var(--blue);padding:9px" onclick="timerStop('cardio')" id="gym-cardio-btn-stop">⏹ Concluir</button>
         </div>
-        <div style="font-size:10px;color:var(--t3);text-align:center;margin-top:6px">Duração: <b id="gym-cardio-min-display" style="color:var(--blue)">0 min</b> · ou digite manualmente abaixo</div>
+        <div style="font-size:10px;color:var(--t3);text-align:center;margin-top:6px">Duração: <b id="gym-cardio-min-display" style="color:var(--pink)">0 min</b> · ou digite manualmente abaixo</div>
         <input type="number" id="gym-cardio-min" placeholder="minutos (manual)" min="0" step="1" style="margin-top:6px;text-align:center" oninput="calcGymCal('cardio')">
       </div>
       <div class="frow">
-        <div class="fg"><label>❤️ Batimentos (bpm)</label><input type="number" id="gym-cardio-bpm" placeholder="ex: 145" min="30" max="230" step="1"></div>
-        <div class="fg"><label>📏 Distância (km)</label><input type="number" id="gym-cardio-km" placeholder="ex: 5.0" min="0" step="0.1"></div>
+        <div class="fg"><label>❤️ Batimentos (bpm)</label><input type="number" id="gym-cardio-bpm" placeholder="ex: 140" min="30" max="230" step="1"></div>
+        <div class="fg"><label>📏 Distância (km) — opcional</label><input type="number" id="gym-cardio-km" placeholder="se aplicável" min="0" step="0.1"></div>
       </div>
       <div class="fg"><label>🔥 Calorias Estimadas (kcal)</label><input type="number" id="gym-cardio-cal" placeholder="calculado" step="1"></div>
+    </div>
+    <div id="caminhada-section" style="display:none">
+      <div style="font-size:11px;font-weight:700;color:var(--green);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.8px">🚶 Caminhada</div>
+      <div style="background:var(--inp);border-radius:var(--rs);padding:10px;margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:7px;margin-bottom:8px">
+          <label style="font-size:10px;color:var(--t2);white-space:nowrap">🎯 Meta (min):</label>
+          <input type="number" id="gym-caminhada-goal" placeholder="ex: 30" min="1" step="1" style="flex:1;text-align:center;padding:6px 8px" oninput="updateTimerProgress('caminhada')">
+        </div>
+        <div style="text-align:center;margin-bottom:6px">
+          <div style="font-size:32px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--green)" id="gym-caminhada-timer">00:00:00</div>
+          <div style="font-size:9px;color:var(--t3);margin-top:2px" id="gym-caminhada-timer-status">Cronômetro parado</div>
+        </div>
+        <div id="gym-caminhada-prog-wrap" style="display:none;margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--t3);margin-bottom:3px">
+            <span id="gym-caminhada-prog-label">0 / 0 min</span>
+            <span id="gym-caminhada-prog-pct" style="font-weight:700;color:var(--green)">0%</span>
+          </div>
+          <div class="prog"><div class="prog-fill" id="gym-caminhada-prog-bar" style="background:var(--green);width:0%"></div></div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button type="button" class="btn-sm" style="flex:1;background:rgba(52,211,153,0.15);color:var(--green);padding:9px" onclick="timerStart('caminhada')" id="gym-caminhada-btn-start">▶ Iniciar</button>
+          <button type="button" class="btn-sm" style="flex:1;background:rgba(245,158,11,0.15);color:var(--amber);padding:9px" onclick="timerPause('caminhada')" id="gym-caminhada-btn-pause">⏸ Pausar</button>
+          <button type="button" class="btn-sm" style="flex:1;background:rgba(74,158,255,0.15);color:var(--blue);padding:9px" onclick="timerStop('caminhada')" id="gym-caminhada-btn-stop">⏹ Concluir</button>
+        </div>
+        <div style="font-size:10px;color:var(--t3);text-align:center;margin-top:6px">Duração: <b id="gym-caminhada-min-display" style="color:var(--green)">0 min</b> · ou digite manualmente abaixo</div>
+        <input type="number" id="gym-caminhada-min" placeholder="minutos (manual)" min="0" step="1" style="margin-top:6px;text-align:center" oninput="calcGymCal('caminhada')">
+      </div>
+      <div class="frow">
+        <div class="fg"><label>❤️ Batimentos (bpm)</label><input type="number" id="gym-caminhada-bpm" placeholder="ex: 110" min="30" max="230" step="1"></div>
+        <div class="fg"><label>📏 Distância (km)</label><input type="number" id="gym-caminhada-km" placeholder="ex: 3.0" min="0" step="0.1"></div>
+      </div>
+      <div class="fg"><label>🔥 Calorias Estimadas (kcal)</label><input type="number" id="gym-caminhada-cal" placeholder="calculado" step="1"></div>
+    </div>
+    <div id="corrida-section" style="display:none">
+      <div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.8px">🏃 Corrida</div>
+      <div style="background:var(--inp);border-radius:var(--rs);padding:10px;margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:7px;margin-bottom:8px">
+          <label style="font-size:10px;color:var(--t2);white-space:nowrap">🎯 Meta (min):</label>
+          <input type="number" id="gym-corrida-goal" placeholder="ex: 30" min="1" step="1" style="flex:1;text-align:center;padding:6px 8px" oninput="updateTimerProgress('corrida')">
+        </div>
+        <div style="text-align:center;margin-bottom:6px">
+          <div style="font-size:32px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--blue)" id="gym-corrida-timer">00:00:00</div>
+          <div style="font-size:9px;color:var(--t3);margin-top:2px" id="gym-corrida-timer-status">Cronômetro parado</div>
+        </div>
+        <div id="gym-corrida-prog-wrap" style="display:none;margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--t3);margin-bottom:3px">
+            <span id="gym-corrida-prog-label">0 / 0 min</span>
+            <span id="gym-corrida-prog-pct" style="font-weight:700;color:var(--blue)">0%</span>
+          </div>
+          <div class="prog"><div class="prog-fill" id="gym-corrida-prog-bar" style="background:var(--blue);width:0%"></div></div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button type="button" class="btn-sm" style="flex:1;background:rgba(52,211,153,0.15);color:var(--green);padding:9px" onclick="timerStart('corrida')" id="gym-corrida-btn-start">▶ Iniciar</button>
+          <button type="button" class="btn-sm" style="flex:1;background:rgba(245,158,11,0.15);color:var(--amber);padding:9px" onclick="timerPause('corrida')" id="gym-corrida-btn-pause">⏸ Pausar</button>
+          <button type="button" class="btn-sm" style="flex:1;background:rgba(74,158,255,0.15);color:var(--blue);padding:9px" onclick="timerStop('corrida')" id="gym-corrida-btn-stop">⏹ Concluir</button>
+        </div>
+        <div style="font-size:10px;color:var(--t3);text-align:center;margin-top:6px">Duração: <b id="gym-corrida-min-display" style="color:var(--blue)">0 min</b> · ou digite manualmente abaixo</div>
+        <input type="number" id="gym-corrida-min" placeholder="minutos (manual)" min="0" step="1" style="margin-top:6px;text-align:center" oninput="calcGymCal('corrida')">
+      </div>
+      <div class="frow">
+        <div class="fg"><label>❤️ Batimentos (bpm)</label><input type="number" id="gym-corrida-bpm" placeholder="ex: 155" min="30" max="230" step="1"></div>
+        <div class="fg"><label>📏 Distância (km)</label><input type="number" id="gym-corrida-km" placeholder="ex: 5.0" min="0" step="0.1"></div>
+      </div>
+      <div class="fg"><label>🔥 Calorias Estimadas (kcal)</label><input type="number" id="gym-corrida-cal" placeholder="calculado" step="1"></div>
+    </div>
+    <div id="ciclismo-section" style="display:none">
+      <div style="font-size:11px;font-weight:700;color:var(--orange);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.8px">🚴 Ciclismo</div>
+      <div style="background:var(--inp);border-radius:var(--rs);padding:10px;margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:7px;margin-bottom:8px">
+          <label style="font-size:10px;color:var(--t2);white-space:nowrap">🎯 Meta (min):</label>
+          <input type="number" id="gym-ciclismo-goal" placeholder="ex: 30" min="1" step="1" style="flex:1;text-align:center;padding:6px 8px" oninput="updateTimerProgress('ciclismo')">
+        </div>
+        <div style="text-align:center;margin-bottom:6px">
+          <div style="font-size:32px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--orange)" id="gym-ciclismo-timer">00:00:00</div>
+          <div style="font-size:9px;color:var(--t3);margin-top:2px" id="gym-ciclismo-timer-status">Cronômetro parado</div>
+        </div>
+        <div id="gym-ciclismo-prog-wrap" style="display:none;margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--t3);margin-bottom:3px">
+            <span id="gym-ciclismo-prog-label">0 / 0 min</span>
+            <span id="gym-ciclismo-prog-pct" style="font-weight:700;color:var(--orange)">0%</span>
+          </div>
+          <div class="prog"><div class="prog-fill" id="gym-ciclismo-prog-bar" style="background:var(--orange);width:0%"></div></div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button type="button" class="btn-sm" style="flex:1;background:rgba(52,211,153,0.15);color:var(--green);padding:9px" onclick="timerStart('ciclismo')" id="gym-ciclismo-btn-start">▶ Iniciar</button>
+          <button type="button" class="btn-sm" style="flex:1;background:rgba(245,158,11,0.15);color:var(--amber);padding:9px" onclick="timerPause('ciclismo')" id="gym-ciclismo-btn-pause">⏸ Pausar</button>
+          <button type="button" class="btn-sm" style="flex:1;background:rgba(74,158,255,0.15);color:var(--blue);padding:9px" onclick="timerStop('ciclismo')" id="gym-ciclismo-btn-stop">⏹ Concluir</button>
+        </div>
+        <div style="font-size:10px;color:var(--t3);text-align:center;margin-top:6px">Duração: <b id="gym-ciclismo-min-display" style="color:var(--orange)">0 min</b> · ou digite manualmente abaixo</div>
+        <input type="number" id="gym-ciclismo-min" placeholder="minutos (manual)" min="0" step="1" style="margin-top:6px;text-align:center" oninput="calcGymCal('ciclismo')">
+      </div>
+      <div class="frow">
+        <div class="fg"><label>❤️ Batimentos (bpm)</label><input type="number" id="gym-ciclismo-bpm" placeholder="ex: 135" min="30" max="230" step="1"></div>
+        <div class="fg"><label>📏 Distância (km)</label><input type="number" id="gym-ciclismo-km" placeholder="ex: 15.0" min="0" step="0.1"></div>
+      </div>
+      <div class="fg"><label>🔥 Calorias Estimadas (kcal)</label><input type="number" id="gym-ciclismo-cal" placeholder="calculado" step="1"></div>
+    </div>
+    <div id="natacao-section" style="display:none">
+      <div style="font-size:11px;font-weight:700;color:var(--teal);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.8px">🏊 Natação</div>
+      <div style="background:var(--inp);border-radius:var(--rs);padding:10px;margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:7px;margin-bottom:8px">
+          <label style="font-size:10px;color:var(--t2);white-space:nowrap">🎯 Meta (min):</label>
+          <input type="number" id="gym-natacao-goal" placeholder="ex: 30" min="1" step="1" style="flex:1;text-align:center;padding:6px 8px" oninput="updateTimerProgress('natacao')">
+        </div>
+        <div style="text-align:center;margin-bottom:6px">
+          <div style="font-size:32px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--teal)" id="gym-natacao-timer">00:00:00</div>
+          <div style="font-size:9px;color:var(--t3);margin-top:2px" id="gym-natacao-timer-status">Cronômetro parado</div>
+        </div>
+        <div id="gym-natacao-prog-wrap" style="display:none;margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--t3);margin-bottom:3px">
+            <span id="gym-natacao-prog-label">0 / 0 min</span>
+            <span id="gym-natacao-prog-pct" style="font-weight:700;color:var(--teal)">0%</span>
+          </div>
+          <div class="prog"><div class="prog-fill" id="gym-natacao-prog-bar" style="background:var(--teal);width:0%"></div></div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button type="button" class="btn-sm" style="flex:1;background:rgba(52,211,153,0.15);color:var(--green);padding:9px" onclick="timerStart('natacao')" id="gym-natacao-btn-start">▶ Iniciar</button>
+          <button type="button" class="btn-sm" style="flex:1;background:rgba(245,158,11,0.15);color:var(--amber);padding:9px" onclick="timerPause('natacao')" id="gym-natacao-btn-pause">⏸ Pausar</button>
+          <button type="button" class="btn-sm" style="flex:1;background:rgba(74,158,255,0.15);color:var(--blue);padding:9px" onclick="timerStop('natacao')" id="gym-natacao-btn-stop">⏹ Concluir</button>
+        </div>
+        <div style="font-size:10px;color:var(--t3);text-align:center;margin-top:6px">Duração: <b id="gym-natacao-min-display" style="color:var(--teal)">0 min</b> · ou digite manualmente abaixo</div>
+        <input type="number" id="gym-natacao-min" placeholder="minutos (manual)" min="0" step="1" style="margin-top:6px;text-align:center" oninput="calcGymCal('natacao')">
+      </div>
+      <div class="frow">
+        <div class="fg"><label>❤️ Batimentos (bpm)</label><input type="number" id="gym-natacao-bpm" placeholder="ex: 130" min="30" max="230" step="1"></div>
+        <div class="fg"><label>📏 Distância (km)</label><input type="number" id="gym-natacao-km" placeholder="ex: 1.0" min="0" step="0.1"></div>
+      </div>
+      <div class="fg"><label>🔥 Calorias Estimadas (kcal)</label><input type="number" id="gym-natacao-cal" placeholder="calculado" step="1"></div>
     </div>
     <div id="musculacao-section" style="display:none">
       <div style="font-size:11px;font-weight:700;color:var(--purple);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.8px">💪 Musculação</div>
@@ -858,7 +1016,7 @@ body{display:flex;flex-direction:column}
     </div>
     <div class="fg"><label>Observações</label><textarea id="gym-obs" placeholder="Como foi o treino, peso corporal..."></textarea></div>
     <div class="fg"><label>Peso corporal (kg) — opcional</label><input type="number" id="gym-peso" placeholder="ex: 95.5" step="0.1"></div>
-    <button class="btn btn-g" onclick="saveGym()">🏋️ Registrar Treino</button>
+    <button class="btn btn-g" onclick="saveGym()">🏃 Registrar Atividade</button>
   </div>
   <div class="card">
     <div class="card-hd"><div><div class="card-title">Esta semana</div><div class="card-sub" id="gym-week-stat">0 treinos</div></div><span class="badge bg2" id="gym-week-days">0 dias</span></div>
@@ -920,7 +1078,7 @@ body{display:flex;flex-direction:column}
     <div class="card"><div class="chart-wrap"><canvas id="cWater"></canvas></div></div>
   </div>
   <div class="chart-block" data-chart="cGym" draggable="true">
-    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🏋️ Treinos — minutos por dia</span></div>
+    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🏃 Atividades Físicas — minutos por dia</span></div>
     <div class="card"><div class="chart-wrap"><canvas id="cGym"></canvas></div></div>
   </div>
   <div class="chart-block" data-chart="cMed" draggable="true">
@@ -1007,7 +1165,7 @@ body{display:flex;flex-direction:column}
       <div class="fg"><label>PSA (ng/mL)</label><input type="number" id="ex-psa" placeholder="ex: 1.2" step="0.01" min="0"></div>
     </div>
     <div class="fg"><label>Observações</label><textarea id="ex-obs" placeholder="Laboratório, condições da coleta..."></textarea></div>
-    <button class="btn btn-b" onclick="saveExame()">🔬 Registrar Exames</button>
+    <button class="btn btn-b" id="btn-save-exame" onclick="saveExame()">🔬 Registrar Exames</button>
   </div>
 
   <div class="st">📋 Exames Registrados</div>
@@ -1052,7 +1210,7 @@ function goTab(name,btn){
   document.getElementById('tab-'+name).classList.add('active');
   if(btn)btn.classList.add('active');
   else{document.querySelectorAll('.sb-item').forEach(b=>{if((b.getAttribute('onclick')||'').includes("'"+name+"'"))b.classList.add('active');});}
-  if(name==='home'){renderHome();renderBodyCharts();}
+  if(name==='home'){renderHome();renderBodyCharts();renderHomeExamCharts();}
   if(name==='charts'){applyChartOrder();renderCharts();initChartDnD();}
   if(name==='history'){renderHistory();renderGymHist();}
   if(name==='register'){renderCustomRegisterCards();fillRegSelects();setDates();prefillMedidas('tirz');prefillMedidas('test');}
@@ -1060,44 +1218,260 @@ function goTab(name,btn){
   if(name==='gym'){renderGymTab();setGymDate();}
   if(name==='exames'){renderExames();setExDate();}
 }
-function renderBodyCharts(){
-  // Destroy existing home charts safely
-  if(!window.charts) window.charts={};
-  ['homePeso','homeCintura'].forEach(k=>{if(window.charts[k]){try{window.charts[k].destroy();}catch(e){} delete window.charts[k];}});
-
-  const allMedData = [];
-  doses.forEach(d => { if(d.peso || d.cintura) allMedData.push(d); });
-  gymLog.forEach(g => { if(g.peso) allMedData.push({date: g.date, peso: g.peso}); });
-  allMedData.sort((a,b) => new Date(a.date) - new Date(b.date));
-  
-  const medLabels=allMedData.map(d=>fmtDT(d.date).split(' ')[0]);
-
-  const cO2={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#162840',titleColor:'#e8f4fd',bodyColor:'#8badc4',borderColor:'rgba(0,212,170,0.3)',borderWidth:1}},scales:{x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9}}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9}}}}};
-
-  // Render charts; retry if canvas not yet measurable (e.g. during login transition)
-  function drawHomeCharts(attempt){
-    const ep=document.getElementById('cPeso');
-    const ec=document.getElementById('cCintura');
-    if(!ep||!ec)return;
-    // If the home tab still has zero width, the canvas isn't laid out yet — retry
-    const ready=ep.clientWidth>0;
-    if(!ready&&attempt<20){requestAnimationFrame(()=>drawHomeCharts(attempt+1));return;}
-    // Meta line for peso: para cada ponto, a meta vigente naquela data
-    const pesoMetaLine=allMedData.map(d=>{const m=getMetaVigente(metasPeso,d.date.split('T')[0]);return m?m.val:null;});
-    const cinMetaLine=allMedData.map(d=>{const m=getMetaVigente(metasCintura,d.date.split('T')[0]);return m?m.val:null;});
-    try{
-      const pesoDs=[{label:'Peso',data:allMedData.map(d=>d.peso||null),borderColor:'#00d4aa',backgroundColor:'rgba(0,212,170,0.08)',tension:0.4,fill:true,pointBackgroundColor:'#00d4aa',pointRadius:4,spanGaps:true}];
-      if(pesoMetaLine.some(v=>v!=null))pesoDs.push({label:'Meta',data:pesoMetaLine,borderColor:'#f59e0b',borderDash:[6,4],backgroundColor:'transparent',tension:0,fill:false,pointRadius:0,spanGaps:true,borderWidth:2});
-      window.charts.homePeso=new Chart(ep,{type:'line',data:{labels:medLabels,datasets:pesoDs},options:{...cO2,plugins:{...cO2.plugins,legend:{display:pesoMetaLine.some(v=>v!=null),labels:{color:'#8badc4',font:{size:9},boxWidth:10}}}}});
-    }catch(e){}
-    try{
-      const cinDs=[{label:'Cintura',data:allMedData.map(d=>d.cintura||null),borderColor:'#4a9eff',backgroundColor:'rgba(74,158,255,0.08)',tension:0.4,fill:true,pointBackgroundColor:'#4a9eff',pointRadius:4,spanGaps:true}];
-      if(cinMetaLine.some(v=>v!=null))cinDs.push({label:'Meta',data:cinMetaLine,borderColor:'#f59e0b',borderDash:[6,4],backgroundColor:'transparent',tension:0,fill:false,pointRadius:0,spanGaps:true,borderWidth:2});
-      window.charts.homeCintura=new Chart(ec,{type:'line',data:{labels:medLabels,datasets:cinDs},options:{...cO2,plugins:{...cO2.plugins,legend:{display:cinMetaLine.some(v=>v!=null),labels:{color:'#8badc4',font:{size:9},boxWidth:10}}}}});
-    }catch(e){}
-  }
-  requestAnimationFrame(()=>drawHomeCharts(0));
+// ═══════════════════════════════════════════════════
+// AGREGAÇÃO DIÁRIA DE PESO/CINTURA
+// Sempre considera o ÚLTIMO peso e a ÚLTIMA cintura registrados
+// naquele dia, de qualquer origem (dose ou treino) — nunca duplica dia.
+// ═══════════════════════════════════════════════════
+function getDailyBodyData(){
+  const byDay={}; // day -> {date, peso, cintura, _pesoTs, _cinturaTs}
+  const consider=(dateStr,peso,cintura)=>{
+    if(!dateStr)return;
+    const day=dateStr.split('T')[0];
+    if(!byDay[day])byDay[day]={date:day,peso:null,cintura:null,_pesoTs:null,_cinturaTs:null};
+    const ts=new Date(dateStr.includes('T')?dateStr:dateStr+'T12:00:00').getTime();
+    const rec=byDay[day];
+    if(peso!=null&&(rec._pesoTs===null||ts>=rec._pesoTs)){rec.peso=peso;rec._pesoTs=ts;}
+    if(cintura!=null&&(rec._cinturaTs===null||ts>=rec._cinturaTs)){rec.cintura=cintura;rec._cinturaTs=ts;}
+  };
+  doses.forEach(d=>{if(d.peso||d.cintura)consider(d.date,d.peso||null,d.cintura||null);});
+  gymLog.forEach(g=>{if(g.peso)consider(g.date+'T12:00:00',g.peso,null);});
+  return Object.values(byDay).sort((a,b)=>a.date.localeCompare(b.date));
 }
+
+function renderBodyCharts(){
+  if(!window.charts) window.charts={};
+  if(window.charts.body){try{window.charts.body.destroy();}catch(e){} delete window.charts.body;}
+
+  const daily=getDailyBodyData();
+  const labels=daily.map(d=>{const dt=new Date(d.date+'T12:00:00');return dt.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});});
+
+  // Subtítulo: total de registros, período e novo mínimo de peso
+  const sub=document.getElementById('bodyChartSub');
+  if(sub){
+    if(!daily.length){sub.textContent='Sem registros ainda';}
+    else{
+      const pesos=daily.filter(d=>d.peso!=null);
+      const dtFmt=d=>{const dt=new Date(d+'T12:00:00');return dt.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});};
+      let txt=`Dados de ${daily.length} registro${daily.length>1?'s':''} · ${dtFmt(daily[0].date)}–${dtFmt(daily[daily.length-1].date)}`;
+      if(pesos.length){
+        const minP=pesos.reduce((m,d)=>d.peso<m.peso?d:m,pesos[0]);
+        txt+=` · <b style="color:var(--teal)">Novo mínimo: ${minP.peso} kg em ${dtFmt(minP.date)}</b>`;
+      }
+      sub.innerHTML=txt;
+    }
+  }
+
+  const cO2={responsive:true,maintainAspectRatio:false,
+    interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:false},tooltip:{backgroundColor:'#162840',titleColor:'#e8f4fd',bodyColor:'#8badc4',borderColor:'rgba(0,212,170,0.3)',borderWidth:1,callbacks:{label:ctx=>{const u=ctx.dataset.yAxisID==='y1'?'cm':'kg';return` ${ctx.dataset.label}: ${ctx.parsed.y} ${u}`;}}}},
+    scales:{
+      x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9}}},
+      y:{position:'left',grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#00d4aa',font:{size:9}},title:{display:true,text:'kg',color:'#00d4aa',font:{size:9}}},
+      y1:{position:'right',grid:{drawOnChartArea:false},ticks:{color:'#f5a623',font:{size:9}},title:{display:true,text:'cm',color:'#f5a623',font:{size:9}}}
+    }
+  };
+
+  // Legenda customizada (evita disputar espaço com o card-hd)
+  const legEl=document.getElementById('bodyChartLegend');
+
+  function drawHomeChart(attempt){
+    const el=document.getElementById('cBody');
+    if(!el)return;
+    const ready=el.clientWidth>0;
+    if(!ready&&attempt<20){requestAnimationFrame(()=>drawHomeChart(attempt+1));return;}
+
+    const pesoData=daily.map(d=>d.peso);
+    const cinData=daily.map(d=>d.cintura);
+    const pesoMetaLine=daily.map(d=>{const m=getMetaVigente(metasPeso,d.date);return m?m.val:null;});
+    const cinMetaLine=daily.map(d=>{const m=getMetaVigente(metasCintura,d.date);return m?m.val:null;});
+    const hasPesoMeta=pesoMetaLine.some(v=>v!=null);
+    const hasCinMeta=cinMetaLine.some(v=>v!=null);
+
+    const datasets=[
+      {label:'Peso',data:pesoData,borderColor:'#00d4aa',backgroundColor:'rgba(0,212,170,0.08)',tension:0.35,fill:false,pointBackgroundColor:'#00d4aa',pointBorderColor:'#00d4aa',pointRadius:4,pointStyle:'circle',spanGaps:true,yAxisID:'y'},
+      {label:'Cintura',data:cinData,borderColor:'#f5a623',backgroundColor:'rgba(245,166,35,0.08)',tension:0.35,fill:false,pointBackgroundColor:'#f5a623',pointBorderColor:'#f5a623',pointRadius:4,pointStyle:'circle',spanGaps:true,yAxisID:'y1'}
+    ];
+    if(hasPesoMeta)datasets.push({label:'Meta Peso',data:pesoMetaLine,borderColor:'rgba(0,212,170,0.55)',borderDash:[6,4],backgroundColor:'transparent',tension:0,fill:false,pointRadius:0,spanGaps:true,borderWidth:2,yAxisID:'y'});
+    if(hasCinMeta)datasets.push({label:'Meta Cintura',data:cinMetaLine,borderColor:'rgba(245,166,35,0.55)',borderDash:[6,4],backgroundColor:'transparent',tension:0,fill:false,pointRadius:0,spanGaps:true,borderWidth:2,yAxisID:'y1'});
+
+    try{
+      window.charts.body=new Chart(el,{type:'line',data:{labels,datasets},options:cO2});
+    }catch(e){}
+
+    // Monta legenda customizada abaixo do título
+    if(legEl){
+      legEl.innerHTML=`
+        <div class="ld"><div class="ldot" style="background:#00d4aa"></div>Peso (kg)</div>
+        <div class="ld"><div class="ldot" style="background:#f5a623"></div>Cintura (cm)</div>
+        ${hasPesoMeta||hasCinMeta?'<div class="ld"><div class="ldot" style="background:transparent;border:1.5px dashed var(--t3)"></div>Meta</div>':''}
+      `;
+    }
+  }
+  requestAnimationFrame(()=>drawHomeChart(0));
+}
+
+// ═══════════════════════════════════════════════════
+// GRÁFICOS DE EXAMES NA TELA INICIAL
+// (Perfil Hormonal — Evolução · Lipidograma Completo)
+// ═══════════════════════════════════════════════════
+function monthLabelPt(dateStr){
+  const d=new Date(dateStr+'T12:00:00');
+  const meses=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  return meses[d.getMonth()]+'/'+String(d.getFullYear()).slice(2);
+}
+
+// Faixas de referência gerais para homens adultos — variam por laboratório/método.
+// Usadas apenas como contexto no tooltip (o valor exibido no gráfico é sempre o número real do exame).
+const HORM_REFS={
+  testoTotal:{label:'Testo Total',unit:'ng/dL',ref:'264–916'},
+  testoLivre:{label:'Testo Livre',unit:'pg/mL',ref:'9–30'},
+  dht:{label:'DHT',unit:'pg/mL',ref:'300–850'},
+  estradiol:{label:'Estradiol',unit:'pg/mL',ref:'10–40'},
+  prolactina:{label:'Prolactina',unit:'ng/mL',ref:'4–15'},
+  hematocrito:{label:'Hematócrito',unit:'%',ref:'40–50'}
+};
+const HORM_PALETTE=['#4a9eff','#f87171','#f5a623','#34d399','#a78bfa','#f472b6','#fb923c','#22d3ee'];
+
+// Plugin genérico: desenha o valor numérico acima de cada barra
+const barValueLabelPlugin={
+  id:'barValueLabelPlugin',
+  afterDatasetsDraw(chart){
+    const{ctx}=chart;
+    chart.data.datasets.forEach((dataset,dsIndex)=>{
+      const meta=chart.getDatasetMeta(dsIndex);
+      if(meta.hidden)return;
+      meta.data.forEach((bar,index)=>{
+        const value=dataset.data[index];
+        if(value==null)return;
+        ctx.save();
+        ctx.fillStyle='#e8f4fd';
+        ctx.font='9px sans-serif';
+        ctx.textAlign='center';
+        ctx.fillText(String(value),bar.x,bar.y-4);
+        ctx.restore();
+      });
+    });
+  }
+};
+
+function renderHormonalHome(){
+  const card=document.getElementById('hormonalHomeCard');
+  const el=document.getElementById('cHormonalHome');
+  if(!el||!card)return;
+  if(!window.charts)window.charts={};
+  if(window.charts.hormonalHome){try{window.charts.hormonalHome.destroy();}catch(e){} delete window.charts.hormonalHome;}
+
+  const markers=Object.keys(HORM_REFS);
+  // TODOS os exames que tenham ao menos um marcador hormonal preenchido — sem agrupar por mês
+  // e sem limite de quantidade, para nunca perder dados de nenhum exame registrado.
+  const withHormonal=[...exames]
+    .filter(ex=>markers.some(k=>ex[k]!=null))
+    .sort((a,b)=>new Date(a.date)-new Date(b.date));
+
+  if(!withHormonal.length){card.style.display='none';return;}
+  card.style.display='block';
+
+  const labels=markers.map(k=>HORM_REFS[k].label);
+  const datasets=withHormonal.map((ex,i)=>({
+    label:fmtD(ex.date),
+    data:markers.map(k=>ex[k]!=null?ex[k]:null),
+    backgroundColor:HORM_PALETTE[i%HORM_PALETTE.length],
+    borderRadius:4
+  }));
+
+  function draw(attempt){
+    if(el.clientWidth<=0&&attempt<20){requestAnimationFrame(()=>draw(attempt+1));return;}
+    try{
+      window.charts.hormonalHome=new Chart(el,{
+        type:'bar',
+        data:{labels,datasets},
+        plugins:[barValueLabelPlugin],
+        options:{
+          responsive:true,maintainAspectRatio:false,
+          layout:{padding:{top:14}},
+          plugins:{
+            legend:{display:false},
+            tooltip:{backgroundColor:'#162840',titleColor:'#e8f4fd',bodyColor:'#8badc4',borderColor:'rgba(0,212,170,0.3)',borderWidth:1,
+              callbacks:{label:ctx=>{
+                const key=markers[ctx.dataIndex];
+                const ref=HORM_REFS[key];
+                return ` ${ctx.dataset.label}: ${ctx.parsed.y} ${ref.unit} (ref. ${ref.ref})`;
+              }}}
+          },
+          scales:{
+            x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9}}},
+            y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9}}}
+          }
+        }
+      });
+    }catch(e){}
+    const legEl=document.getElementById('hormonalLegend');
+    if(legEl)legEl.innerHTML=datasets.map((ds,i)=>`<div class="ld"><div class="ldot" style="background:${HORM_PALETTE[i%HORM_PALETTE.length]}"></div>${ds.label}</div>`).join('');
+  }
+  requestAnimationFrame(()=>draw(0));
+}
+
+function renderLipidHome(){
+  const card=document.getElementById('lipidHomeCard');
+  const el=document.getElementById('cLipidHome');
+  if(!el||!card)return;
+  if(!window.charts)window.charts={};
+  if(window.charts.lipidHome){try{window.charts.lipidHome.destroy();}catch(e){} delete window.charts.lipidHome;}
+
+  // TODOS os exames com algum dado lipídico, ordenados por data real (não por texto do mês)
+  const withLipid=[...exames]
+    .filter(e=>e.colTotal!=null||e.ldl!=null||e.hdl!=null||e.trig!=null)
+    .sort((a,b)=>new Date(a.date)-new Date(b.date));
+
+  if(!withLipid.length){card.style.display='none';return;}
+  card.style.display='block';
+
+  // Rótulo com dia/mês/ano evita ambiguidade quando há mais de um exame no mesmo mês
+  const labels=withLipid.map(e=>fmtD(e.date));
+  const sub=document.getElementById('lipidHomeSub');
+  if(sub){
+    let txt=labels.join(' → ');
+    const lastObs=[...withLipid].reverse().find(e=>e.obs&&e.obs.trim());
+    if(lastObs)txt+=' · '+lastObs.obs.trim();
+    sub.textContent=txt;
+  }
+
+  function draw(attempt){
+    if(el.clientWidth<=0&&attempt<20){requestAnimationFrame(()=>draw(attempt+1));return;}
+    const mk=(label,key,color)=>({label,data:withLipid.map(e=>e[key]!=null?e[key]:null),borderColor:color,backgroundColor:color.replace(')',',0.08)').replace('rgb','rgba'),tension:0.35,fill:false,pointBackgroundColor:color,pointRadius:5,spanGaps:true});
+    const datasets=[
+      mk('Col. Total','colTotal','rgb(248,113,113)'),
+      mk('LDL','ldl','rgb(245,166,35)'),
+      mk('HDL','hdl','rgb(52,211,153)'),
+      mk('Triglicérides','trig','rgb(74,158,255)')
+    ];
+    try{
+      window.charts.lipidHome=new Chart(el,{
+        type:'line',
+        data:{labels,datasets},
+        options:{
+          responsive:true,maintainAspectRatio:false,
+          interaction:{mode:'index',intersect:false},
+          plugins:{
+            legend:{display:false},
+            tooltip:{backgroundColor:'#162840',titleColor:'#e8f4fd',bodyColor:'#8badc4',borderColor:'rgba(0,212,170,0.3)',borderWidth:1,
+              callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.parsed.y} mg/dL`}}
+          },
+          scales:{
+            x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9}}},
+            y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9},callback:v=>v+' mg/dL'}}
+          }
+        }
+      });
+    }catch(e){}
+    const legEl=document.getElementById('lipidLegend');
+    if(legEl)legEl.innerHTML=datasets.map(ds=>`<div class="ld"><div class="ldot" style="background:${ds.borderColor}"></div>${ds.label}</div>`).join('');
+  }
+  requestAnimationFrame(()=>draw(0));
+}
+
+function renderHomeExamCharts(){renderHormonalHome();renderLipidHome();}
 </script>
 
 
@@ -1142,6 +1516,7 @@ const DB={
 let doses       = DB.get('tds_doses',[]);
 let tirzStocks  = DB.get('tds_tirz',[]);
 let editingStock = {tirz:null,test:null,klow:null,custom:null,customH:null};
+let editingExameId = null;
 let customHormones = DB.get('tds_customhorm',[]); // [{id,nome,cor}]
 let customStocks   = DB.get('tds_customstock',[]); // [{id,hormoneId,tipo,comp,conc,vol,qty,totalMl,totalMg,usedMl,usedMg,val,obs,date}]
 let testStocks  = DB.get('tds_test',[]);
@@ -1934,7 +2309,7 @@ function renderWater(){
 // ═══════════════════════════════════════════════════
 // ACADEMIA / GYM
 // ═══════════════════════════════════════════════════
-const gymTypes=['cardio','musculacao','luta','outros'];
+const gymTypes=['cardio','caminhada','corrida','ciclismo','natacao','musculacao','luta','outros'];
 function toggleGymType(btn){
   btn.classList.toggle('sel');
   const tipo=btn.getAttribute('data-tipo');
@@ -1945,7 +2320,7 @@ function toggleGymType(btn){
 // ═══════════════════════════════════════════════════
 // CRONÔMETROS DE TREINO
 // ═══════════════════════════════════════════════════
-const gymTimers={cardio:{elapsed:0,running:false,interval:null,startTs:0},musc:{elapsed:0,running:false,interval:null,startTs:0},luta:{elapsed:0,running:false,interval:null,startTs:0},outros:{elapsed:0,running:false,interval:null,startTs:0}};
+const gymTimers={cardio:{elapsed:0,running:false,interval:null,startTs:0},caminhada:{elapsed:0,running:false,interval:null,startTs:0},corrida:{elapsed:0,running:false,interval:null,startTs:0},ciclismo:{elapsed:0,running:false,interval:null,startTs:0},natacao:{elapsed:0,running:false,interval:null,startTs:0},musc:{elapsed:0,running:false,interval:null,startTs:0},luta:{elapsed:0,running:false,interval:null,startTs:0},outros:{elapsed:0,running:false,interval:null,startTs:0}};
 
 function fmtTimer(sec){
   const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;
@@ -1967,14 +2342,16 @@ function calcGymCal(tipo){
   const min=manual || Math.round(t.elapsed/60);
   if(!min)return;
   const lastPeso = doses.find(d=>(d.tipo==='tirz'||d.tipo==='test')&&d.peso)?.peso || 80;
-  let met=5;
+  // MET (Metabolic Equivalent of Task) — estimativa de intensidade moderada por atividade
+  let met;
   if(tipo==='cardio'){
     const mod=document.getElementById('gym-cardio-modal').value;
-    const mets={Esteira:9,Bicicleta:8,'Elíptico':7,'Corrida ao ar livre':10,Natação:8,'Pular corda':12,Outro:6};
-    met=mets[mod]||7;
-  } else if(tipo==='musculacao'){ met=5; }
-  else if(tipo==='luta'){ met=10; }
-  else { met=4; }
+    const cardioMETS={Esteira:9,'Dança':5.5,Escada:8,Bicicleta:7,'Elíptico':7,'Pular corda':12,Outro:6};
+    met=cardioMETS[mod]||6;
+  } else {
+    const METS={caminhada:3.5,corrida:9.8,ciclismo:8,natacao:8,musc:5,luta:10,outros:4};
+    met=METS[tipo]||4;
+  }
   const cal = Math.round(met * lastPeso * (min/60));
   const el=document.getElementById('gym-'+tipo+'-cal');
   if(el) el.value = cal;
@@ -2001,7 +2378,7 @@ function updateTimerProgress(tipo){
     if(bar)bar.style.background='var(--green)';
     if(pctEl){pctEl.textContent='🎯 '+Math.round(pct)+'%';pctEl.style.color='var(--green)';}
   } else {
-    const colors={cardio:'var(--blue)',musc:'var(--purple)',luta:'var(--red)',outros:'var(--amber)'};
+    const colors={cardio:'var(--pink)',caminhada:'var(--green)',corrida:'var(--blue)',ciclismo:'var(--orange)',natacao:'var(--teal)',musc:'var(--purple)',luta:'var(--red)',outros:'var(--amber)'};
     if(bar)bar.style.background=colors[tipo]||'var(--teal)';
     if(pctEl){pctEl.textContent=Math.round(pct)+'%';pctEl.style.color=colors[tipo]||'var(--teal)';}
   }
@@ -2046,26 +2423,48 @@ function timerReset(tipo){
   const goalEl=document.getElementById('gym-'+tipo+'-goal');if(goalEl)goalEl.value='';
   const wrap=document.getElementById('gym-'+tipo+'-prog-wrap');if(wrap)wrap.style.display='none';
 }
-function resetAllTimers(){['cardio','musc','luta','outros'].forEach(timerReset);}
+function resetAllTimers(){['cardio','caminhada','corrida','ciclismo','natacao','musc','luta','outros'].forEach(timerReset);}
 
 function saveGym(){
   const date=document.getElementById('gym-date').value;
   if(!date){toast('⚠️ Selecione a data','#f59e0b');return;}
   const treinos=[];
-  const cardioBtn=document.querySelector('[data-tipo=cardio]');
-  const muscBtn=document.querySelector('[data-tipo=musculacao]');
-  const lutaBtn=document.querySelector('[data-tipo=luta]');
-  const outrosBtn=document.querySelector('[data-tipo=outros]');
   // Helper: minutos do timer (se rodou) ou do campo manual
   const getMin=(tipo)=>{const manual=parseInt(document.getElementById('gym-'+tipo+'-min').value);if(manual)return manual;return Math.round(gymTimers[tipo].elapsed/60);};
+
+  // Cardio genérico (Esteira, Dança, Escada, Bicicleta, etc. — via modalidade)
+  const cardioBtn=document.querySelector('[data-tipo=cardio]');
   if(cardioBtn&&cardioBtn.classList.contains('sel')){
     const min=getMin('cardio');
     const bpm=parseInt(document.getElementById('gym-cardio-bpm').value)||null;
     const km=parseFloat(document.getElementById('gym-cardio-km').value)||null;
     const goal=parseFloat(document.getElementById('gym-cardio-goal').value)||null;
     const cal=parseInt(document.getElementById('gym-cardio-cal').value)||0;
-    treinos.push({tipo:'cardio',label:'Cardio',modal:document.getElementById('gym-cardio-modal').value,min,bpm,km,goal,cal,icon:'🏃',color:'var(--blue)'});
+    const modal=document.getElementById('gym-cardio-modal').value;
+    treinos.push({tipo:'cardio',label:'Cardio',modal,min,bpm,km,goal,cal,icon:'🔥',color:'var(--pink)'});
   }
+
+  // Atividades de distância (mesmo padrão: bpm + km + meta + cronômetro + calorias)
+  const distActivities=[
+    {tipo:'caminhada',label:'Caminhada',icon:'🚶',color:'var(--green)'},
+    {tipo:'corrida',label:'Corrida',icon:'🏃',color:'var(--blue)'},
+    {tipo:'ciclismo',label:'Ciclismo',icon:'🚴',color:'var(--orange)'},
+    {tipo:'natacao',label:'Natação',icon:'🏊',color:'var(--teal)'}
+  ];
+  distActivities.forEach(act=>{
+    const btn=document.querySelector('[data-tipo='+act.tipo+']');
+    if(!btn||!btn.classList.contains('sel'))return;
+    const min=getMin(act.tipo);
+    const bpm=parseInt(document.getElementById('gym-'+act.tipo+'-bpm').value)||null;
+    const km=parseFloat(document.getElementById('gym-'+act.tipo+'-km').value)||null;
+    const goal=parseFloat(document.getElementById('gym-'+act.tipo+'-goal').value)||null;
+    const cal=parseInt(document.getElementById('gym-'+act.tipo+'-cal').value)||0;
+    treinos.push({tipo:act.tipo,label:act.label,modal:act.label,min,bpm,km,goal,cal,icon:act.icon,color:act.color});
+  });
+
+  const muscBtn=document.querySelector('[data-tipo=musculacao]');
+  const lutaBtn=document.querySelector('[data-tipo=luta]');
+  const outrosBtn=document.querySelector('[data-tipo=outros]');
   if(muscBtn&&muscBtn.classList.contains('sel')){
     const min=getMin('musc');
     const bpm=parseInt(document.getElementById('gym-musc-bpm').value)||null;
@@ -2089,7 +2488,7 @@ function saveGym(){
     const cal=parseInt(document.getElementById('gym-outros-cal').value)||0;
     treinos.push({tipo:'outros',label:desc||'Outros',modal:desc,min,bpm,km,goal,cal,icon:'⚡',color:'var(--amber)'});
   }
-  if(!treinos.length){toast('⚠️ Selecione pelo menos um tipo de treino','#f59e0b');return;}
+  if(!treinos.length){toast('⚠️ Selecione pelo menos uma atividade','#f59e0b');return;}
   const totalMin=treinos.reduce((acc,t)=>acc+t.min,0);
   const peso=parseFloat(document.getElementById('gym-peso').value)||null;
   const obs=document.getElementById('gym-obs').value;
@@ -2113,10 +2512,15 @@ function saveGym(){
   // Reset
   document.querySelectorAll('.gym-type-btn').forEach(b=>{b.classList.remove('sel');});
   gymTypes.forEach(t=>document.getElementById(t+'-section').style.display='none');
-  ['gym-cardio-min','gym-musc-min','gym-luta-min','gym-outros-min','gym-peso','gym-cardio-bpm','gym-cardio-km','gym-musc-bpm','gym-luta-bpm','gym-outros-bpm','gym-outros-km','gym-cardio-goal','gym-musc-goal','gym-luta-goal','gym-outros-goal'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['gym-cardio-min','gym-caminhada-min','gym-corrida-min','gym-ciclismo-min','gym-natacao-min','gym-musc-min','gym-luta-min','gym-outros-min','gym-peso',
+   'gym-cardio-bpm','gym-cardio-km','gym-caminhada-bpm','gym-caminhada-km','gym-corrida-bpm','gym-corrida-km','gym-ciclismo-bpm','gym-ciclismo-km','gym-natacao-bpm','gym-natacao-km',
+   'gym-musc-bpm','gym-luta-bpm','gym-outros-bpm','gym-outros-km',
+   'gym-cardio-goal','gym-caminhada-goal','gym-corrida-goal','gym-ciclismo-goal','gym-natacao-goal','gym-musc-goal','gym-luta-goal','gym-outros-goal',
+   'gym-cardio-cal','gym-caminhada-cal','gym-corrida-cal','gym-ciclismo-cal','gym-natacao-cal','gym-musc-cal','gym-luta-cal','gym-outros-cal'
+  ].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('gym-obs').value='';
   resetAllTimers();
-  renderGymTab();renderHome();toast('🏋️ Treino registrado!');
+  renderGymTab();renderHome();toast('🏃 Atividade registrada!');
 }
 
 function getWeekGym(){
@@ -2277,14 +2681,11 @@ function renderHome(){
   const lte=doses.find(d=>d.tipo==='test');
   if(lte){e('h-test').innerHTML=lte.dose+'<span style="font-size:10px;color:var(--t2);margin-left:2px">mg</span>';e('h-test-d').textContent=fmtDT(lte.date);}
   
-  // Coleta dados de todas as fontes
-  const allMedData = [];
-  doses.forEach(d => { if(d.peso || d.cintura) allMedData.push(d); });
-  gymLog.forEach(g => { if(g.peso) allMedData.push({date: g.date, peso: g.peso}); });
+  // Dados agregados por dia (um peso e uma cintura por dia, sempre o último registro do dia)
+  const dailyBody=getDailyBodyData();
 
-  // Último peso/cintura
   // Peso: inicial (mais antigo) e atual (mais recente)
-  const allPeso=allMedData.filter(d=>d.peso).sort((a,b)=>new Date(a.date)-new Date(b.date));
+  const allPeso=dailyBody.filter(d=>d.peso!=null).map(d=>({date:d.date,peso:d.peso,imc:null}));
   if(allPeso.length){
     const pIni=allPeso[0].peso, pAtual=allPeso[allPeso.length-1].peso;
     const pDiff=+(pAtual-pIni).toFixed(1);
@@ -2313,9 +2714,9 @@ function renderHome(){
       e('h-peso-prog-pct').textContent=(reached?'🎯 ':'')+prog.toFixed(0)+'%';
     } else if(e('h-peso-prog-wrap')){e('h-peso-prog-wrap').style.display='none';}
     const lp=allPeso[allPeso.length-1];
-    if(e('h-peso-d'))e('h-peso-d').textContent='Atualizado: '+fmtDT(lp.date).split(' ')[0]+(lp.imc?' · IMC '+lp.imc:'');
+    if(e('h-peso-d'))e('h-peso-d').textContent='Atualizado: '+fmtD(lp.date);
   }
-  const allCin=allMedData.filter(d=>d.cintura).sort((a,b)=>new Date(a.date)-new Date(b.date));
+  const allCin=dailyBody.filter(d=>d.cintura!=null).map(d=>({date:d.date,cintura:d.cintura}));
   if(allCin.length){
     const cIni=allCin[0].cintura, cAtual=allCin[allCin.length-1].cintura;
     const cDiff=+(cAtual-cIni).toFixed(1);
@@ -2335,7 +2736,7 @@ function renderHome(){
       e('h-cintura-prog-pct').textContent=(reached?'🎯 ':'')+prog.toFixed(0)+'%';
     } else if(e('h-cintura-prog-wrap')){e('h-cintura-prog-wrap').style.display='none';}
     const lc=allCin[allCin.length-1];
-    if(e('h-cintura-d'))e('h-cintura-d').textContent='Atualizado: '+fmtDT(lc.date).split(' ')[0];
+    if(e('h-cintura-d'))e('h-cintura-d').textContent='Atualizado: '+fmtD(lc.date);
   }
   renderWater();
   // Stocks
@@ -2348,7 +2749,7 @@ function renderHome(){
   if(e('gym-week-badge'))e('gym-week-badge').textContent=weekDays+' dias';
   const gws=document.getElementById('gymWeekSummary');
   if(gws){
-    if(!weekLogs.length)gws.innerHTML='<div class="empty-st">Registre treinos na aba Academia</div>';
+    if(!weekLogs.length)gws.innerHTML='<div class="empty-st">Registre atividades na aba Atividades Físicas</div>';
     else gws.innerHTML=`<div style="display:flex;gap:14px;margin-bottom:6px"><div class="sc" style="flex:1;padding:8px"><div class="sl">Dias</div><div class="sv" style="color:var(--green);font-size:20px">${weekDays}</div></div><div class="sc" style="flex:1;padding:8px"><div class="sl">Minutos</div><div class="sv" style="color:var(--green);font-size:20px">${weekMin}</div></div></div>`+weekLogs.slice(0,3).map(g=>`<div class="tl-item"><div class="tl-dot" style="background:rgba(52,211,153,0.12)">🏋️</div><div style="flex:1"><div class="tl-name">${fmtD(g.date)} — ${g.treinos.map(t=>t.icon+t.label).join(', ')}</div><div class="tl-det">${g.totalMin} min total ${g.peso?'· '+g.peso+' kg':''}</div></div></div>`).join('');
   }
   // Agenda
@@ -2629,14 +3030,64 @@ function saveExame(){
   };
   const hasData=Object.entries(ex).some(([k,v])=>!['id','date','obs'].includes(k)&&v!==null);
   if(!hasData){toast('⚠️ Preencha ao menos um exame','#f59e0b');return;}
-  exames.unshift(ex);
+  if(editingExameId){
+    // Modo edição: substitui o exame existente preservando o id
+    const idx=exames.findIndex(e=>e.id===editingExameId);
+    if(idx>=0){ex.id=editingExameId;exames[idx]=ex;}
+    editingExameId=null;
+    const btn=document.getElementById('btn-save-exame');
+    if(btn)btn.textContent='🔬 Registrar Exames';
+    toast('✅ Exame atualizado!');
+  } else {
+    exames.unshift(ex);
+    toast('✅ Exames registrados!');
+  }
   save();
   ['ex-testo-total','ex-testo-livre','ex-dht','ex-estradiol','ex-prolactina','ex-lh','ex-fsh','ex-shbg','ex-col-total','ex-hdl','ex-ldl','ex-trig','ex-hematocrito','ex-hemoglobina','ex-glicose','ex-psa','ex-obs'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('ex-lip-hint').innerHTML='';document.getElementById('ex-hct-hint').innerHTML='';
-  renderExames();toast('✅ Exames registrados!');
+  setExDate();
+  renderExames();renderHomeExamCharts();renderExamesCharts();
 }
 
-function delExame(id){if(!confirm('Remover este exame?'))return;exames=exames.filter(e=>e.id!==id);save();renderExames();toast('🗑 Removido');}
+
+function editExame(id){
+  const ex=exames.find(e=>e.id===id);if(!ex)return;
+  editingExameId=id;
+  // Campos de data e texto
+  document.getElementById('ex-date').value=ex.date||'';
+  document.getElementById('ex-obs').value=ex.obs||'';
+  // Campos numéricos — usa string vazia se null para limpar o campo
+  const setN=(field,val)=>{const el=document.getElementById(field);if(el)el.value=val!=null?val:'';};
+  setN('ex-testo-total',ex.testoTotal);
+  setN('ex-testo-livre',ex.testoLivre);
+  setN('ex-dht',ex.dht);
+  setN('ex-estradiol',ex.estradiol);
+  setN('ex-prolactina',ex.prolactina);
+  setN('ex-lh',ex.lh);
+  setN('ex-fsh',ex.fsh);
+  setN('ex-shbg',ex.shbg);
+  setN('ex-col-total',ex.colTotal);
+  setN('ex-hdl',ex.hdl);
+  setN('ex-ldl',ex.ldl);
+  setN('ex-trig',ex.trig);
+  setN('ex-hematocrito',ex.hematocrito);
+  setN('ex-hemoglobina',ex.hemoglobina);
+  setN('ex-glicose',ex.glicose);
+  setN('ex-psa',ex.psa);
+  // Recalcula hints se tiver dados
+  calcExLDL();checkHct();
+  // Atualiza botão
+  const btn=document.getElementById('btn-save-exame');
+  if(btn)btn.textContent='💾 Salvar Alterações';
+  // Vai para a aba de exames e rola até o topo do formulário
+  goTab('exames',null);
+  setTimeout(()=>{
+    const el=document.getElementById('ex-date');
+    if(el)el.scrollIntoView({behavior:'smooth',block:'center'});
+  },120);
+  toast('✏️ Editando exame de '+fmtD(ex.date));
+}
+function delExame(id){if(!confirm('Remover este exame?'))return;exames=exames.filter(e=>e.id!==id);save();renderExames();renderHomeExamCharts();toast('🗑 Removido');}
 
 function renderExames(){
   const el=document.getElementById('examesList');if(!el)return;
@@ -2654,7 +3105,10 @@ function renderExames(){
     return`<div class="card" style="padding:11px 13px;margin-bottom:8px">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
         <div style="font-size:12px;font-weight:700;color:var(--blue);text-transform:capitalize">🔬 ${dia}</div>
-        <button class="del-btn" onclick="delExame('${ex.id}')">✕</button>
+        <div style="display:flex;gap:5px">
+          <button class="edit-btn" onclick="editExame('${ex.id}')">✏️ Editar</button>
+          <button class="del-btn" onclick="delExame('${ex.id}')">✕</button>
+        </div>
       </div>
       <div style="display:flex;gap:5px;flex-wrap:wrap">${badges}</div>
       ${ex.obs?`<div style="font-size:10px;color:var(--t3);margin-top:6px">📝 ${ex.obs}</div>`:''}
@@ -3030,23 +3484,19 @@ function renderCharts(){
   document.getElementById('s-water').textContent=getTodayWater();
   document.getElementById('s-gym').textContent=new Set(wkLogs.map(g=>g.date)).size;
   document.getElementById('s-gym-min').textContent=wkLogs.reduce((a,g)=>a+g.totalMin,0);
-  // Medidas — última registrada (de qualquer fonte)
-  const allMedDataStats = [];
-  doses.forEach(d => { if(d.peso || d.cintura || d.imc) allMedDataStats.push(d); });
-  gymLog.forEach(g => { if(g.peso) allMedDataStats.push({date: g.date, peso: g.peso}); });
-  allMedDataStats.sort((a,b) => new Date(b.date) - new Date(a.date));
-
-  const lastPesoObj = allMedDataStats.find(d => d.peso);
-  if(lastPesoObj){
-    document.getElementById('s-peso').innerHTML=lastPesoObj.peso+'<span style="font-size:11px;color:var(--t2)"> kg</span>';
-    document.getElementById('s-peso-d').textContent=fmtDT(lastPesoObj.date).split(' ')[0];
+  // Medidas — última registrada (agregado por dia, um valor por dia)
+  const dailyBodyStats=getDailyBodyData();
+  const lastPesoDay = [...dailyBodyStats].reverse().find(d => d.peso!=null);
+  if(lastPesoDay){
+    document.getElementById('s-peso').innerHTML=lastPesoDay.peso+'<span style="font-size:11px;color:var(--t2)"> kg</span>';
+    document.getElementById('s-peso-d').textContent=fmtD(lastPesoDay.date);
   }
-  const lastCinObj = allMedDataStats.find(d => d.cintura);
-  if(lastCinObj){
-    document.getElementById('s-cintura').innerHTML=lastCinObj.cintura+'<span style="font-size:11px;color:var(--t2)"> cm</span>';
-    document.getElementById('s-cintura-d').textContent=fmtDT(lastCinObj.date).split(' ')[0];
+  const lastCinDay = [...dailyBodyStats].reverse().find(d => d.cintura!=null);
+  if(lastCinDay){
+    document.getElementById('s-cintura').innerHTML=lastCinDay.cintura+'<span style="font-size:11px;color:var(--t2)"> cm</span>';
+    document.getElementById('s-cintura-d').textContent=fmtD(lastCinDay.date);
   }
-  const lastIMCObj = allMedDataStats.find(d => d.imc);
+  const lastIMCObj = [...doses].sort((a,b)=>new Date(b.date)-new Date(a.date)).find(d => d.imc);
   if(lastIMCObj){
     const info=imcInfo(lastIMCObj.imc);
     document.getElementById('s-imc').textContent=lastIMCObj.imc;
@@ -3127,7 +3577,7 @@ function doLogin(){
   document.getElementById('topUserAvatar').textContent = initials;
   document.getElementById('topUserName').textContent   = u.name.split(' ')[0];
   // Init app
-  applyTheme();setDates();setGymDate();fillRegSelects();renderHome();renderCats();renderStocks();renderKlowStocks();renderBodyCharts();renderExames();renderMetas();renderCustomHormones();renderCustomRegisterCards();
+  applyTheme();setDates();setGymDate();fillRegSelects();renderHome();renderCats();renderStocks();renderKlowStocks();renderBodyCharts();renderHomeExamCharts();renderExames();renderMetas();renderCustomHormones();renderCustomRegisterCards();
   const bi=document.getElementById('backup-info');
   if(bi)bi.textContent='Exporte periodicamente para não perder seus dados';
 }
