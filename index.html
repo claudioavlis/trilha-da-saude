@@ -249,6 +249,174 @@ body{display:flex;flex-direction:column}
   .sc{padding:13px}
   .sv{font-size:20px}
 }
+
+/* ══════════════ v4 — LAYOUT & COMPONENTES ══════════════ */
+.top-title{font-size:15px;font-weight:700;color:var(--t1);letter-spacing:-0.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:46vw}
+.main{padding:14px 14px 28px}
+.main>.tab{max-width:1200px;margin:0 auto}
+.card{border-radius:18px;padding:16px}
+.card-title{font-size:14px}
+.btn-sm.ghost{background:transparent;color:var(--t2);border:1px solid var(--b2)}
+.btn-sm.ghost:hover{color:var(--t1);border-color:var(--b1)}
+.btn-sm.solid{background:var(--teal);color:#06121f;box-shadow:0 2px 10px rgba(0,212,170,.25)}
+.ic-btn{width:32px;height:32px;border-radius:9px;border:1px solid var(--b2);background:var(--card2);color:var(--t2);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all .15s;font-family:inherit}
+.ic-btn:hover{color:var(--t1);border-color:var(--b1)}
+.ic-btn.danger:hover{color:var(--red);border-color:rgba(248,113,113,.4)}
+
+/* HERO + ATALHOS */
+.hero{display:flex;align-items:flex-end;justify-content:space-between;margin:2px 2px 12px}
+.hero-hi{font-size:21px;font-weight:750;letter-spacing:-.6px}
+.hero-sub{font-size:12px;color:var(--t3);margin-top:2px}
+.quick-row{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 4px;margin:0 -2px 12px;scrollbar-width:none}
+.quick-row::-webkit-scrollbar{display:none}
+.qa{flex:0 0 auto;display:flex;align-items:center;gap:7px;background:var(--card);border:1px solid var(--b2);border-radius:999px;padding:9px 14px 9px 10px;color:var(--t1);font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s}
+.qa span{width:24px;height:24px;border-radius:50%;background:var(--card2);display:inline-flex;align-items:center;justify-content:center;font-size:13px}
+.qa:active{transform:scale(.96)}
+.qa:hover{border-color:var(--b1)}
+
+/* PAINEL DE MARCADORES */
+.mk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:10px}
+.mk-tile{position:relative;text-align:left;background:var(--card2);border:1px solid var(--b2);border-radius:14px;padding:11px 12px 0;cursor:pointer;color:var(--t1);font-family:inherit;overflow:hidden;display:flex;flex-direction:column;min-height:132px;transition:transform .12s,border-color .15s}
+.mk-tile:hover{border-color:var(--b1)}
+.mk-tile:active{transform:scale(.98)}
+.mk-tile::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--green);opacity:.85}
+.mk-tile.st-high::before{background:var(--red)}
+.mk-tile.st-low::before{background:var(--amber)}
+.mk-top{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.mk-name{font-size:11px;font-weight:600;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mk-pill{font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:999px;letter-spacing:.2px;flex-shrink:0;display:inline-flex;align-items:center}
+.mk-pill.ok{background:rgba(52,211,153,.14);color:var(--green)}
+.mk-pill.high{background:rgba(248,113,113,.15);color:var(--red)}
+.mk-pill.low{background:rgba(245,158,11,.15);color:var(--amber)}
+.mk-val{font-size:22px;font-weight:750;letter-spacing:-.6px;margin-top:6px;line-height:1.1;font-variant-numeric:tabular-nums}
+.mk-val small{font-size:10.5px;font-weight:500;color:var(--t3);margin-left:4px;letter-spacing:0}
+.mk-range{position:relative;height:6px;border-radius:3px;background:var(--inp);margin:9px 0 6px}
+.mk-zone{position:absolute;top:0;bottom:0;background:rgba(52,211,153,.35);border-radius:3px}
+.mk-dot{position:absolute;top:50%;width:11px;height:11px;border-radius:50%;transform:translate(-50%,-50%);background:var(--green);border:2px solid var(--card2);box-shadow:0 0 0 1px rgba(0,0,0,.2)}
+.mk-dot.high{background:var(--red)}.mk-dot.low{background:var(--amber)}
+.mk-foot{display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--t3);gap:6px}
+.mk-delta{font-weight:600;color:var(--t2);white-space:nowrap}
+.mk-spark{display:block;width:calc(100% + 24px);height:30px;margin:6px -12px 0;opacity:.95}
+.mk-obs{margin-top:12px;font-size:11px;color:var(--t3);line-height:1.5;background:var(--card2);border-radius:10px;padding:9px 11px;border:1px solid var(--b2)}
+.mk-obs b{color:var(--t2)}
+
+/* CABEÇALHO DE PÁGINA */
+.page-hd{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin:2px 2px 14px}
+.page-title{font-size:21px;font-weight:750;letter-spacing:-.6px}
+.page-sub{font-size:12px;color:var(--t3);margin-top:2px}
+
+/* KPIs */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px;margin-bottom:14px}
+.kpi{background:var(--card);border:1px solid var(--b2);border-radius:14px;padding:10px 11px;min-width:0}
+.kpi-l{font-size:10px;color:var(--t3);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi-v{font-size:19px;font-weight:750;letter-spacing:-.5px;margin-top:4px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.kpi-v small{font-size:10px;font-weight:500;color:var(--t3);margin-left:2px;letter-spacing:0}
+.kpi-s{font-size:10px;color:var(--t3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* SEGMENTED */
+.chart-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.seg{display:inline-flex;background:var(--card);border:1px solid var(--b2);border-radius:11px;padding:3px;gap:2px;overflow-x:auto;max-width:100%;scrollbar-width:none}
+.seg::-webkit-scrollbar{display:none}
+.seg button{border:none;background:none;color:var(--t2);font-family:inherit;font-size:12px;font-weight:600;padding:7px 11px;border-radius:8px;cursor:pointer;white-space:nowrap;transition:all .15s}
+.seg button.on{background:var(--card2);color:var(--teal);box-shadow:0 1px 4px rgba(0,0,0,.25)}
+.seg.full{display:flex;width:100%}.seg.full button{flex:1}
+.hint-row{font-size:10.5px;color:var(--t3);margin:6px 2px 10px}
+
+/* GRADE DE GRÁFICOS */
+.charts-grid{display:grid;grid-template-columns:1fr;gap:12px}
+.chart-block{margin:0;min-width:0;transition:transform .15s,opacity .15s}
+.chart-block.dragging{opacity:.55}
+.chart-block.lifted .cb-card{box-shadow:0 14px 40px rgba(0,0,0,.45);border-color:var(--teal);transform:scale(1.01)}
+.cb-card{background:var(--card);border:1px solid var(--b2);border-radius:18px;padding:14px 14px 12px;box-shadow:var(--shadow-sm);transition:box-shadow .2s,border-color .2s,transform .2s;height:100%}
+.cb-hd{display:flex;align-items:flex-start;gap:9px}
+.cb-hd .drag-handle{margin-top:1px;padding:5px 6px;font-size:13px;border-radius:8px}
+.cb-ttl{flex:1;min-width:0}
+.cb-title{font-size:13.5px;font-weight:650;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cb-sub{font-size:10.5px;color:var(--t3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cb-act{display:flex;gap:5px;flex-shrink:0}
+.cb-stat{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 8px;margin:10px 0 2px;min-height:4px}
+.cb-big{font-size:24px;font-weight:750;letter-spacing:-.7px;font-variant-numeric:tabular-nums}
+.cb-unit{font-size:11px;color:var(--t3);margin-left:-4px}
+.cb-delta{font-size:11px;font-weight:650;color:var(--t2)}
+.cb-meta{font-size:10.5px;color:var(--t3);margin-left:auto}
+.cb-wrap{height:200px;margin-top:6px}
+.size-s .cb-wrap{height:150px}
+.size-l .cb-wrap{height:280px}
+.cb-empty{height:100%;min-height:110px;display:flex;align-items:center;justify-content:center;color:var(--t3);font-size:12px;border:1px dashed var(--b2);border-radius:12px}
+
+/* BOTTOM SHEET */
+.sheet-bg{position:fixed;inset:0;background:rgba(2,8,18,.6);backdrop-filter:blur(3px);z-index:600;opacity:0;pointer-events:none;transition:opacity .25s}
+.sheet-bg.open{opacity:1;pointer-events:all}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:601;background:var(--card);border-radius:22px 22px 0 0;border:1px solid var(--b2);border-bottom:none;padding:8px 16px calc(20px + env(safe-area-inset-bottom));max-height:88vh;overflow-y:auto;transform:translateY(105%);transition:transform .3s cubic-bezier(.32,.72,0,1);box-shadow:0 -10px 40px rgba(0,0,0,.4)}
+.sheet.open{transform:translateY(0);visibility:visible}
+.sheet:not(.open){visibility:hidden;transition:transform .3s cubic-bezier(.32,.72,0,1),visibility 0s .3s}
+.sheet-grab{width:38px;height:4px;border-radius:2px;background:var(--b1);margin:2px auto 12px}
+.sh-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:12px}
+.sh-title{font-size:17px;font-weight:750;letter-spacing:-.4px}
+.sh-sub{font-size:11.5px;color:var(--t3);margin-top:2px}
+.sh-x{background:var(--card2);border:1px solid var(--b2);color:var(--t2);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:13px;flex-shrink:0}
+.sh-hero{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+.sh-big{font-size:32px;font-weight:800;letter-spacing:-1px}
+.sh-unit{font-size:12px;color:var(--t3)}
+.sh-date{font-size:11px;color:var(--t3);margin-left:auto}
+.sh-table{width:100%;border-collapse:collapse;margin-top:14px;font-size:12px}
+.sh-table th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);font-weight:700;padding:6px 4px;border-bottom:1px solid var(--b2)}
+.sh-table td{padding:9px 4px;border-bottom:1px solid var(--b2)}
+.sh-table .num{text-align:right;font-variant-numeric:tabular-nums}
+.sh-table .muted{color:var(--t3)}
+.swatches{display:flex;gap:8px;flex-wrap:wrap}
+.sw{width:30px;height:30px;border-radius:50%;border:2px solid transparent;cursor:pointer;background:var(--card2);color:var(--t2);font-size:11px;font-weight:700;font-family:inherit;box-shadow:inset 0 0 0 1px var(--b2)}
+.sw.on{border-color:var(--t1);transform:scale(1.08)}
+.ce-actions{display:flex;gap:8px;margin-top:16px}
+.ce-actions .btn{flex:1}
+.ce-del{background:rgba(248,113,113,.12);color:var(--red);flex:0 0 auto!important;width:auto;padding:11px 18px}
+.sheet .seg{background:var(--inp)}
+
+/* NAVEGAÇÃO INFERIOR */
+.bottom-nav{display:flex;flex-shrink:0;background:var(--topbar);border-top:1px solid var(--b1);padding:6px 6px calc(6px + env(safe-area-inset-bottom));z-index:200}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;color:var(--t3);font-family:inherit;font-size:10px;font-weight:600;padding:5px 0;border-radius:12px;cursor:pointer;transition:color .15s}
+.bn-ic{width:46px;height:28px;border-radius:14px;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.bn-ic svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.bn-item.active{color:var(--teal)}
+.bn-item.active .bn-ic{background:rgba(0,212,170,.14)}
+body.light .top-title{color:#fff}
+body.light .bottom-nav{background:#ffffff;border-top-color:rgba(0,0,0,.08)}
+
+/* TELA INICIAL — cards de destaque */
+#tab-home .sc{border-radius:16px}
+#tab-home .sgrid{gap:10px}
+
+/* ── RESPONSIVO ── */
+@media (max-width:420px){
+  .date-pill{display:none}
+  .user-chip-name{display:none}
+  .user-chip{padding:3px}
+  .cb-meta{margin-left:0;width:100%}
+}
+@media (min-width:640px){
+  .sheet{left:50%;right:auto;bottom:auto;top:50%;width:min(560px,92vw);border-radius:22px;border-bottom:1px solid var(--b2);transform:translate(-50%,-46%) scale(.97);opacity:0;pointer-events:none;transition:transform .25s,opacity .2s;padding-bottom:20px}
+  .sheet.open{transform:translate(-50%,-50%) scale(1);opacity:1;pointer-events:all}
+  .sheet-grab{display:none}
+}
+@media (min-width:900px){
+  .charts-grid{grid-template-columns:1fr 1fr}
+  .charts-grid .size-l{grid-column:1/-1}
+  #tab-home.active{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+  #tab-home>*{grid-column:1/-1;margin-bottom:0}
+  #tab-home>.card:not(.mk-card):not(.body-card){grid-column:auto}
+  .kpi-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
+}
+@media (min-width:1180px){
+  #tab-home .sgrid{grid-template-columns:1fr 1fr 2fr 2fr}
+  #tab-home .sgrid>.sc{grid-column:auto!important}
+}
+@media (min-width:1024px){
+  body{padding-left:var(--sidebar-w)}
+  .sidebar{transform:none;box-shadow:none}
+  .sb-overlay,.sb-close,.hamburger{display:none!important}
+  .bottom-nav{display:none}
+  .main{padding:20px 26px 36px}
+}
 </style>
 </head>
 <body>
@@ -309,7 +477,7 @@ body{display:flex;flex-direction:column}
     <button class="sb-item" onclick="openProfile()"><span class="sb-icon">👤</span>Meu Perfil</button>
     <button class="sb-item" onclick="doLogout()"><span class="sb-icon">🚪</span>Sair</button>
   </div>
-  <div class="sb-footer" style="font-size:10px;color:var(--t3);text-align:center">v3.0 · Trilha da Saúde</div>
+  <div class="sb-footer" style="font-size:10px;color:var(--t3);text-align:center">v4.0 · Trilha da Saúde</div>
 </div>
 
 <!-- ══ TOPBAR ══ -->
@@ -319,7 +487,7 @@ body{display:flex;flex-direction:column}
       <span></span><span></span><span></span>
     </button>
     <div>
-      <div style="display:flex;align-items:center;gap:7px"><span id="topIcon" style="display:inline-flex;align-items:center"></span><span style="font-size:15px;font-weight:700;color:var(--teal)">Trilha da Saúde</span></div>
+      <div style="display:flex;align-items:center;gap:7px"><span id="topIcon" style="display:inline-flex;align-items:center"></span><span id="topTitle" class="top-title">Trilha da Saúde</span></div>
     </div>
   </div>
   <div class="topbar-right">
@@ -337,6 +505,16 @@ body{display:flex;flex-direction:column}
 
 <!-- ════ TAB: INÍCIO ════ -->
 <div class="tab active" id="tab-home">
+  <div class="hero">
+    <div><div class="hero-hi" id="heroHi">Olá</div><div class="hero-sub" id="heroSub"></div></div>
+  </div>
+  <div class="quick-row">
+    <button class="qa" onclick="goTab('register',null)"><span>💉</span>Registrar</button>
+    <button class="qa" onclick="addWater(300)"><span>💧</span>+300 ml</button>
+    <button class="qa" onclick="goTab('gym',null)"><span>🏃</span>Treino</button>
+    <button class="qa" onclick="goTab('exames',null)"><span>🔬</span>Exame</button>
+    <button class="qa" onclick="goTab('charts',null)"><span>📊</span>Gráficos</button>
+  </div>
   <div class="sgrid">
     <div class="sc"><div class="sl">💉 Tirzepetida</div><div class="sv" id="h-tirz" style="color:var(--teal)">—</div><div class="ss" id="h-tirz-d">sem registro</div></div>
     <div class="sc"><div class="sl">🧪 Testosterona</div><div class="sv" id="h-test" style="color:var(--blue)">—</div><div class="ss" id="h-test-d">sem registro</div></div>
@@ -387,7 +565,7 @@ body{display:flex;flex-direction:column}
   </div>
 
   <!-- GRÁFICO UNIFICADO PESO & CINTURA NA TELA INICIAL -->
-  <div class="card">
+  <div class="card body-card">
     <div class="card-hd">
       <div>
         <div class="card-title">⚖️ Peso & Cintura</div>
@@ -398,28 +576,28 @@ body{display:flex;flex-direction:column}
     <div class="chart-wrap" style="height:220px"><canvas id="cBody"></canvas></div>
   </div>
 
-  <!-- PERFIL HORMONAL — EVOLUÇÃO -->
-  <div class="card" id="hormonalHomeCard" style="display:none">
+  <!-- PERFIL HORMONAL — painel de marcadores -->
+  <div class="card mk-card" id="hormonalHomeCard" style="display:none">
     <div class="card-hd">
       <div>
-        <div class="card-title">🧬 Perfil Hormonal — Evolução</div>
-        <div class="card-sub">Marcadores-chave ao longo do tempo (% do teto da faixa de referência)</div>
+        <div class="card-title">🧬 Perfil Hormonal</div>
+        <div class="card-sub" id="hormonalHomeSub"></div>
       </div>
+      <button class="btn-sm ghost" onclick="goTab('exames',null)">Exames ›</button>
     </div>
-    <div class="legend" id="hormonalLegend" style="margin-bottom:2px"></div>
-    <div class="chart-wrap" style="height:220px"><canvas id="cHormonalHome"></canvas></div>
+    <div class="mk-grid" id="hormonalGrid"></div>
   </div>
 
-  <!-- LIPIDOGRAMA COMPLETO -->
-  <div class="card" id="lipidHomeCard" style="display:none">
+  <!-- LIPIDOGRAMA — painel de marcadores -->
+  <div class="card mk-card" id="lipidHomeCard" style="display:none">
     <div class="card-hd">
       <div>
-        <div class="card-title">🩸 Lipidograma Completo</div>
+        <div class="card-title">🩸 Lipidograma &amp; Hemograma</div>
         <div class="card-sub" id="lipidHomeSub"></div>
       </div>
     </div>
-    <div class="legend" id="lipidLegend" style="margin-bottom:2px"></div>
-    <div class="chart-wrap" style="height:220px"><canvas id="cLipidHome"></canvas></div>
+    <div class="mk-grid" id="lipidGrid"></div>
+    <div class="mk-obs" id="lipidHomeObs"></div>
   </div>
 
   <div class="card">
@@ -1089,92 +1267,44 @@ body{display:flex;flex-direction:column}
 
 <!-- ════ TAB: GRÁFICOS ════ -->
 <div class="tab" id="tab-charts">
-  <div style="background:var(--card2);border:1px solid var(--b2);border-radius:var(--rs);padding:8px 11px;margin-bottom:10px;font-size:11px;color:var(--t3);display:flex;align-items:center;gap:6px">
-    <span style="font-size:14px">⠿</span> Arraste os gráficos pelo ícone para reorganizar. A ordem é salva automaticamente.
-  </div>
-  <div id="chartsContainer">
-  <div class="chart-block" data-chart="cTirz" draggable="true">
-    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">💉 Tirzepetida — doses (mg)</span></div>
-    <div class="card"><div class="chart-wrap"><canvas id="cTirz"></canvas></div></div>
-  </div>
-  <div class="chart-block" data-chart="cTest" draggable="true">
-    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🧪 Testosterona — doses</span></div>
-    <div class="card"><div class="legend"><div class="ld"><div class="ldot" style="background:var(--blue)"></div>Dose (mg)</div><div class="ld"><div class="ldot" style="background:var(--purple)"></div>Volume (ml)</div></div><div class="chart-wrap"><canvas id="cTest"></canvas></div></div>
-  </div>
-  <div class="chart-block" data-chart="cKlow" draggable="true">
-    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">💚 Klow — doses (mg)</span></div>
-    <div class="card"><div class="chart-wrap"><canvas id="cKlow"></canvas></div></div>
-  </div>
-  <div class="chart-block" data-chart="cIMC" draggable="true">
-    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🔢 Evolução do IMC</span></div>
-    <div class="card"><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;font-size:10px">
-      <span style="background:rgba(52,211,153,0.15);color:var(--green);padding:2px 8px;border-radius:8px;font-weight:600">18.5–24.9 Normal</span>
-      <span style="background:rgba(245,158,11,0.15);color:var(--amber);padding:2px 8px;border-radius:8px;font-weight:600">25–29.9 Sobrepeso</span>
-      <span style="background:rgba(248,113,113,0.15);color:var(--red);padding:2px 8px;border-radius:8px;font-weight:600">≥30 Obesidade</span>
-    </div><div class="chart-wrap"><canvas id="cIMC"></canvas></div></div>
-  </div>
-  <div class="chart-block" data-chart="cExTesto" draggable="true">
-    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🔬 Testosterona Total · ref. 264–916 ng/dL</span></div>
-    <div class="card"><div class="chart-wrap"><canvas id="cExTesto"></canvas></div></div>
-  </div>
-  <div class="chart-block" data-chart="cExEstradiol" draggable="true">
-    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🔬 Estradiol E2 · ref. 10–40 pg/mL</span></div>
-    <div class="card"><div class="chart-wrap"><canvas id="cExEstradiol"></canvas></div></div>
-  </div>
-  <div class="chart-block" data-chart="cExColesterol" draggable="true">
-    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🔬 Colesterol Total · ideal <200 mg/dL</span></div>
-    <div class="card"><div class="chart-wrap"><canvas id="cExColesterol"></canvas></div></div>
-  </div>
-  <div class="chart-block" data-chart="cExProlactina" draggable="true">
-    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🔬 Prolactina · ref. 4–15 ng/mL</span></div>
-    <div class="card"><div class="chart-wrap"><canvas id="cExProlactina"></canvas></div></div>
-  </div>
-  <div class="chart-block" data-chart="cExHematocrito" draggable="true">
-    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🔬 Hematócrito · ref. 40–50%</span></div>
-    <div class="card"><div class="chart-wrap"><canvas id="cExHematocrito"></canvas></div></div>
-  </div>
-  <div class="chart-block" data-chart="cWater" draggable="true">
-    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">💧 Água — últimos 14 dias (ml)</span></div>
-    <div class="card"><div class="chart-wrap"><canvas id="cWater"></canvas></div></div>
-  </div>
-  <div class="chart-block" data-chart="cGym" draggable="true">
-    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🏃 Atividades Físicas — minutos por dia</span></div>
-    <div class="card"><div class="chart-wrap"><canvas id="cGym"></canvas></div></div>
-  </div>
-  <div class="chart-block" data-chart="cMed" draggable="true">
-    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">💊 Medicamentos — registros</span></div>
-    <div class="card"><div class="chart-wrap"><canvas id="cMed"></canvas></div></div>
-  </div>
-  <div class="chart-block" data-chart="cSupl" draggable="true">
-    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">🌿 Suplementos — frequência</span></div>
-    <div class="card"><div class="chart-wrap"><canvas id="cSupl"></canvas></div></div>
-  </div>
-  <div class="chart-block" data-chart="cSleep" draggable="true">
-    <div class="chart-block-hd"><span class="drag-handle">⠿</span><span class="chart-block-title">😴 Sono — horas dormidas (meta: 8h)</span></div>
-    <div class="card">
-      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;font-size:10px">
-        <span style="background:rgba(52,211,153,0.15);color:var(--green);padding:2px 8px;border-radius:8px;font-weight:600">≥8h Meta atingida</span>
-        <span style="background:rgba(245,158,11,0.15);color:var(--amber);padding:2px 8px;border-radius:8px;font-weight:600">6–8h Aceitável</span>
-        <span style="background:rgba(248,113,113,0.15);color:var(--red);padding:2px 8px;border-radius:8px;font-weight:600">&lt;6h Insuficiente</span>
-      </div>
-      <div class="chart-wrap"><canvas id="cSleep"></canvas></div>
+  <div class="page-hd">
+    <div>
+      <div class="page-title">Gráficos</div>
+      <div class="page-sub">Resumo e evolução dos seus indicadores</div>
     </div>
+    <button class="btn-sm solid" onclick="openChartEditor()">＋ Novo gráfico</button>
   </div>
+
+  <!-- RESUMO -->
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-l">⚖️ Peso</div><div class="kpi-v" id="s-peso" style="color:var(--teal)">—</div><div class="kpi-s" id="s-peso-d">sem registro</div></div>
+    <div class="kpi"><div class="kpi-l">📐 Cintura</div><div class="kpi-v" id="s-cintura" style="color:var(--blue)">—</div><div class="kpi-s" id="s-cintura-d">sem registro</div></div>
+    <div class="kpi"><div class="kpi-l">🔢 IMC</div><div class="kpi-v" id="s-imc" style="color:var(--amber)">—</div><div class="kpi-s" id="s-imc-label">—</div></div>
+    <div class="kpi"><div class="kpi-l">💉 Tirz média</div><div class="kpi-v" id="s-tirz" style="color:var(--teal)">—</div><div class="kpi-s">mg/aplicação</div></div>
+    <div class="kpi"><div class="kpi-l">🧪 Test. média</div><div class="kpi-v" id="s-test" style="color:var(--blue)">—</div><div class="kpi-s">mg/aplicação</div></div>
+    <div class="kpi"><div class="kpi-l">📝 Registros</div><div class="kpi-v" id="s-total" style="color:var(--t1)">0</div><div class="kpi-s">todos os tipos</div></div>
+    <div class="kpi"><div class="kpi-l">🏃 Treinos</div><div class="kpi-v" id="s-gym" style="color:var(--green)">0</div><div class="kpi-s">nesta semana</div></div>
+    <div class="kpi"><div class="kpi-l">⏱ Minutos</div><div class="kpi-v" id="s-gym-min" style="color:var(--green)">0</div><div class="kpi-s">treino na semana</div></div>
+    <div class="kpi"><div class="kpi-l">💧 Água hoje</div><div class="kpi-v" id="s-water" style="color:var(--blue)">0</div><div class="kpi-s">ingeridos</div></div>
+    <div class="kpi"><div class="kpi-l">😴 Sono hoje</div><div class="kpi-v" id="s-sleep" style="color:var(--purple)">—</div><div class="kpi-s" id="s-sleep-d">sem registro</div></div>
+    <div class="kpi"><div class="kpi-l">😴 Média 7d</div><div class="kpi-v" id="s-sleep-avg" style="color:var(--purple)">—</div><div class="kpi-s">h/noite</div></div>
   </div>
-  <div class="st">Estatísticas</div>
-  <div class="sgrid">
-    <div class="sc"><div class="sl">Total Doses</div><div class="sv" id="s-total" style="color:var(--teal)">0</div><div class="ss">todos os tipos</div></div>
-    <div class="sc"><div class="sl">Tirz média</div><div class="sv" id="s-tirz" style="color:var(--teal)">—</div><div class="ss">mg/aplicação</div></div>
-    <div class="sc"><div class="sl">Test. média</div><div class="sv" id="s-test" style="color:var(--blue)">—</div><div class="ss">mg/aplicação</div></div>
-    <div class="sc"><div class="sl">Água hoje</div><div class="sv" id="s-water" style="color:var(--blue)">0</div><div class="ss">ml ingeridos</div></div>
-    <div class="sc"><div class="sl">Treinos semana</div><div class="sv" id="s-gym" style="color:var(--green)">0</div><div class="ss">dias esta semana</div></div>
-    <div class="sc"><div class="sl">Min treino</div><div class="sv" id="s-gym-min" style="color:var(--green)">0</div><div class="ss">minutos totais</div></div>
-    <div class="sc"><div class="sl">⚖️ Último peso</div><div class="sv" id="s-peso" style="color:var(--teal)">—</div><div class="ss" id="s-peso-d">sem registro</div></div>
-    <div class="sc"><div class="sl">📐 Última cintura</div><div class="sv" id="s-cintura" style="color:var(--blue)">—</div><div class="ss" id="s-cintura-d">sem registro</div></div>
-    <div class="sc" style="grid-column:span 2"><div class="sl">🔢 Último IMC</div><div style="display:flex;align-items:center;gap:10px;margin-top:4px"><div class="sv" id="s-imc" style="color:var(--amber)">—</div><span id="s-imc-label" style="font-size:11px;font-weight:600"></span></div></div>
-    <div class="sc"><div class="sl">😴 Sono hoje</div><div class="sv" id="s-sleep" style="color:var(--purple)">—</div><div class="ss" id="s-sleep-d">sem registro</div></div>
-    <div class="sc"><div class="sl">😴 Média 7 dias</div><div class="sv" id="s-sleep-avg" style="color:var(--purple)">—</div><div class="ss">h/noite</div></div>
+
+  <!-- BARRA DE FERRAMENTAS -->
+  <div class="chart-toolbar">
+    <div class="seg" id="chartPeriodSeg">
+      <button data-p="def">Padrão</button>
+      <button data-p="30">30d</button>
+      <button data-p="90">90d</button>
+      <button data-p="180">6m</button>
+      <button data-p="365">1a</button>
+      <button data-p="all">Tudo</button>
+    </div>
+    <button class="btn-sm ghost" onclick="restoreDefaultCharts()" title="Restaurar gráficos padrão">↺ Padrões</button>
   </div>
+  <div class="hint-row">⠿ Arraste pelo ícone para reorganizar · ✎ editar · 🗑 excluir</div>
+
+  <div id="chartsContainer" class="charts-grid"></div>
 </div>
 
 
@@ -1253,6 +1383,23 @@ body{display:flex;flex-direction:column}
 
 </div><!-- /main -->
 
+<!-- ══ NAVEGAÇÃO INFERIOR (mobile) ══ -->
+<nav class="bottom-nav" id="bottomNav">
+  <button class="bn-item active" data-tab="home" onclick="goTab('home',null)"><span class="bn-ic"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg></span><span>Início</span></button>
+  <button class="bn-item" data-tab="register" onclick="goTab('register',null)"><span class="bn-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg></span><span>Registrar</span></button>
+  <button class="bn-item" data-tab="gym" onclick="goTab('gym',null)"><span class="bn-ic"><svg viewBox="0 0 24 24"><path d="M6.5 6.5v11M17.5 6.5v11M3 9.5v5M21 9.5v5M6.5 12h11"/></svg></span><span>Treino</span></button>
+  <button class="bn-item" data-tab="charts" onclick="goTab('charts',null)"><span class="bn-ic"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><span>Gráficos</span></button>
+  <button class="bn-item" data-tab="more" onclick="openSidebar()"><span class="bn-ic"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></span><span>Mais</span></button>
+</nav>
+
+<!-- ══ BOTTOM SHEET (detalhe de marcador / editor de gráfico) ══ -->
+<div class="sheet-bg" id="sheetBg" onclick="closeSheet()"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true">
+  <div class="sheet-grab"></div>
+  <div id="sheetBody"></div>
+</div>
+
+
 <!-- SIDEBAR JS nav controls -->
 <script>
 function openSidebar(){
@@ -1263,6 +1410,7 @@ function closeSidebar(){
   document.getElementById('sidebar').classList.remove('open');
   document.getElementById('sbOverlay').classList.remove('open');
 }
+const TAB_TITLES={home:'Trilha da Saúde',register:'Registrar',history:'Histórico',exames:'Exames',cadastro:'Cadastro',gym:'Atividades Físicas',charts:'Gráficos',backup:'Backup'};
 function goTab(name,btn){
   closeSidebar();
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -1270,8 +1418,12 @@ function goTab(name,btn){
   document.getElementById('tab-'+name).classList.add('active');
   if(btn)btn.classList.add('active');
   else{document.querySelectorAll('.sb-item').forEach(b=>{if((b.getAttribute('onclick')||'').includes("'"+name+"'"))b.classList.add('active');});}
+  document.querySelectorAll('.bn-item').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));
+  const tt=document.getElementById('topTitle');
+  if(tt)tt.textContent=TAB_TITLES[name]||'Trilha da Saúde';
+  const mainEl=document.querySelector('.main');if(mainEl)mainEl.scrollTop=0;
   if(name==='home'){renderHome();renderBodyCharts();renderHomeExamCharts();}
-  if(name==='charts'){applyChartOrder();renderCharts();initChartDnD();}
+  if(name==='charts'){renderCharts();}
   if(name==='history'){renderHistory();renderGymHist();}
   if(name==='register'){renderCustomRegisterCards();fillRegSelects();setDates();prefillMedidas('tirz');prefillMedidas('test');}
   if(name==='cadastro'){renderStocks();renderCats();renderMetas();renderCustomHormones();renderTestTipos();}
@@ -1324,11 +1476,11 @@ function renderBodyCharts(){
 
   const cO2={responsive:true,maintainAspectRatio:false,
     interaction:{mode:'index',intersect:false},
-    plugins:{legend:{display:false},tooltip:{backgroundColor:'#162840',titleColor:'#e8f4fd',bodyColor:'#8badc4',borderColor:'rgba(0,212,170,0.3)',borderWidth:1,callbacks:{label:ctx=>{const u=ctx.dataset.yAxisID==='y1'?'cm':'kg';return` ${ctx.dataset.label}: ${ctx.parsed.y} ${u}`;}}}},
+    plugins:{legend:{display:false},tooltip:{callbacks:{title:it=>{const d=daily[it[0].dataIndex];return d?fmtD(d.date):'';},label:ctx=>{if(ctx.parsed.y==null)return null;const u=ctx.dataset.yAxisID==='y1'?'cm':'kg';return` ${ctx.dataset.label}: ${fmtN(ctx.parsed.y,1)} ${u}`;}}}},
     scales:{
-      x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9}}},
-      y:{position:'left',grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#00d4aa',font:{size:9}},title:{display:true,text:'kg',color:'#00d4aa',font:{size:9}}},
-      y1:{position:'right',grid:{drawOnChartArea:false},ticks:{color:'#f5a623',font:{size:9}},title:{display:true,text:'cm',color:'#f5a623',font:{size:9}}}
+      x:{grid:{display:false},ticks:{maxRotation:0,autoSkipPadding:16,maxTicksLimit:7}},
+      y:{position:'left',grid:{color:gridColor()},ticks:{color:'#00d4aa',maxTicksLimit:6}},
+      y1:{position:'right',grid:{drawOnChartArea:false},ticks:{color:'#f5a623',maxTicksLimit:6}}
     }
   };
 
@@ -1349,8 +1501,8 @@ function renderBodyCharts(){
     const hasCinMeta=cinMetaLine.some(v=>v!=null);
 
     const datasets=[
-      {label:'Peso',data:pesoData,borderColor:'#00d4aa',backgroundColor:'rgba(0,212,170,0.08)',tension:0.35,fill:false,pointBackgroundColor:'#00d4aa',pointBorderColor:'#00d4aa',pointRadius:4,pointStyle:'circle',spanGaps:true,yAxisID:'y'},
-      {label:'Cintura',data:cinData,borderColor:'#f5a623',backgroundColor:'rgba(245,166,35,0.08)',tension:0.35,fill:false,pointBackgroundColor:'#f5a623',pointBorderColor:'#f5a623',pointRadius:4,pointStyle:'circle',spanGaps:true,yAxisID:'y1'}
+      {label:'Peso',data:pesoData,borderColor:'#00d4aa',backgroundColor:gradFill('#00d4aa',0.22),tension:0.35,cubicInterpolationMode:'monotone',fill:true,pointBackgroundColor:'#00d4aa',pointBorderColor:'transparent',pointRadius:daily.length>40?0:2.5,pointStyle:'circle',spanGaps:true,yAxisID:'y'},
+      {label:'Cintura',data:cinData,borderColor:'#f5a623',backgroundColor:'rgba(245,166,35,0.08)',tension:0.35,cubicInterpolationMode:'monotone',fill:false,pointBackgroundColor:'#f5a623',pointBorderColor:'transparent',pointRadius:daily.length>40?0:2.5,pointStyle:'circle',spanGaps:true,yAxisID:'y1'}
     ];
     if(hasPesoMeta)datasets.push({label:'Meta Peso',data:pesoMetaLine,borderColor:'rgba(0,212,170,0.55)',borderDash:[6,4],backgroundColor:'transparent',tension:0,fill:false,pointRadius:0,spanGaps:true,borderWidth:2,yAxisID:'y'});
     if(hasCinMeta)datasets.push({label:'Meta Cintura',data:cinMetaLine,borderColor:'rgba(245,166,35,0.55)',borderDash:[6,4],backgroundColor:'transparent',tension:0,fill:false,pointRadius:0,spanGaps:true,borderWidth:2,yAxisID:'y1'});
@@ -1375,163 +1527,15 @@ function renderBodyCharts(){
 // GRÁFICOS DE EXAMES NA TELA INICIAL
 // (Perfil Hormonal — Evolução · Lipidograma Completo)
 // ═══════════════════════════════════════════════════
-function monthLabelPt(dateStr){
-  const d=new Date(dateStr+'T12:00:00');
-  const meses=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-  return meses[d.getMonth()]+'/'+String(d.getFullYear()).slice(2);
+function updateHero(){
+  const el=document.getElementById('heroHi');if(!el)return;
+  const hr=new Date().getHours();
+  const nm=(typeof currentUser!=='undefined'&&currentUser&&currentUser.name)?currentUser.name.split(' ')[0]:'';
+  el.textContent=(hr<12?'Bom dia':hr<18?'Boa tarde':'Boa noite')+(nm?', '+nm:'');
+  const sub=document.getElementById('heroSub');
+  if(sub){const d=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});sub.textContent=d.charAt(0).toUpperCase()+d.slice(1);}
 }
-
-// Faixas de referência gerais para homens adultos — variam por laboratório/método.
-// Usadas apenas como contexto no tooltip (o valor exibido no gráfico é sempre o número real do exame).
-const HORM_REFS={
-  testoTotal:{label:'Testo Total',unit:'ng/dL',ref:'264–916'},
-  testoLivre:{label:'Testo Livre',unit:'pg/mL',ref:'9–30'},
-  dht:{label:'DHT',unit:'pg/mL',ref:'300–850'},
-  estradiol:{label:'Estradiol',unit:'pg/mL',ref:'10–40'},
-  prolactina:{label:'Prolactina',unit:'ng/mL',ref:'4–15'},
-  hematocrito:{label:'Hematócrito',unit:'%',ref:'40–50'}
-};
-const HORM_PALETTE=['#4a9eff','#f87171','#f5a623','#34d399','#a78bfa','#f472b6','#fb923c','#22d3ee'];
-
-// Plugin genérico: desenha o valor numérico acima de cada barra
-const barValueLabelPlugin={
-  id:'barValueLabelPlugin',
-  afterDatasetsDraw(chart){
-    const{ctx}=chart;
-    chart.data.datasets.forEach((dataset,dsIndex)=>{
-      const meta=chart.getDatasetMeta(dsIndex);
-      if(meta.hidden)return;
-      meta.data.forEach((bar,index)=>{
-        const value=dataset.data[index];
-        if(value==null)return;
-        ctx.save();
-        ctx.fillStyle='#e8f4fd';
-        ctx.font='9px sans-serif';
-        ctx.textAlign='center';
-        ctx.fillText(String(value),bar.x,bar.y-4);
-        ctx.restore();
-      });
-    });
-  }
-};
-
-function renderHormonalHome(){
-  const card=document.getElementById('hormonalHomeCard');
-  const el=document.getElementById('cHormonalHome');
-  if(!el||!card)return;
-  if(!window.charts)window.charts={};
-  if(window.charts.hormonalHome){try{window.charts.hormonalHome.destroy();}catch(e){} delete window.charts.hormonalHome;}
-
-  const markers=Object.keys(HORM_REFS);
-  // TODOS os exames que tenham ao menos um marcador hormonal preenchido — sem agrupar por mês
-  // e sem limite de quantidade, para nunca perder dados de nenhum exame registrado.
-  const withHormonal=[...exames]
-    .filter(ex=>markers.some(k=>ex[k]!=null))
-    .sort((a,b)=>new Date(a.date)-new Date(b.date));
-
-  if(!withHormonal.length){card.style.display='none';return;}
-  card.style.display='block';
-
-  const labels=markers.map(k=>HORM_REFS[k].label);
-  const datasets=withHormonal.map((ex,i)=>({
-    label:fmtD(ex.date),
-    data:markers.map(k=>ex[k]!=null?ex[k]:null),
-    backgroundColor:HORM_PALETTE[i%HORM_PALETTE.length],
-    borderRadius:4
-  }));
-
-  function draw(attempt){
-    if(el.clientWidth<=0&&attempt<20){requestAnimationFrame(()=>draw(attempt+1));return;}
-    try{
-      window.charts.hormonalHome=new Chart(el,{
-        type:'bar',
-        data:{labels,datasets},
-        plugins:[barValueLabelPlugin],
-        options:{
-          responsive:true,maintainAspectRatio:false,
-          layout:{padding:{top:14}},
-          plugins:{
-            legend:{display:false},
-            tooltip:{backgroundColor:'#162840',titleColor:'#e8f4fd',bodyColor:'#8badc4',borderColor:'rgba(0,212,170,0.3)',borderWidth:1,
-              callbacks:{label:ctx=>{
-                const key=markers[ctx.dataIndex];
-                const ref=HORM_REFS[key];
-                return ` ${ctx.dataset.label}: ${ctx.parsed.y} ${ref.unit} (ref. ${ref.ref})`;
-              }}}
-          },
-          scales:{
-            x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9}}},
-            y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9}}}
-          }
-        }
-      });
-    }catch(e){}
-    const legEl=document.getElementById('hormonalLegend');
-    if(legEl)legEl.innerHTML=datasets.map((ds,i)=>`<div class="ld"><div class="ldot" style="background:${HORM_PALETTE[i%HORM_PALETTE.length]}"></div>${ds.label}</div>`).join('');
-  }
-  requestAnimationFrame(()=>draw(0));
-}
-
-function renderLipidHome(){
-  const card=document.getElementById('lipidHomeCard');
-  const el=document.getElementById('cLipidHome');
-  if(!el||!card)return;
-  if(!window.charts)window.charts={};
-  if(window.charts.lipidHome){try{window.charts.lipidHome.destroy();}catch(e){} delete window.charts.lipidHome;}
-
-  // TODOS os exames com algum dado lipídico, ordenados por data real (não por texto do mês)
-  const withLipid=[...exames]
-    .filter(e=>e.colTotal!=null||e.ldl!=null||e.hdl!=null||e.trig!=null)
-    .sort((a,b)=>new Date(a.date)-new Date(b.date));
-
-  if(!withLipid.length){card.style.display='none';return;}
-  card.style.display='block';
-
-  // Rótulo com dia/mês/ano evita ambiguidade quando há mais de um exame no mesmo mês
-  const labels=withLipid.map(e=>fmtD(e.date));
-  const sub=document.getElementById('lipidHomeSub');
-  if(sub){
-    let txt=labels.join(' → ');
-    const lastObs=[...withLipid].reverse().find(e=>e.obs&&e.obs.trim());
-    if(lastObs)txt+=' · '+lastObs.obs.trim();
-    sub.textContent=txt;
-  }
-
-  function draw(attempt){
-    if(el.clientWidth<=0&&attempt<20){requestAnimationFrame(()=>draw(attempt+1));return;}
-    const mk=(label,key,color)=>({label,data:withLipid.map(e=>e[key]!=null?e[key]:null),borderColor:color,backgroundColor:color.replace(')',',0.08)').replace('rgb','rgba'),tension:0.35,fill:false,pointBackgroundColor:color,pointRadius:5,spanGaps:true});
-    const datasets=[
-      mk('Col. Total','colTotal','rgb(248,113,113)'),
-      mk('LDL','ldl','rgb(245,166,35)'),
-      mk('HDL','hdl','rgb(52,211,153)'),
-      mk('Triglicérides','trig','rgb(74,158,255)')
-    ];
-    try{
-      window.charts.lipidHome=new Chart(el,{
-        type:'line',
-        data:{labels,datasets},
-        options:{
-          responsive:true,maintainAspectRatio:false,
-          interaction:{mode:'index',intersect:false},
-          plugins:{
-            legend:{display:false},
-            tooltip:{backgroundColor:'#162840',titleColor:'#e8f4fd',bodyColor:'#8badc4',borderColor:'rgba(0,212,170,0.3)',borderWidth:1,
-              callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.parsed.y} mg/dL`}}
-          },
-          scales:{
-            x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9}}},
-            y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9},callback:v=>v+' mg/dL'}}
-          }
-        }
-      });
-    }catch(e){}
-    const legEl=document.getElementById('lipidLegend');
-    if(legEl)legEl.innerHTML=datasets.map(ds=>`<div class="ld"><div class="ldot" style="background:${ds.borderColor}"></div>${ds.label}</div>`).join('');
-  }
-  requestAnimationFrame(()=>draw(0));
-}
-
-function renderHomeExamCharts(){renderHormonalHome();renderLipidHome();}
+function renderHomeExamCharts(){updateHero();renderHormonalHome();renderLipidHome();}
 </script>
 
 
@@ -1614,6 +1618,7 @@ function save(){
   DB.set('tds_doses',doses);DB.set('tds_tirz',tirzStocks);DB.set('tds_test',testStocks);
   DB.set('tds_supl',suplCat);DB.set('tds_med',medCat);DB.set('tds_water',waterLog);
   DB.set('tds_wgoal',waterGoal);DB.set('tds_ag',agCfg);DB.set('tds_gym',gymLog);DB.set('tds_klow',klowStocks);DB.set('tds_profiles',userProfiles);DB.set('tds_exames',exames);DB.set('tds_metas_peso',metasPeso);DB.set('tds_metas_cintura',metasCintura);DB.set('tds_chart_order',chartOrder);DB.set('tds_customhorm',customHormones);DB.set('tds_customstock',customStocks);DB.set('tds_sleep',sleepLog);DB.set('tds_test_tipos',testTipos);
+  if(typeof chartDefs!=='undefined')DB.set('tds_chart_defs',chartDefs);
 }
 
 // ═══════════════════════════════════════════════════
@@ -2173,10 +2178,16 @@ function toggleTheme(){
   const btn=document.getElementById('themeBtn');
   if(btn)btn.textContent=isLight?'🌙':'☀️';
   localStorage.setItem('tds_theme',isLight?'light':'dark');
+  const tc=document.querySelector('meta[name="theme-color"]');if(tc)tc.content=isLight?'#111e30':'#08121f';
+  applyChartTheme();
+  const act=document.querySelector('.tab.active');const nm=act?act.id.replace('tab-',''):'home';
+  if(nm==='home'){renderBodyCharts();renderHomeExamCharts();}
+  if(nm==='charts')renderCharts();
 }
 function applyTheme(){
   const saved=localStorage.getItem('tds_theme');
   if(saved==='light'){document.body.classList.add('light');const btn=document.getElementById('themeBtn');if(btn)btn.textContent='🌙';}
+  applyChartTheme();
 }
 
 // ═══════════════════════════════════════════════════
@@ -3246,7 +3257,7 @@ function exportBackup(){
     version:2,
     exportDate:new Date().toISOString(),
     appName:'Trilha da Saúde',
-    doses,tirzStocks,testStocks,klowStocks,suplCat,medCat,waterLog,waterGoal,agCfg,gymLog,userProfiles,exames,metasPeso,metasCintura,chartOrder,customHormones,customStocks,sleepLog,testTipos
+    doses,tirzStocks,testStocks,klowStocks,suplCat,medCat,waterLog,waterGoal,agCfg,gymLog,userProfiles,exames,metasPeso,metasCintura,chartOrder,customHormones,customStocks,sleepLog,testTipos,chartDefs
   };
   const json=JSON.stringify(data,null,2);
   const blob=new Blob([json],{type:'application/json'});
@@ -3284,6 +3295,8 @@ function importBackup(event){
       if(data.metasPeso)metasPeso=data.metasPeso;
       if(data.metasCintura)metasCintura=data.metasCintura;
       if(data.chartOrder)chartOrder=data.chartOrder;
+      if(Array.isArray(data.chartDefs)&&data.chartDefs.length)chartDefs=data.chartDefs;
+      else if(data.chartOrder)chartDefs=buildDefaultCharts();
       if(data.customHormones)customHormones=data.customHormones;
       if(data.customStocks)customStocks=data.customStocks;
       if(data.sleepLog)sleepLog=data.sleepLog;
@@ -3552,89 +3565,6 @@ function renderExamesCharts(){
 
 
 // ═══════════════════════════════════════════════════
-// CHART REORDER — Drag & Drop (mouse + touch)
-// ═══════════════════════════════════════════════════
-function applyChartOrder(){
-  const container=document.getElementById('chartsContainer');
-  if(!container||!chartOrder.length)return;
-  chartOrder.forEach(cid=>{
-    const blk=container.querySelector('.chart-block[data-chart="'+cid+'"]');
-    if(blk)container.appendChild(blk);
-  });
-}
-function saveChartOrder(){
-  const container=document.getElementById('chartsContainer');
-  if(!container)return;
-  chartOrder=[...container.querySelectorAll('.chart-block')].map(b=>b.getAttribute('data-chart'));
-  save();
-}
-
-let dragSrc=null;
-
-function initChartDnD(){
-  const container=document.getElementById('chartsContainer');
-  if(!container||container.dataset.dndInit)return;
-  container.dataset.dndInit='1';
-
-  // ── Desktop: HTML5 drag events ──
-  container.querySelectorAll('.chart-block').forEach(blk=>{
-    blk.addEventListener('dragstart',e=>{dragSrc=blk;blk.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
-    blk.addEventListener('dragend',e=>{blk.classList.remove('dragging');container.querySelectorAll('.chart-block').forEach(b=>b.classList.remove('drag-over'));saveChartOrder();});
-    blk.addEventListener('dragover',e=>{e.preventDefault();const after=getDragAfter(container,e.clientY);const dragging=container.querySelector('.dragging');if(!dragging)return;if(after==null)container.appendChild(dragging);else container.insertBefore(dragging,after);});
-  });
-
-  // ── Mobile: touch on drag-handle ──
-  container.querySelectorAll('.drag-handle').forEach(handle=>{
-    handle.addEventListener('touchstart',onTouchStart,{passive:false});
-  });
-}
-
-function getDragAfter(container,y){
-  const els=[...container.querySelectorAll('.chart-block:not(.dragging)')];
-  return els.reduce((closest,child)=>{
-    const box=child.getBoundingClientRect();
-    const offset=y-box.top-box.height/2;
-    if(offset<0&&offset>closest.offset)return{offset,element:child};
-    return closest;
-  },{offset:Number.NEGATIVE_INFINITY}).element||null;
-}
-
-// Touch dragging
-let touchBlk=null, touchPlaceholder=null, touchStartY=0, touchScrollStart=0;
-function onTouchStart(e){
-  e.preventDefault();
-  const handle=e.currentTarget;
-  touchBlk=handle.closest('.chart-block');
-  if(!touchBlk)return;
-  touchBlk.classList.add('dragging');
-  touchStartY=e.touches[0].clientY;
-  document.addEventListener('touchmove',onTouchMove,{passive:false});
-  document.addEventListener('touchend',onTouchEnd,{passive:false});
-}
-function onTouchMove(e){
-  if(!touchBlk)return;
-  e.preventDefault();
-  const container=document.getElementById('chartsContainer');
-  const y=e.touches[0].clientY;
-  const after=getDragAfter(container,y);
-  if(after==null)container.appendChild(touchBlk);
-  else container.insertBefore(touchBlk,after);
-  // Auto-scroll near edges
-  const vh=window.innerHeight;
-  if(y<90)window.scrollBy(0,-8);
-  else if(y>vh-90)window.scrollBy(0,8);
-}
-function onTouchEnd(e){
-  if(!touchBlk)return;
-  touchBlk.classList.remove('dragging');
-  touchBlk=null;
-  document.removeEventListener('touchmove',onTouchMove);
-  document.removeEventListener('touchend',onTouchEnd);
-  saveChartOrder();
-  toast('✅ Ordem salva');
-}
-
-// ═══════════════════════════════════════════════════
 // CHARTS
 // ═══════════════════════════════════════════════════
 let charts={};
@@ -3714,202 +3644,710 @@ function saveSleepLog(){
   toast('😴 Sono registrado! '+hStr+'h'+(hours>=8?' ✅':hours>=6?' ⚠️':' ❌'));
 }
 
-function renderCharts(){
-  // Medidas corporais — para o gráfico de IMC (peso e cintura ficam na Início)
-  const medDoses=doses.filter(d=>(d.tipo==='tirz'||d.tipo==='test')&&(d.peso||d.imc||d.cintura)).sort((a,b)=>new Date(a.date)-new Date(b.date));
-  const medLabels=medDoses.map(d=>fmtDT(d.date).split(' ')[0]);
+// ═══════════════════════════════════════════════════
+// REFERÊNCIAS LABORATORIAIS (homem adulto — variam por laboratório/método)
+// ═══════════════════════════════════════════════════
+const LAB_REFS={
+  testoTotal:{label:'Testosterona Total',short:'Testo Total',unit:'ng/dL',min:264,max:916,color:'#4a9eff'},
+  testoLivre:{label:'Testosterona Livre',short:'Testo Livre',unit:'pg/mL',min:9,max:30,color:'#22d3ee'},
+  dht:{label:'DHT',short:'DHT',unit:'pg/mL',min:300,max:850,color:'#a78bfa'},
+  estradiol:{label:'Estradiol (E2)',short:'Estradiol',unit:'pg/mL',min:10,max:40,color:'#f472b6'},
+  prolactina:{label:'Prolactina',short:'Prolactina',unit:'ng/mL',min:4,max:15,color:'#fb923c'},
+  lh:{label:'LH',short:'LH',unit:'mUI/mL',min:1.7,max:8.6,color:'#34d399'},
+  fsh:{label:'FSH',short:'FSH',unit:'mUI/mL',min:1.5,max:12.4,color:'#00d4aa'},
+  shbg:{label:'SHBG',short:'SHBG',unit:'nmol/L',min:10,max:57,color:'#f59e0b'},
+  hematocrito:{label:'Hematócrito',short:'Hematócrito',unit:'%',min:40,max:50,color:'#f87171'},
+  hemoglobina:{label:'Hemoglobina',short:'Hemoglobina',unit:'g/dL',min:13.5,max:17.5,color:'#fb7185'},
+  colTotal:{label:'Colesterol Total',short:'Col. Total',unit:'mg/dL',min:null,max:190,color:'#f87171'},
+  ldl:{label:'LDL',short:'LDL',unit:'mg/dL',min:null,max:130,color:'#f59e0b'},
+  hdl:{label:'HDL',short:'HDL',unit:'mg/dL',min:40,max:null,color:'#34d399'},
+  trig:{label:'Triglicerídeos',short:'Triglicérides',unit:'mg/dL',min:null,max:150,color:'#4a9eff'},
+  glicose:{label:'Glicose',short:'Glicose',unit:'mg/dL',min:70,max:99,color:'#a78bfa'},
+  psa:{label:'PSA',short:'PSA',unit:'ng/mL',min:null,max:4,color:'#22d3ee'}
+};
+const HORM_KEYS=['testoTotal','testoLivre','dht','estradiol','prolactina','shbg','lh','fsh'];
+const LIPID_KEYS=['colTotal','ldl','hdl','trig','hematocrito','hemoglobina','glicose','psa'];
 
-  // IMC chart (cPeso e cCintura agora vivem na aba Início via renderBodyCharts)
-  const cImcEl=document.getElementById('cIMC');
-  if(cImcEl){
-    kc('imc');
-    const imcDatasets=[{label:'IMC',data:medDoses.map(d=>d.imc||null),borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,0.08)',tension:0.4,fill:false,pointRadius:5,spanGaps:true,pointBackgroundColor:medDoses.map(d=>{if(!d.imc)return'#f59e0b';const i=imcInfo(d.imc);return i.color.replace('var(--','').replace(')','');})}];
-    charts.imc=new Chart(cImcEl,{type:'line',data:{labels:medLabels,datasets:imcDatasets},options:{...cO,plugins:{...cO.plugins,tooltip:{...cO.plugins.tooltip,callbacks:{label:ctx=>`IMC ${ctx.parsed.y} — ${imcInfo(ctx.parsed.y).label}`}}}}});
-  }
-  const cTirzEl=document.getElementById('cTirz');
-  kc('tirz');const td=doses.filter(d=>d.tipo==='tirz').slice().sort((a,b)=>new Date(a.date)-new Date(b.date));
-  if(cTirzEl)charts.tirz=new Chart(cTirzEl,{type:'line',data:{labels:td.map(d=>fmtDT(d.date).split(' ')[0]),datasets:[{data:td.map(d=>d.dose),borderColor:'#00d4aa',backgroundColor:'rgba(0,212,170,0.08)',tension:0.4,fill:true,pointBackgroundColor:'#00d4aa',pointRadius:4}]},options:cO});
-  const cTestEl=document.getElementById('cTest');
-  kc('test');const tsd=doses.filter(d=>d.tipo==='test').slice().sort((a,b)=>new Date(a.date)-new Date(b.date));
-  if(cTestEl)charts.test=new Chart(cTestEl,{
-    type:'bar',
-    data:{
-      labels:tsd.map(d=>fmtDT(d.date).split(' ')[0]),
-      datasets:[
-        {label:'Dose (mg)',data:tsd.map(d=>d.dose),backgroundColor:'rgba(74,158,255,0.65)',borderColor:'#4a9eff',borderWidth:1,borderRadius:4,yAxisID:'yMg'},
-        {label:'Volume (ml)',data:tsd.map(d=>d.ml||0),backgroundColor:'rgba(167,139,250,0.65)',borderColor:'#a78bfa',borderWidth:1,borderRadius:4,yAxisID:'yMl'}
-      ]
-    },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{
-        legend:{display:true,labels:{color:'#8badc4',font:{size:10},boxWidth:10}},
-        tooltip:{
-          backgroundColor:'#162840',titleColor:'#e8f4fd',bodyColor:'#8badc4',
-          borderColor:'rgba(0,212,170,0.3)',borderWidth:1,
-          callbacks:{
-            label:ctx=>{
-              if(ctx.datasetIndex===0)return ` ${ctx.parsed.y} mg`;
-              return ` ${ctx.parsed.y.toFixed(2)} ml`;
-            },
-            afterBody:(items)=>{
-              const idx=items[0]?.dataIndex;
-              if(idx==null||!tsd[idx])return[];
-              const d=tsd[idx];
-              const parts=[];
-              if(d.dose&&d.ml)parts.push(` = ${d.dose}mg em ${d.ml.toFixed(2)}ml`);
-              if(d.local)parts.push(` 📍 ${d.local}`);
-              return parts;
-            }
-          }
-        }
-      },
-      scales:{
-        x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9}}},
-        yMg:{type:'linear',position:'left',grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a9eff',font:{size:9}},title:{display:true,text:'mg',color:'#4a9eff',font:{size:9}}},
-        yMl:{type:'linear',position:'right',grid:{drawOnChartArea:false},ticks:{color:'#a78bfa',font:{size:9},callback:v=>v.toFixed(1)+'ml'},title:{display:true,text:'ml',color:'#a78bfa',font:{size:9}}}
-      }
-    }
+function fmtN(v,dec){
+  if(v==null||isNaN(v))return'—';
+  const d=dec!=null?dec:(Math.abs(v)>=100?0:Math.abs(v)>=10?1:2);
+  return Number(v).toLocaleString('pt-BR',{maximumFractionDigits:d});
+}
+function refStatus(v,r){
+  if(!r||v==null)return{lbl:'',cls:'na'};
+  if(r.min!=null&&v<r.min)return{lbl:'Baixo',cls:'low'};
+  if(r.max!=null&&v>r.max)return{lbl:'Alto',cls:'high'};
+  return{lbl:'Normal',cls:'ok'};
+}
+function refText(r){
+  if(!r)return'';
+  if(r.min!=null&&r.max!=null)return fmtN(r.min)+'–'+fmtN(r.max);
+  if(r.max!=null)return'< '+fmtN(r.max);
+  if(r.min!=null)return'> '+fmtN(r.min);
+  return'';
+}
+function escH(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+// ═══════════════════════════════════════════════════
+// TEMA DOS GRÁFICOS (segue claro/escuro)
+// ═══════════════════════════════════════════════════
+function cssVar(n){return getComputedStyle(document.body).getPropertyValue(n).trim();}
+function hexA(c,a){
+  if(!c)return`rgba(0,212,170,${a})`;
+  if(c.startsWith('#')){let h=c.slice(1);if(h.length===3)h=h.split('').map(x=>x+x).join('');const n=parseInt(h,16);return`rgba(${n>>16&255},${n>>8&255},${n&255},${a})`;}
+  const m=c.match(/[\d.]+/g);return m?`rgba(${m[0]},${m[1]},${m[2]},${a})`:c;
+}
+function isLight(){return document.body.classList.contains('light');}
+function gridColor(){return isLight()?'rgba(15,30,50,0.07)':'rgba(255,255,255,0.05)';}
+function applyChartTheme(){
+  if(typeof Chart==='undefined')return;
+  const t3=cssVar('--t3')||'#4a6b82';
+  Chart.defaults.color=t3;
+  Chart.defaults.borderColor=gridColor();
+  Chart.defaults.font.family="-apple-system,'SF Pro Text','Segoe UI',system-ui,sans-serif";
+  Chart.defaults.font.size=10;
+  Chart.defaults.elements.line.borderWidth=2;
+  Chart.defaults.elements.point.hoverRadius=5;
+  Object.assign(Chart.defaults.plugins.tooltip,{
+    backgroundColor:isLight()?'rgba(255,255,255,0.97)':'rgba(8,16,30,0.96)',
+    titleColor:isLight()?'#0d1a28':'#e6f1fc',bodyColor:isLight()?'#3d5870':'#a9c2d8',
+    borderColor:isLight()?'rgba(0,0,0,0.1)':'rgba(255,255,255,0.1)',borderWidth:1,
+    padding:10,cornerRadius:10,boxPadding:4,usePointStyle:true,
+    titleFont:{weight:'600',size:11},bodyFont:{size:11}
   });
-  // Klow chart (3rd)
-  kc('klow');const klowD=doses.filter(d=>d.tipo==='klow').slice().sort((a,b)=>new Date(a.date)-new Date(b.date));
-  if(document.getElementById('cKlow'))charts.klow=new Chart(document.getElementById('cKlow'),{type:'line',data:{labels:klowD.map(d=>fmtDT(d.date).split(' ')[0]),datasets:[{data:klowD.map(d=>d.dose),borderColor:'#34d399',backgroundColor:'rgba(52,211,153,0.08)',tension:0.4,fill:true,pointBackgroundColor:'#34d399',pointRadius:4}]},options:cO});
-  const cWaterEl=document.getElementById('cWater');
-  kc('water');const last7=[];for(let i=13;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const k=d.toISOString().split('T')[0];last7.push({label:d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}),val:waterLog[k]||0});}
-  if(cWaterEl)charts.water=new Chart(cWaterEl,{type:'bar',data:{labels:last7.map(x=>x.label),datasets:[{data:last7.map(x=>x.val),backgroundColor:last7.map(x=>x.val>=waterGoal?'rgba(52,211,153,0.7)':'rgba(74,158,255,0.5)'),borderRadius:4}]},options:cO});
-  // GYM — todos os dias registrados (agregando minutos por dia)
-  kc('gym');
-  const gymByDay={};
-  gymLog.forEach(g=>{gymByDay[g.date]=(gymByDay[g.date]||0)+g.totalMin;});
-  const gymDays=Object.keys(gymByDay).sort();
-  const gymLabels=gymDays.map(d=>{const dt=new Date(d+'T12:00:00');return dt.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});});
-  const gymData=gymDays.map(d=>gymByDay[d]);
-  const cGymEl=document.getElementById('cGym');
-  if(cGymEl)charts.gym=new Chart(cGymEl,{type:'bar',data:{labels:gymLabels.length?gymLabels:['Sem dados'],datasets:[{data:gymData.length?gymData:[0],backgroundColor:'rgba(52,211,153,0.65)',borderColor:'var(--green)',borderWidth:1,borderRadius:4}]},options:{...cO,plugins:{...cO.plugins,tooltip:{...cO.plugins.tooltip,callbacks:{title:items=>{const i=items[0].dataIndex;const dt=new Date(gymDays[i]+'T12:00:00');return dt.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'});},label:ctx=>` ${ctx.parsed.y} min`}}},scales:{x:{...cO.scales.x},y:{...cO.scales.y,beginAtZero:true,ticks:{...cO.scales.y.ticks,precision:0}}}}});
-  // SUPL
-  // Med chart — barras verticais por medicamento (contagem de registros)
-  kc('med');
-  const medD=doses.filter(d=>d.tipo==='med');
-  const medMap={};
-  medD.forEach(d=>{const nm=d.nome||'(sem nome)';medMap[nm]=(medMap[nm]||0)+1;});
-  const medNames=Object.keys(medMap);
-  const medColors=['rgba(245,158,11,0.75)','rgba(251,146,60,0.75)','rgba(248,113,113,0.75)','rgba(167,139,250,0.75)','rgba(74,158,255,0.75)','rgba(52,211,153,0.75)','rgba(0,212,170,0.75)','rgba(244,114,182,0.75)'];
-  const cMedEl=document.getElementById('cMed');
-  if(cMedEl){
-    charts.med=new Chart(cMedEl,{
-      type:'bar',
-      data:{
-        labels:medNames.length?medNames:['Sem registros'],
-        datasets:[{
-          label:'Registros',
-          data:medNames.length?medNames.map(n=>medMap[n]):[0],
-          backgroundColor:medNames.length?medNames.map((n,i)=>medColors[i%medColors.length]):['rgba(255,255,255,0.06)'],
-          borderRadius:4
-        }]
-      },
-      options:{
-        responsive:true,maintainAspectRatio:false,
-        plugins:{
-          legend:{display:false},
-          tooltip:{backgroundColor:'#162840',titleColor:'#e8f4fd',bodyColor:'#8badc4',borderColor:'rgba(0,212,170,0.3)',borderWidth:1,callbacks:{label:ctx=>` ${ctx.parsed.y} registro(s)`}}
-        },
-        scales:{
-          x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9}}},
-          y:{beginAtZero:true,grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9},precision:0,stepSize:1}}
-        }
-      }
-    });
+  // gráficos antigos que usam cO herdam o tema
+  if(typeof cO!=='undefined'){
+    cO.plugins.tooltip={};
+    cO.scales.x={grid:{color:gridColor()},ticks:{color:t3,font:{size:10},maxRotation:0,autoSkipPadding:14}};
+    cO.scales.y={grid:{color:gridColor()},ticks:{color:t3,font:{size:10}}};
   }
-  kc('supl');const sm={};doses.filter(d=>d.tipo==='supl').forEach(d=>{sm[d.nome]=(sm[d.nome]||0)+1;});const sn=Object.keys(sm);
-  const cols=['rgba(167,139,250,0.8)','rgba(0,212,170,0.8)','rgba(74,158,255,0.8)','rgba(245,158,11,0.8)','rgba(248,113,113,0.8)','rgba(52,211,153,0.8)'];
-  const cSuplEl=document.getElementById('cSupl');
-  if(cSuplEl)charts.supl=new Chart(cSuplEl,{type:'doughnut',data:{labels:sn.length?sn:['Sem dados'],datasets:[{data:sn.length?sn.map(n=>sm[n]):[1],backgroundColor:cols,borderColor:'#111f35',borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#8badc4',font:{size:10},padding:10}},tooltip:cO.plugins.tooltip}}});
+}
 
-  // SLEEP — últimos 14 dias com meta de 8h
-  kc('sleep');
-  const sleepLast14=[];
-  for(let i=13;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const k=d.toISOString().split('T')[0];const entry=sleepLog.find(s=>s.date===k);sleepLast14.push({label:d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}),val:entry?entry.hours:null});}
-  const cSleepEl=document.getElementById('cSleep');
-  if(cSleepEl){
-    const sleepBg=sleepLast14.map(x=>{if(x.val===null)return'rgba(255,255,255,0.06)';if(x.val>=8)return'rgba(52,211,153,0.75)';if(x.val>=6)return'rgba(245,158,11,0.75)';return'rgba(248,113,113,0.75)';});
-    charts.sleep=new Chart(cSleepEl,{
-      type:'bar',
-      data:{
-        labels:sleepLast14.map(x=>x.label),
-        datasets:[
-          {label:'Horas dormidas',data:sleepLast14.map(x=>x.val),backgroundColor:sleepBg,borderRadius:4},
-          {label:'Meta (8h)',data:Array(14).fill(8),type:'line',borderColor:'rgba(167,139,250,0.65)',borderDash:[5,4],borderWidth:1.5,pointRadius:0,fill:false,tension:0,order:0}
-        ]
-      },
-      options:{
-        responsive:true,maintainAspectRatio:false,
-        plugins:{
-          legend:{display:true,labels:{color:'#8badc4',font:{size:10},boxWidth:10}},
-          tooltip:{backgroundColor:'#162840',titleColor:'#e8f4fd',bodyColor:'#8badc4',borderColor:'rgba(167,139,250,0.3)',borderWidth:1,
-            callbacks:{label:ctx=>{
-              if(ctx.datasetIndex===1)return' Meta: 8h';
-              const v=ctx.parsed.y;if(v===null||v===0)return' Sem registro';
-              const h=Math.floor(v),m=Math.round((v-h)*60);
-              const dur=h+'h'+(m>0?m+'min':'');
-              return' '+dur+(v>=8?' ✅ Meta atingida':v>=6?' ⚠️ Aceitável':' ❌ Insuficiente');
-            }}
-          }
-        },
-        scales:{
-          x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9}}},
-          y:{beginAtZero:true,max:12,grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'#4a6b82',font:{size:9},callback:v=>v+'h'},title:{display:true,text:'horas',color:'#4a6b82',font:{size:9}}}
-        }
-      }
+// Faixa de referência sombreada atrás das séries
+const refBandPlugin={
+  id:'refBand',
+  beforeDatasetsDraw(chart,args,o){
+    if(!o||(o.min==null&&o.max==null))return;
+    const{ctx,chartArea:a,scales}=chart;const y=scales[o.axis||'y'];if(!y||!a)return;
+    const top=o.max!=null?y.getPixelForValue(o.max):a.top;
+    const bot=o.min!=null?y.getPixelForValue(o.min):a.bottom;
+    const col=o.color||'#34d399';
+    ctx.save();ctx.beginPath();ctx.rect(a.left,a.top,a.width,a.height);ctx.clip();
+    ctx.fillStyle=hexA(col,0.09);
+    ctx.fillRect(a.left,Math.min(top,bot),a.width,Math.abs(bot-top));
+    ctx.strokeStyle=hexA(col,0.55);ctx.lineWidth=1;ctx.setLineDash([4,4]);
+    ctx.font='600 9px -apple-system,Segoe UI,sans-serif';ctx.textAlign='right';ctx.fillStyle=hexA(col,0.9);
+    [o.min,o.max].forEach(v=>{
+      if(v==null)return;const py=y.getPixelForValue(v);
+      if(py<a.top-1||py>a.bottom+1)return;
+      ctx.beginPath();ctx.moveTo(a.left,py);ctx.lineTo(a.right,py);ctx.stroke();
+      ctx.fillText((o.prefix||'')+fmtN(v),a.right-4,py-4);
     });
+    ctx.restore();
+  }
+};
+if(typeof Chart!=='undefined')Chart.register(refBandPlugin);
+
+function gradFill(color,a1){
+  return ctx=>{
+    const c=ctx.chart,a=c.chartArea;if(!a)return hexA(color,0.15);
+    const g=c.ctx.createLinearGradient(0,a.top,0,a.bottom);
+    g.addColorStop(0,hexA(color,a1||0.30));g.addColorStop(1,hexA(color,0));return g;
+  };
+}
+
+// Registro próprio dos gráficos novos
+const CH={};
+function killCh(id){if(CH[id]){try{CH[id].destroy();}catch(e){}delete CH[id];}}
+
+// ═══════════════════════════════════════════════════
+// PAINEL DE MARCADORES NA TELA INICIAL
+// ═══════════════════════════════════════════════════
+function monthLabelPt(dateStr){
+  const d=new Date(dateStr+'T12:00:00');
+  const meses=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  return meses[d.getMonth()]+'/'+String(d.getFullYear()).slice(2);
+}
+function markerPoints(k){
+  return [...exames].filter(e=>e[k]!=null&&e[k]!==''&&!isNaN(e[k]))
+    .sort((a,b)=>a.date.localeCompare(b.date)).map(e=>({d:e.date,v:+e[k],obs:e.obs||''}));
+}
+function sparkSVG(pts,r,color){
+  if(pts.length<2)return'';
+  const W=100,H=30,vals=pts.map(p=>p.v);
+  let lo=Math.min(...vals),hi=Math.max(...vals);
+  if(r){if(r.min!=null)lo=Math.min(lo,r.min);if(r.max!=null)hi=Math.max(hi,r.max);}
+  const pad=(hi-lo)*0.12||1;lo-=pad;hi+=pad;
+  const X=i=>(i/(pts.length-1))*W, Y=v=>H-((v-lo)/(hi-lo))*H;
+  let band='';
+  if(r&&(r.min!=null||r.max!=null)){
+    const y1=r.max!=null?Y(r.max):0,y2=r.min!=null?Y(r.min):H;
+    band=`<rect x="0" y="${Math.min(y1,y2).toFixed(1)}" width="${W}" height="${Math.abs(y2-y1).toFixed(1)}" fill="${hexA('#34d399',0.12)}"/>`;
+  }
+  const line=pts.map((p,i)=>X(i).toFixed(1)+','+Y(p.v).toFixed(1)).join(' ');
+  const lx=X(pts.length-1),ly=Y(pts[pts.length-1].v);
+  return`<svg class="mk-spark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${band}<polyline points="${line}" fill="none" stroke="${color}" stroke-width="1.8" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/><circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="2.6" fill="${color}" vector-effect="non-scaling-stroke"/></svg>`;
+}
+function rangeBar(v,r){
+  if(!r||(r.min==null&&r.max==null))return'';
+  const vals=[v];if(r.min!=null)vals.push(r.min);if(r.max!=null)vals.push(r.max);
+  let lo=Math.min(...vals),hi=Math.max(...vals);
+  const span=(hi-lo)||Math.abs(hi)||1;lo-=span*0.18;hi+=span*0.18;if(r.min==null||lo<0)lo=Math.max(0,lo);
+  const P=x=>Math.max(0,Math.min(100,(x-lo)/(hi-lo)*100));
+  const zl=r.min!=null?P(r.min):0,zr=r.max!=null?P(r.max):100;
+  const st=refStatus(v,r);
+  return`<div class="mk-range"><div class="mk-zone" style="left:${zl}%;width:${Math.max(2,zr-zl)}%"></div><div class="mk-dot ${st.cls}" style="left:${P(v)}%"></div></div>`;
+}
+function markerTile(k){
+  const r=LAB_REFS[k],pts=markerPoints(k);if(!pts.length)return'';
+  const last=pts[pts.length-1],prev=pts[pts.length-2],st=refStatus(last.v,r);
+  let delta='';
+  if(prev){
+    const dv=last.v-prev.v;const arrow=dv>0?'▲':dv<0?'▼':'■';
+    delta=`<span class="mk-delta">${arrow} ${fmtN(Math.abs(dv))}</span>`;
+  }
+  return`<button class="mk-tile st-${st.cls}" onclick="openMarkerSheet('${k}')">
+    <div class="mk-top"><span class="mk-name">${r.short}</span>${st.lbl?`<span class="mk-pill ${st.cls}">${st.lbl}</span>`:''}</div>
+    <div class="mk-val">${fmtN(last.v)}<small>${r.unit}</small></div>
+    ${rangeBar(last.v,r)}
+    <div class="mk-foot"><span>ref ${refText(r)}</span>${delta}</div>
+    ${sparkSVG(pts,r,r.color)}
+  </button>`;
+}
+function renderMarkerCard(cardId,gridId,subId,keys){
+  const card=document.getElementById(cardId),grid=document.getElementById(gridId);
+  if(!card||!grid)return[];
+  const avail=keys.filter(k=>markerPoints(k).length);
+  if(!avail.length){card.style.display='none';return[];}
+  card.style.display='';
+  grid.innerHTML=avail.map(markerTile).join('');
+  const dates=[...new Set(avail.flatMap(k=>markerPoints(k).map(p=>p.d)))].sort();
+  const sub=document.getElementById(subId);
+  if(sub)sub.textContent=`Último exame ${fmtD(dates[dates.length-1])} · ${dates.length} coleta${dates.length>1?'s':''} · toque para ver a evolução`;
+  return avail;
+}
+function renderHormonalHome(){renderMarkerCard('hormonalHomeCard','hormonalGrid','hormonalHomeSub',HORM_KEYS);}
+function renderLipidHome(){
+  renderMarkerCard('lipidHomeCard','lipidGrid','lipidHomeSub',LIPID_KEYS);
+  const obsEl=document.getElementById('lipidHomeObs');
+  if(obsEl){
+    const lastObs=[...exames].sort((a,b)=>b.date.localeCompare(a.date)).find(e=>e.obs&&e.obs.trim());
+    obsEl.innerHTML=lastObs?`<b>Obs. ${fmtD(lastObs.date)}:</b> ${escH(lastObs.obs.trim())}`:'';
+    obsEl.style.display=lastObs?'':'none';
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// BOTTOM SHEET
+// ═══════════════════════════════════════════════════
+function openSheet(html){
+  document.getElementById('sheetBody').innerHTML=html;
+  document.getElementById('sheetBg').classList.add('open');
+  document.getElementById('sheet').classList.add('open');
+}
+function closeSheet(){
+  document.getElementById('sheetBg').classList.remove('open');
+  document.getElementById('sheet').classList.remove('open');
+  killCh('sheet');
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet();});
+
+function openMarkerSheet(k){
+  const r=LAB_REFS[k],pts=markerPoints(k);if(!pts.length)return;
+  const last=pts[pts.length-1],st=refStatus(last.v,r);
+  const rows=[...pts].reverse().map((p,i,arr)=>{
+    const s=refStatus(p.v,r),nx=arr[i+1];
+    const dv=nx?p.v-nx.v:null;
+    return`<tr><td>${fmtD(p.d)}</td><td class="num">${fmtN(p.v)}</td><td>${s.lbl?`<span class="mk-pill ${s.cls}">${s.lbl}</span>`:''}</td><td class="num muted">${dv==null?'':(dv>0?'+':'')+fmtN(dv)}</td></tr>`;
+  }).join('');
+  openSheet(`
+    <div class="sh-hd"><div><div class="sh-title">${r.label}</div><div class="sh-sub">Referência ${refText(r)} ${r.unit} · ${pts.length} resultado${pts.length>1?'s':''}</div></div><button class="sh-x" onclick="closeSheet()">✕</button></div>
+    <div class="sh-hero"><span class="sh-big" style="color:${r.color}">${fmtN(last.v)}</span><span class="sh-unit">${r.unit}</span>${st.lbl?`<span class="mk-pill ${st.cls}">${st.lbl}</span>`:''}<span class="sh-date">em ${fmtD(last.d)}</span></div>
+    <div class="chart-wrap" style="height:220px"><canvas id="sheetCanvas"></canvas></div>
+    <table class="sh-table"><thead><tr><th>Data</th><th class="num">Valor</th><th>Status</th><th class="num">Δ</th></tr></thead><tbody>${rows}</tbody></table>
+  `);
+  requestAnimationFrame(()=>{
+    const el=document.getElementById('sheetCanvas');if(!el)return;
+    killCh('sheet');
+    const vals=pts.map(p=>p.v);
+    let lo=Math.min(...vals),hi=Math.max(...vals);if(r.min!=null)lo=Math.min(lo,r.min);if(r.max!=null)hi=Math.max(hi,r.max);
+    const pad=(hi-lo)*0.12||1;
+    CH.sheet=new Chart(el,{type:'line',
+      data:{labels:pts.map(p=>fmtD(p.d)),datasets:[{label:r.short,data:vals,borderColor:r.color,backgroundColor:gradFill(r.color),fill:true,tension:0.35,cubicInterpolationMode:'monotone',
+        pointRadius:4,pointBackgroundColor:pts.map(p=>{const s=refStatus(p.v,r).cls;return s==='high'?'#f87171':s==='low'?'#f59e0b':r.color;}),pointBorderColor:'transparent'}]},
+      options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+        plugins:{legend:{display:false},refBand:{min:r.min,max:r.max},tooltip:{callbacks:{label:c=>` ${fmtN(c.parsed.y)} ${r.unit} · ${refStatus(c.parsed.y,r).lbl}`}}},
+        scales:{x:{grid:{display:false},ticks:{maxRotation:0,autoSkipPadding:14}},y:{grid:{color:gridColor()},suggestedMin:Math.max(0,lo-pad),suggestedMax:hi+pad,ticks:{callback:v=>fmtN(v)}}}}});
+  });
+}
+
+// ═══════════════════════════════════════════════════
+// GRÁFICOS CONFIGURÁVEIS — fontes de dados
+// ═══════════════════════════════════════════════════
+const dKey=t=>String(t).slice(0,10);
+function seriesFromDoses(f,field){field=field||'dose';return doses.filter(f).filter(d=>d[field]!=null&&d[field]!==''&&!isNaN(d[field])).map(d=>({t:d.date,v:+d[field]}));}
+function countRows(list,keyFn,valFn){
+  const m={};list.forEach(x=>{const k=keyFn(x)||'(sem nome)';m[k]=(m[k]||0)+(valFn?valFn(x):1);});
+  return Object.entries(m).map(([label,value])=>({label,value})).sort((a,b)=>b.value-a.value);
+}
+function getChartSources(){
+  const S=[];
+  const add=o=>S.push(Object.assign({kind:'series',agg:'avg',grp:'record',ref:null},o));
+  const G1='Doses',G2='Corpo',G3='Exames',G4='Rotina',G5='Contagens';
+  add({id:'dose:tirz',group:G1,label:'Tirzepatida — dose',unit:'mg',color:'#00d4aa',get:()=>seriesFromDoses(d=>d.tipo==='tirz')});
+  add({id:'dose:test',group:G1,label:'Testosterona — dose',unit:'mg',color:'#4a9eff',get:()=>seriesFromDoses(d=>d.tipo==='test')});
+  add({id:'dose:testml',group:G1,label:'Testosterona — volume',unit:'ml',color:'#a78bfa',get:()=>seriesFromDoses(d=>d.tipo==='test','ml')});
+  add({id:'dose:klow',group:G1,label:'Klow — dose',unit:'mg',color:'#34d399',get:()=>seriesFromDoses(d=>d.tipo==='klow')});
+  customHormones.forEach(h=>add({id:'dose:custom:'+h.id,group:G1,label:h.nome+' — dose',unit:'mg',color:h.cor||'#a78bfa',get:()=>seriesFromDoses(d=>d.tipo==='custom'&&d.hormoneId===h.id)}));
+  add({id:'body:peso',group:G2,label:'Peso',unit:'kg',color:'#00d4aa',grp:'day',get:()=>getDailyBodyData().filter(d=>d.peso!=null).map(d=>({t:d.date,v:+d.peso}))});
+  add({id:'body:cintura',group:G2,label:'Cintura',unit:'cm',color:'#f59e0b',grp:'day',get:()=>getDailyBodyData().filter(d=>d.cintura!=null).map(d=>({t:d.date,v:+d.cintura}))});
+  add({id:'body:imc',group:G2,label:'IMC',unit:'',color:'#f59e0b',grp:'day',ref:{min:18.5,max:24.9},get:()=>{
+    const m={};[...doses].filter(d=>d.imc).sort((a,b)=>String(a.date).localeCompare(String(b.date))).forEach(d=>m[dKey(d.date)]=+d.imc);
+    return Object.entries(m).map(([t,v])=>({t,v}));}});
+  Object.entries(LAB_REFS).forEach(([k,r])=>add({id:'lab:'+k,group:G3,label:r.label,unit:r.unit,color:r.color,ref:{min:r.min,max:r.max},
+    get:()=>exames.filter(e=>e[k]!=null&&e[k]!==''&&!isNaN(e[k])).map(e=>({t:e.date,v:+e[k]}))}));
+  add({id:'rot:water',group:G4,label:'Água ingerida',unit:'ml',color:'#4a9eff',agg:'sum',grp:'day',refFn:()=>({min:waterGoal,max:null}),
+    get:()=>Object.entries(waterLog).filter(([k,v])=>v>0).map(([t,v])=>({t,v:+v}))});
+  add({id:'rot:sleep',group:G4,label:'Sono',unit:'h',color:'#a78bfa',grp:'day',ref:{min:8,max:null},
+    get:()=>sleepLog.filter(s=>s.hours!=null).map(s=>({t:s.date,v:+s.hours}))});
+  add({id:'rot:gymMin',group:G4,label:'Atividade física — minutos',unit:'min',color:'#34d399',agg:'sum',grp:'day',
+    get:()=>gymLog.map(g=>({t:g.date,v:+g.totalMin||0}))});
+  add({id:'rot:gymCal',group:G4,label:'Atividade física — calorias',unit:'kcal',color:'#fb923c',agg:'sum',grp:'day',
+    get:()=>gymLog.map(g=>({t:g.date,v:(g.treinos||[]).reduce((a,t)=>a+(+t.cal||0),0)}))});
+  const inCut=(t,cut)=>!cut||dKey(t)>=cut;
+  S.push({id:'cat:med',kind:'cat',group:G5,label:'Medicamentos — registros por item',unit:'reg.',color:'#f59e0b',
+    get:cut=>countRows(doses.filter(d=>d.tipo==='med'&&inCut(d.date,cut)),d=>d.nome)});
+  S.push({id:'cat:supl',kind:'cat',group:G5,label:'Suplementos — registros por item',unit:'reg.',color:'#a78bfa',
+    get:cut=>countRows(doses.filter(d=>d.tipo==='supl'&&inCut(d.date,cut)),d=>d.nome)});
+  S.push({id:'cat:gymType',group:G5,kind:'cat',label:'Atividades — minutos por modalidade',unit:'min',color:'#34d399',
+    get:cut=>countRows(gymLog.filter(g=>inCut(g.date,cut)).flatMap(g=>g.treinos||[]),t=>t.label||t.tipo,t=>+t.min||0)});
+  S.push({id:'cat:local',group:G5,kind:'cat',label:'Locais de aplicação',unit:'apl.',color:'#4a9eff',
+    get:cut=>countRows(doses.filter(d=>d.local&&inCut(d.date,cut)),d=>d.local)});
+  return S;
+}
+function srcById(id){return getChartSources().find(s=>s.id===id);}
+
+// ═══════════════════════════════════════════════════
+// DEFINIÇÕES DOS GRÁFICOS (CRUD + ordem)
+// ═══════════════════════════════════════════════════
+const DEFAULT_CHARTS=[
+  {id:'cTirz',title:'Tirzepatida — doses',src:'dose:tirz',type:'area',period:'all',grp:'record'},
+  {id:'cTest',title:'Testosterona — dose e volume',src:'dose:test',src2:'dose:testml',type:'bar',period:'all',grp:'record'},
+  {id:'cKlow',title:'Klow — doses',src:'dose:klow',type:'area',period:'all',grp:'record'},
+  {id:'cIMC',title:'Evolução do IMC',src:'body:imc',type:'line',period:'all',grp:'day'},
+  {id:'cExTesto',title:'Testosterona Total',src:'lab:testoTotal',type:'area',period:'all',grp:'record'},
+  {id:'cExHematocrito',title:'Hematócrito',src:'lab:hematocrito',type:'area',period:'all',grp:'record'},
+  {id:'cExColesterol',title:'Colesterol Total',src:'lab:colTotal',type:'area',period:'all',grp:'record'},
+  {id:'cExEstradiol',title:'Estradiol E2',src:'lab:estradiol',type:'area',period:'all',grp:'record'},
+  {id:'cExProlactina',title:'Prolactina',src:'lab:prolactina',type:'area',period:'all',grp:'record'},
+  {id:'cWater',title:'Água — por dia',src:'rot:water',type:'bar',period:'30',grp:'day'},
+  {id:'cGym',title:'Atividades físicas — minutos por semana',src:'rot:gymMin',type:'bar',period:'180',grp:'week'},
+  {id:'cSleep',title:'Sono — horas por noite',src:'rot:sleep',type:'bar',period:'30',grp:'day'},
+  {id:'cMed',title:'Medicamentos — registros',src:'cat:med',type:'hbar',period:'all'},
+  {id:'cSupl',title:'Suplementos — frequência',src:'cat:supl',type:'donut',period:'all'}
+];
+function buildDefaultCharts(){
+  const defs=DEFAULT_CHARTS.map(d=>Object.assign({refMode:'auto',size:'m',color:''},d));
+  if(chartOrder&&chartOrder.length){
+    const pos=id=>{const i=chartOrder.indexOf(id);return i<0?999:i;};
+    defs.sort((a,b)=>pos(a.id)-pos(b.id));
+  }
+  return defs;
+}
+let chartDefs=DB.get('tds_chart_defs',null);
+if(!Array.isArray(chartDefs)||!chartDefs.length)chartDefs=buildDefaultCharts();
+function saveChartDefs(){chartOrder=chartDefs.map(d=>d.id);DB.set('tds_chart_defs',chartDefs);DB.set('tds_chart_order',chartOrder);}
+
+let chartPeriod=(()=>{try{return localStorage.getItem('tds_chart_period')||'def';}catch(e){return'def';}})();
+const PERIOD_LBL={'30':'30 dias','90':'90 dias','180':'6 meses','365':'1 ano','all':'Tudo'};
+function periodCut(p){if(!p||p==='all')return null;const d=new Date();d.setDate(d.getDate()-(+p));return d.toISOString().slice(0,10);}
+function effPeriod(def){return chartPeriod!=='def'?chartPeriod:(def.period||'all');}
+
+function weekKey(ds){const d=new Date(ds+'T12:00:00');const day=(d.getDay()+6)%7;d.setDate(d.getDate()-day);return d.toISOString().slice(0,10);}
+const MESES=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+function fmtKeyShort(k,grp){
+  const ds=dKey(k),[y,m,d]=ds.split('-');
+  if(grp==='month')return MESES[+m-1]+'/'+y.slice(2);
+  return d+'/'+m;
+}
+function fmtKeyLong(k,grp){
+  const ds=dKey(k),[y,m,d]=ds.split('-');
+  if(grp==='month')return MESES[+m-1]+' de '+y;
+  if(grp==='week')return'Semana de '+d+'/'+m+'/'+y.slice(2);
+  const hm=String(k).length>10?' '+String(k).slice(11,16):'';
+  return d+'/'+m+'/'+y.slice(2)+hm;
+}
+function buildSeries(src,grp,cut){
+  let pts=src.get().filter(p=>p.t&&isFinite(p.v));
+  if(cut)pts=pts.filter(p=>dKey(p.t)>=cut);
+  pts.sort((a,b)=>String(a.t).localeCompare(String(b.t)));
+  grp=grp||src.grp||'record';
+  if(grp==='record')return pts.map(p=>({k:String(p.t),v:p.v}));
+  const kf=grp==='day'?p=>dKey(p.t):grp==='week'?p=>weekKey(dKey(p.t)):p=>dKey(p.t).slice(0,7)+'-01';
+  const m=new Map();pts.forEach(p=>{const k=kf(p);if(!m.has(k))m.set(k,[]);m.get(k).push(p.v);});
+  return[...m.entries()].map(([k,vs])=>{const s=vs.reduce((a,b)=>a+b,0);return{k,v:+(src.agg==='sum'?s:s/vs.length).toFixed(2)};});
+}
+function defRef(def,src){
+  if(def.refMode==='off')return null;
+  if(def.refMode==='custom'){
+    const mn=def.refMin===''||def.refMin==null?null:+def.refMin,mx=def.refMax===''||def.refMax==null?null:+def.refMax;
+    return mn==null&&mx==null?null:{min:mn,max:mx};
+  }
+  const r=src.refFn?src.refFn():src.ref;
+  return r&&(r.min!=null||r.max!=null)?r:null;
+}
+
+// ═══════════════════════════════════════════════════
+// RENDER DA ABA GRÁFICOS
+// ═══════════════════════════════════════════════════
+function renderCharts(){
+  renderChartKpis();
+  syncPeriodSeg();
+  const cont=document.getElementById('chartsContainer');if(!cont)return;
+  Object.keys(CH).filter(k=>k.startsWith('d_')).forEach(killCh);
+  if(!chartDefs.length){
+    cont.innerHTML=`<div class="card empty-st" style="grid-column:1/-1"><div class="ic">📊</div>Nenhum gráfico. Toque em <b>＋ Novo gráfico</b> ou <b>↺ Padrões</b>.</div>`;
+    return;
+  }
+  cont.innerHTML=chartDefs.map(def=>{
+    const src=srcById(def.src);
+    const title=escH(def.title||(src?src.label:'Gráfico'));
+    return`<div class="chart-block size-${def.size||'m'}" data-chart="${def.id}">
+      <div class="cb-card">
+        <div class="cb-hd">
+          <span class="drag-handle" title="Arrastar">⠿</span>
+          <div class="cb-ttl"><div class="cb-title">${title}</div><div class="cb-sub" id="cbs_${def.id}"></div></div>
+          <div class="cb-act">
+            <button class="ic-btn" title="Editar" onclick="openChartEditor('${def.id}')">✎</button>
+            <button class="ic-btn danger" title="Excluir" onclick="deleteChart('${def.id}')">🗑</button>
+          </div>
+        </div>
+        <div class="cb-stat" id="cbv_${def.id}"></div>
+        <div class="chart-wrap cb-wrap"><canvas id="cv_${def.id}"></canvas></div>
+      </div>
+    </div>`;
+  }).join('');
+  initChartDnD();
+  requestAnimationFrame(()=>chartDefs.forEach(def=>{try{drawChartDef(def);}catch(e){console.warn('chart',def.id,e);}}));
+}
+
+function drawChartDef(def){
+  const el=document.getElementById('cv_'+def.id);if(!el)return;
+  const key='d_'+def.id;killCh(key);
+  const src=srcById(def.src);
+  const sub=document.getElementById('cbs_'+def.id),stat=document.getElementById('cbv_'+def.id);
+  const wrap=el.parentElement;
+  const per=effPeriod(def),cut=periodCut(per);
+  const perLbl=PERIOD_LBL[per]||'Tudo';
+  if(!src){wrap.innerHTML='<div class="cb-empty">Fonte de dados indisponível — edite este gráfico.</div>';return;}
+  const color=def.color||src.color;
+
+  // ── Categorias (rosca / barras horizontais)
+  if(src.kind==='cat'){
+    const rows=src.get(cut);
+    const total=rows.reduce((a,r)=>a+r.value,0);
+    if(sub)sub.textContent=`${perLbl} · ${rows.length} ite${rows.length===1?'m':'ns'}`;
+    if(stat)stat.innerHTML=rows.length?`<span class="cb-big">${fmtN(total,0)}</span><span class="cb-unit">${src.unit}</span><span class="cb-meta">mais frequente: <b>${escH(rows[0].label)}</b></span>`:'';
+    if(!rows.length){wrap.innerHTML='<div class="cb-empty">Sem dados no período</div>';return;}
+    const pal=['#00d4aa','#4a9eff','#a78bfa','#f59e0b','#f87171','#34d399','#f472b6','#fb923c','#22d3ee','#facc15'];
+    if(def.type==='donut'){
+      const top=rows.slice(0,8),rest=rows.slice(8).reduce((a,r)=>a+r.value,0);
+      if(rest)top.push({label:'Outros',value:rest});
+      CH[key]=new Chart(el,{type:'doughnut',data:{labels:top.map(r=>r.label),datasets:[{data:top.map(r=>r.value),backgroundColor:top.map((r,i)=>pal[i%pal.length]),borderColor:cssVar('--card'),borderWidth:2,hoverOffset:6}]},
+        options:{responsive:true,maintainAspectRatio:false,cutout:'64%',layout:{padding:4},
+          plugins:{legend:{position:'right',labels:{boxWidth:9,boxHeight:9,usePointStyle:true,pointStyle:'circle',padding:8,font:{size:10},color:cssVar('--t2')}},
+            tooltip:{callbacks:{label:c=>` ${c.label}: ${fmtN(c.parsed,0)} ${src.unit} (${Math.round(c.parsed/total*100)}%)`}}}}});
+    }else{
+      const top=rows.slice(0,10);
+      wrap.style.height=Math.max(140,top.length*30+30)+'px';
+      CH[key]=new Chart(el,{type:'bar',data:{labels:top.map(r=>r.label),datasets:[{data:top.map(r=>r.value),backgroundColor:top.map((r,i)=>hexA(def.color||pal[i%pal.length],0.8)),borderRadius:6,barThickness:16}]},
+        options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+          plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${fmtN(c.parsed.x,0)} ${src.unit}`}}},
+          scales:{x:{beginAtZero:true,grid:{color:gridColor()},ticks:{precision:0}},y:{grid:{display:false},ticks:{color:cssVar('--t2'),font:{size:11}}}}}});
+    }
+    return;
   }
 
-  // Exames charts
-  renderExamesCharts();
-  // Stats
-  const tA=doses.filter(d=>d.tipo==='tirz'),teA=doses.filter(d=>d.tipo==='test');
-  const wkLogs=getWeekGym();
-  document.getElementById('s-total').textContent=doses.length;
-  document.getElementById('s-tirz').textContent=tA.length?(tA.reduce((s,d)=>s+d.dose,0)/tA.length).toFixed(1):'—';
-  document.getElementById('s-test').textContent=teA.length?Math.round(teA.reduce((s,d)=>s+d.dose,0)/teA.length):'—';
-  document.getElementById('s-water').textContent=getTodayWater();
-  document.getElementById('s-gym').textContent=new Set(wkLogs.map(g=>g.date)).size;
-  document.getElementById('s-gym-min').textContent=wkLogs.reduce((a,g)=>a+g.totalMin,0);
-  // Medidas — última registrada (agregado por dia, um valor por dia)
-  const dailyBodyStats=getDailyBodyData();
-  const lastPesoDay = [...dailyBodyStats].reverse().find(d => d.peso!=null);
-  if(lastPesoDay){
-    document.getElementById('s-peso').innerHTML=lastPesoDay.peso+'<span style="font-size:11px;color:var(--t2)"> kg</span>';
-    document.getElementById('s-peso-d').textContent=fmtD(lastPesoDay.date);
+  // ── Séries temporais
+  const grp=def.grp||src.grp;
+  const s1=buildSeries(src,grp,cut);
+  const src2=def.src2?srcById(def.src2):null;
+  const s2=src2&&src2.kind!=='cat'?buildSeries(src2,grp,cut):null;
+  const ref=defRef(def,src);
+
+  if(sub){
+    const grpLbl={record:'por registro',day:'por dia',week:'por semana',month:'por mês'}[grp]||'';
+    sub.innerHTML=`${perLbl} · ${grpLbl}${ref?` · ref ${refText(ref)}`:''}${src2?` · <span style="color:${def.color2||src2.color}">● ${escH(src2.label)}</span>`:''}`;
   }
-  const lastCinDay = [...dailyBodyStats].reverse().find(d => d.cintura!=null);
-  if(lastCinDay){
-    document.getElementById('s-cintura').innerHTML=lastCinDay.cintura+'<span style="font-size:11px;color:var(--t2)"> cm</span>';
-    document.getElementById('s-cintura-d').textContent=fmtD(lastCinDay.date);
+  if(!s1.length){if(stat)stat.innerHTML='';wrap.innerHTML='<div class="cb-empty">Sem dados no período selecionado</div>';return;}
+
+  // destaque: último valor + variação
+  if(stat){
+    const last=s1[s1.length-1],prev=s1[s1.length-2];
+    const st=ref?refStatus(last.v,ref):null;
+    let dl='';
+    if(prev){const dv=last.v-prev.v;const pct=prev.v?Math.round(dv/prev.v*100):0;dl=`<span class="cb-delta ${dv>0?'up':dv<0?'down':''}">${dv>0?'▲':dv<0?'▼':'■'} ${fmtN(Math.abs(dv))}${pct?` (${Math.abs(pct)}%)`:''}</span>`;}
+    const avg=s1.reduce((a,p)=>a+p.v,0)/s1.length;
+    stat.innerHTML=`<span class="cb-big" style="color:${color}">${fmtN(last.v)}</span><span class="cb-unit">${src.unit}</span>${dl}${st&&st.lbl?`<span class="mk-pill ${st.cls}">${st.lbl}</span>`:''}<span class="cb-meta">média ${fmtN(avg)} · ${s1.length} pts</span>`;
   }
-  const lastIMCObj = [...doses].sort((a,b)=>new Date(b.date)-new Date(a.date)).find(d => d.imc);
-  if(lastIMCObj){
-    const info=imcInfo(lastIMCObj.imc);
-    document.getElementById('s-imc').textContent=lastIMCObj.imc;
-    document.getElementById('s-imc').style.color=info.color;
-    document.getElementById('s-imc-label').textContent=info.label;
-    document.getElementById('s-imc-label').style.color=info.color;
+
+  const keys=[...new Set([...s1.map(p=>p.k),...(s2?s2.map(p=>p.k):[])])].sort();
+  const m1=new Map(s1.map(p=>[p.k,p.v])),m2=s2?new Map(s2.map(p=>[p.k,p.v])):null;
+  const d1=keys.map(k=>m1.has(k)?m1.get(k):null);
+  const n=keys.length;
+  const pr=n>60?0:n>25?2:3.5;
+  const isBar=def.type==='bar';
+  const ds=[];
+  const outCol='#f59e0b';
+  ds.push({
+    type:isBar?'bar':'line',label:src.label,data:d1,yAxisID:'y',order:2,
+    borderColor:color,
+    backgroundColor:isBar?(ref?d1.map(v=>v==null?'transparent':refStatus(v,ref).cls==='ok'?hexA(color,0.8):hexA(outCol,0.8)):hexA(color,0.78)):(def.type==='area'?gradFill(color):'transparent'),
+    fill:!isBar&&def.type==='area',tension:0.35,cubicInterpolationMode:'monotone',spanGaps:true,
+    pointRadius:pr,pointBackgroundColor:color,pointBorderColor:'transparent',
+    borderRadius:isBar?5:0,borderSkipped:false,maxBarThickness:28,borderWidth:isBar?0:2.2
+  });
+  if(s2){
+    const c2=def.color2||src2.color;
+    ds.push({type:'line',label:src2.label,data:keys.map(k=>m2.has(k)?m2.get(k):null),yAxisID:'y2',order:1,
+      borderColor:c2,backgroundColor:c2,fill:false,tension:0.35,cubicInterpolationMode:'monotone',spanGaps:true,pointRadius:Math.min(pr,2.5),pointBackgroundColor:c2,borderWidth:2,borderDash:[]});
   }
-  // Sleep stats
-  const todaySleep=sleepLog.find(s=>s.date===today());
-  const sSleepEl=document.getElementById('s-sleep');
-  const sSleepD=document.getElementById('s-sleep-d');
-  if(todaySleep&&sSleepEl){
-    const h=Math.floor(todaySleep.hours),m=Math.round((todaySleep.hours-h)*60);
-    sSleepEl.innerHTML=h+'<span style="font-size:11px;color:var(--t2)">h'+(m>0?m+'m':'')+'</span>';
-    sSleepD.textContent=todaySleep.hours>=8?'✅ Meta atingida':todaySleep.hours>=6?'⚠️ Aceitável':'❌ Insuficiente';
+  const vals=d1.filter(v=>v!=null);
+  let lo=Math.min(...vals),hi=Math.max(...vals);
+  if(ref){if(ref.min!=null)lo=Math.min(lo,ref.min);if(ref.max!=null)hi=Math.max(hi,ref.max);}
+  const pad=(hi-lo)*0.1||Math.abs(hi)*0.1||1;
+  const scales={
+    x:{grid:{display:false},ticks:{maxRotation:0,autoSkip:true,autoSkipPadding:16,maxTicksLimit:8,callback:(v,i)=>fmtKeyShort(keys[i],grp)}},
+    y:{position:'left',grid:{color:gridColor()},beginAtZero:isBar,suggestedMin:isBar?0:Math.max(0,lo-pad),suggestedMax:hi+pad,
+      ticks:{maxTicksLimit:6,callback:v=>fmtN(v)},title:{display:!!s2,text:src.unit,color:color,font:{size:10}}}
+  };
+  if(s2)scales.y2={position:'right',grid:{drawOnChartArea:false},ticks:{maxTicksLimit:6,callback:v=>fmtN(v),color:def.color2||src2.color},title:{display:true,text:src2.unit,color:def.color2||src2.color,font:{size:10}}};
+  CH[key]=new Chart(el,{type:isBar?'bar':'line',data:{labels:keys,datasets:ds},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{display:false},refBand:ref?{min:ref.min,max:ref.max}:{},
+        tooltip:{callbacks:{
+          title:it=>fmtKeyLong(keys[it[0].dataIndex],grp),
+          label:c=>{const s=c.datasetIndex===0?src:src2;if(c.parsed.y==null)return null;let t=` ${s.label}: ${fmtN(c.parsed.y)} ${s.unit}`;if(c.datasetIndex===0&&ref){const st=refStatus(c.parsed.y,ref);if(st.lbl)t+=` · ${st.lbl}`;}return t;}
+        }}},
+      scales}});
+}
+
+function renderChartKpis(){
+  const tA=doses.filter(d=>d.tipo==='tirz'&&d.dose),teA=doses.filter(d=>d.tipo==='test'&&d.dose);
+  const wk=getWeekGym();
+  const set=(id,h)=>{const e=document.getElementById(id);if(e)e.innerHTML=h;};
+  const u=s=>`<small>${s}</small>`;
+  set('s-total',fmtN(doses.length,0));
+  set('s-tirz',tA.length?fmtN(tA.reduce((s,d)=>s+(+d.dose),0)/tA.length,1)+u('mg'):'—');
+  set('s-test',teA.length?fmtN(teA.reduce((s,d)=>s+(+d.dose),0)/teA.length,0)+u('mg'):'—');
+  set('s-water',fmtN(getTodayWater(),0)+u('ml'));
+  set('s-gym',new Set(wk.map(g=>g.date)).size+u('dias'));
+  set('s-gym-min',fmtN(wk.reduce((a,g)=>a+(+g.totalMin||0),0),0)+u('min'));
+  const daily=getDailyBodyData();
+  const lp=[...daily].reverse().find(d=>d.peso!=null);
+  if(lp){set('s-peso',fmtN(lp.peso,1)+u('kg'));set('s-peso-d',fmtD(lp.date));}
+  const lc=[...daily].reverse().find(d=>d.cintura!=null);
+  if(lc){set('s-cintura',fmtN(lc.cintura,1)+u('cm'));set('s-cintura-d',fmtD(lc.date));}
+  const li=[...doses].sort((a,b)=>String(b.date).localeCompare(String(a.date))).find(d=>d.imc);
+  if(li){const info=imcInfo(li.imc);set('s-imc',fmtN(+li.imc,1));const e=document.getElementById('s-imc');if(e)e.style.color=info.color;set('s-imc-label',info.label);}
+  const fh=h=>{const H=Math.floor(h),M=Math.round((h-H)*60);return H+u('h'+(M?String(M).padStart(2,'0'):''));};
+  const ts=sleepLog.find(s=>s.date===today());
+  if(ts){set('s-sleep',fh(ts.hours));set('s-sleep-d',ts.hours>=8?'meta atingida':ts.hours>=6?'aceitável':'insuficiente');}
+  const l7=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);l7.push(d.toISOString().slice(0,10));}
+  const vs=l7.map(k=>sleepLog.find(s=>s.date===k)).filter(Boolean);
+  set('s-sleep-avg',vs.length?fh(vs.reduce((a,x)=>a+x.hours,0)/vs.length):'—');
+}
+
+function syncPeriodSeg(){
+  const seg=document.getElementById('chartPeriodSeg');if(!seg)return;
+  seg.querySelectorAll('button').forEach(b=>{
+    b.classList.toggle('on',b.dataset.p===chartPeriod);
+    b.onclick=()=>{chartPeriod=b.dataset.p;try{localStorage.setItem('tds_chart_period',chartPeriod);}catch(e){}renderCharts();};
+  });
+}
+
+// ── CRUD
+function deleteChart(id){
+  const d=chartDefs.find(x=>x.id===id);if(!d)return;
+  if(!confirm(`Excluir o gráfico "${d.title}"?\n\nVocê pode recriá-lo depois em "↺ Padrões" ou "＋ Novo gráfico".`))return;
+  chartDefs=chartDefs.filter(x=>x.id!==id);saveChartDefs();renderCharts();toast('🗑 Gráfico excluído');
+}
+function restoreDefaultCharts(){
+  const missing=DEFAULT_CHARTS.filter(d=>!chartDefs.find(x=>x.id===d.id));
+  if(!missing.length){
+    if(!confirm('Todos os gráficos padrão já existem.\n\nDeseja redefinir os gráficos padrão para as configurações originais? (Gráficos personalizados são mantidos.)'))return;
+    chartDefs=chartDefs.map(d=>{const o=DEFAULT_CHARTS.find(x=>x.id===d.id);return o?Object.assign({refMode:'auto',size:'m',color:''},o):d;});
+    saveChartDefs();renderCharts();toast('↺ Padrões redefinidos');return;
   }
-  const sSleepAvg=document.getElementById('s-sleep-avg');
-  if(sSleepAvg){
-    const last7Days=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);last7Days.push(d.toISOString().split('T')[0]);}
-    const validSleep=last7Days.map(k=>sleepLog.find(s=>s.date===k)).filter(Boolean);
-    if(validSleep.length){const avg=validSleep.reduce((s,x)=>s+x.hours,0)/validSleep.length;const ah=Math.floor(avg),am=Math.round((avg-ah)*60);sSleepAvg.innerHTML=ah+'<span style="font-size:11px;color:var(--t2)">h'+(am>0?am+'m':'')+'</span>';}
-    else sSleepAvg.textContent='—';
+  missing.forEach(d=>chartDefs.push(Object.assign({refMode:'auto',size:'m',color:''},d)));
+  saveChartDefs();renderCharts();toast(`↺ ${missing.length} gráfico(s) restaurado(s)`);
+}
+
+const SWATCHES=['#00d4aa','#4a9eff','#a78bfa','#f59e0b','#f87171','#34d399','#f472b6','#fb923c','#22d3ee','#facc15'];
+let editingChartId=null;
+function sourceOptions(sel,includeCat,blank){
+  const S=getChartSources().filter(s=>includeCat||s.kind!=='cat');
+  const groups=[...new Set(S.map(s=>s.group))];
+  return(blank?`<option value="">— nenhum —</option>`:'')+groups.map(g=>`<optgroup label="${g}">${S.filter(s=>s.group===g).map(s=>`<option value="${s.id}"${s.id===sel?' selected':''}>${escH(s.label)}${s.unit&&s.kind!=='cat'?' ('+s.unit+')':''}</option>`).join('')}</optgroup>`).join('');
+}
+function openChartEditor(id){
+  editingChartId=id||null;
+  const d=id?chartDefs.find(x=>x.id===id):{title:'',src:'body:peso',src2:'',type:'area',period:'all',grp:'',refMode:'auto',size:'m',color:''};
+  if(!d)return;
+  openSheet(`
+    <div class="sh-hd"><div><div class="sh-title">${id?'Editar gráfico':'Novo gráfico'}</div><div class="sh-sub">Escolha o dado, o formato e o período</div></div><button class="sh-x" onclick="closeSheet()">✕</button></div>
+    <div class="fg"><label>Dado</label><select id="ce-src" onchange="ceSync(true)">${sourceOptions(d.src,true)}</select></div>
+    <div class="fg"><label>Título</label><input type="text" id="ce-title" oninput="this.dataset.auto=''" value="${escH(d.title)}" placeholder="Usa o nome do dado se ficar vazio"></div>
+    <div class="fg"><label>Formato</label><div class="seg full" id="ce-type"></div></div>
+    <div class="frow ce-series">
+      <div class="fg"><label>Agrupar</label><select id="ce-grp">
+        <option value="">Automático</option><option value="record">Cada registro</option><option value="day">Por dia</option><option value="week">Por semana</option><option value="month">Por mês</option></select></div>
+      <div class="fg"><label>Período padrão</label><select id="ce-period">
+        <option value="30">30 dias</option><option value="90">90 dias</option><option value="180">6 meses</option><option value="365">1 ano</option><option value="all">Tudo</option></select></div>
+    </div>
+    <div class="fg ce-cat-only"><label>Período padrão</label><select id="ce-period-cat">
+      <option value="30">30 dias</option><option value="90">90 dias</option><option value="180">6 meses</option><option value="365">1 ano</option><option value="all">Tudo</option></select></div>
+    <div class="fg ce-series"><label>Comparar com (eixo direito)</label><select id="ce-src2">${sourceOptions(d.src2||'',false,true)}</select></div>
+    <div class="fg ce-series"><label>Faixa de referência / meta</label>
+      <select id="ce-ref" onchange="ceSync()"><option value="auto">Automática (padrão do dado)</option><option value="custom">Personalizada</option><option value="off">Não mostrar</option></select></div>
+    <div class="frow ce-series" id="ce-refrow">
+      <div class="fg"><label>Mínimo</label><input type="number" step="any" id="ce-rmin" value="${d.refMin??''}"></div>
+      <div class="fg"><label>Máximo</label><input type="number" step="any" id="ce-rmax" value="${d.refMax??''}"></div>
+    </div>
+    <div class="fg"><label>Cor</label><div class="swatches" id="ce-color">${['',...SWATCHES].map(c=>`<button type="button" data-c="${c}" class="sw${(d.color||'')===c?' on':''}" style="${c?'background:'+c:''}" title="${c?c:'Cor padrão do dado'}">${c?'':'A'}</button>`).join('')}</div></div>
+    <div class="fg"><label>Tamanho</label><div class="seg full" id="ce-size">${[['s','Compacto'],['m','Médio'],['l','Grande']].map(([v,l])=>`<button type="button" data-v="${v}" class="${(d.size||'m')===v?'on':''}">${l}</button>`).join('')}</div></div>
+    <div class="ce-actions">
+      ${id?`<button class="btn ce-del" onclick="deleteChartFromEditor()">Excluir</button>`:''}
+      <button class="btn btn-t" onclick="saveChartEditor()">${id?'Salvar alterações':'Criar gráfico'}</button>
+    </div>
+  `);
+  document.getElementById('ce-grp').value=d.grp||'';
+  document.getElementById('ce-period').value=d.period||'all';
+  document.getElementById('ce-period-cat').value=d.period||'all';
+  document.getElementById('ce-ref').value=d.refMode||'auto';
+  document.getElementById('ce-type').dataset.v=d.type;
+  document.querySelectorAll('#ce-color .sw').forEach(b=>b.onclick=()=>{document.querySelectorAll('#ce-color .sw').forEach(x=>x.classList.remove('on'));b.classList.add('on');});
+  document.querySelectorAll('#ce-size button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#ce-size button').forEach(x=>x.classList.remove('on'));b.classList.add('on');});
+  ceSync(!id);
+}
+function ceSync(srcChanged){
+  const src=srcById(document.getElementById('ce-src').value);if(!src)return;
+  const isCat=src.kind==='cat';
+  document.querySelectorAll('.ce-series').forEach(e=>e.style.display=isCat?'none':'');
+  document.querySelectorAll('.ce-cat-only').forEach(e=>e.style.display=isCat?'':'none');
+  const tbox=document.getElementById('ce-type');
+  const opts=isCat?[['donut','Rosca'],['hbar','Barras']]:[['line','Linha'],['area','Área'],['bar','Barras']];
+  let cur=tbox.dataset.v;if(!opts.find(o=>o[0]===cur))cur=opts[isCat?1:1][0];
+  tbox.dataset.v=cur;
+  tbox.innerHTML=opts.map(([v,l])=>`<button type="button" data-v="${v}" class="${v===cur?'on':''}">${l}</button>`).join('');
+  tbox.querySelectorAll('button').forEach(b=>b.onclick=()=>{tbox.dataset.v=b.dataset.v;tbox.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));});
+  if(srcChanged){
+    const t=document.getElementById('ce-title');if(!t.value||t.dataset.auto)t.value=src.label,t.dataset.auto='1';
+    const r=src.refFn?src.refFn():src.ref;
+    document.getElementById('ce-rmin').value=r&&r.min!=null?r.min:'';
+    document.getElementById('ce-rmax').value=r&&r.max!=null?r.max:'';
   }
+  const rm=document.getElementById('ce-ref').value;
+  document.getElementById('ce-refrow').style.display=(!isCat&&rm==='custom')?'':'none';
+}
+function saveChartEditor(){
+  const src=srcById(document.getElementById('ce-src').value);if(!src){toast('⚠️ Escolha um dado','#f59e0b');return;}
+  const isCat=src.kind==='cat';
+  const swOn=document.querySelector('#ce-color .sw.on');
+  const szOn=document.querySelector('#ce-size button.on');
+  const def={
+    title:document.getElementById('ce-title').value.trim()||src.label,
+    src:src.id,
+    src2:isCat?'':document.getElementById('ce-src2').value,
+    type:document.getElementById('ce-type').dataset.v,
+    grp:isCat?'':document.getElementById('ce-grp').value,
+    period:isCat?document.getElementById('ce-period-cat').value:document.getElementById('ce-period').value,
+    refMode:document.getElementById('ce-ref').value,
+    refMin:document.getElementById('ce-rmin').value,
+    refMax:document.getElementById('ce-rmax').value,
+    color:swOn?swOn.dataset.c:'',
+    size:szOn?szOn.dataset.v:'m'
+  };
+  if(def.src2===def.src)def.src2='';
+  if(editingChartId){
+    const d=chartDefs.find(x=>x.id===editingChartId);if(d)Object.assign(d,def);
+    toast('✅ Gráfico atualizado');
+  }else{
+    def.id='u_'+Date.now().toString(36);
+    chartDefs.unshift(def);
+    toast('✅ Gráfico criado');
+  }
+  saveChartDefs();closeSheet();renderCharts();
+  if(!editingChartId){const m=document.querySelector('.main');if(m)m.scrollTo({top:0,behavior:'smooth'});}
+}
+function deleteChartFromEditor(){
+  const id=editingChartId;closeSheet();setTimeout(()=>deleteChart(id),220);
+}
+
+// ═══════════════════════════════════════════════════
+// REORDENAR — arrastar (mouse + toque), funciona em grade
+// ═══════════════════════════════════════════════════
+function applyChartOrder(){/* ordem vem de chartDefs */}
+function readOrderFromDom(){
+  const cont=document.getElementById('chartsContainer');if(!cont)return;
+  const ids=[...cont.querySelectorAll('.chart-block')].map(b=>b.dataset.chart);
+  chartDefs.sort((a,b)=>ids.indexOf(a.id)-ids.indexOf(b.id));
+  saveChartDefs();
+}
+function placeDragged(cont,blk,x,y){
+  const els=[...cont.querySelectorAll('.chart-block')].filter(e=>e!==blk);
+  let best=null,bd=Infinity;
+  els.forEach(e=>{const r=e.getBoundingClientRect();const d=Math.hypot(x-(r.left+r.width/2),y-(r.top+r.height/2));if(d<bd){bd=d;best={e,r};}});
+  if(!best)return;
+  const r=best.r;
+  const sameRow=y>=r.top&&y<=r.bottom;
+  const before=sameRow&&r.width<cont.clientWidth*0.8?x<r.left+r.width/2:y<r.top+r.height/2;
+  if(before){if(best.e.previousElementSibling!==blk)cont.insertBefore(blk,best.e);}
+  else if(best.e.nextElementSibling!==blk)cont.insertBefore(blk,best.e.nextElementSibling);
+}
+function initChartDnD(){
+  const cont=document.getElementById('chartsContainer');if(!cont)return;
+  if(!cont.dataset.dndInit){
+    cont.dataset.dndInit='1';
+    cont.addEventListener('dragover',e=>{const blk=cont.querySelector('.chart-block.dragging');if(!blk)return;e.preventDefault();placeDragged(cont,blk,e.clientX,e.clientY);});
+  }
+  cont.querySelectorAll('.chart-block').forEach(blk=>{
+    const h=blk.querySelector('.drag-handle');
+    h.addEventListener('mousedown',()=>{blk.draggable=true;});
+    blk.addEventListener('dragstart',e=>{blk.classList.add('dragging');e.dataTransfer.effectAllowed='move';try{e.dataTransfer.setData('text/plain',blk.dataset.chart);}catch(_){}});
+    blk.addEventListener('dragend',()=>{blk.classList.remove('dragging');blk.draggable=false;readOrderFromDom();});
+    h.addEventListener('touchstart',onChartTouchStart,{passive:false});
+  });
+}
+let tBlk=null,tScrollTimer=null,tLastY=0;
+function onChartTouchStart(e){
+  e.preventDefault();
+  tBlk=e.currentTarget.closest('.chart-block');if(!tBlk)return;
+  tBlk.classList.add('dragging','lifted');
+  if(navigator.vibrate)try{navigator.vibrate(12);}catch(_){}
+  tLastY=e.touches[0].clientY;
+  document.addEventListener('touchmove',onChartTouchMove,{passive:false});
+  document.addEventListener('touchend',onChartTouchEnd);
+  document.addEventListener('touchcancel',onChartTouchEnd);
+  const main=document.querySelector('.main');
+  tScrollTimer=setInterval(()=>{
+    if(!tBlk||!main)return;const vh=window.innerHeight;
+    if(tLastY<130)main.scrollTop-=12;else if(tLastY>vh-140)main.scrollTop+=12;
+  },16);
+}
+function onChartTouchMove(e){
+  if(!tBlk)return;e.preventDefault();
+  const t=e.touches[0];tLastY=t.clientY;
+  placeDragged(document.getElementById('chartsContainer'),tBlk,t.clientX,t.clientY);
+}
+function onChartTouchEnd(){
+  if(!tBlk)return;
+  tBlk.classList.remove('dragging','lifted');tBlk=null;
+  clearInterval(tScrollTimer);
+  document.removeEventListener('touchmove',onChartTouchMove);
+  document.removeEventListener('touchend',onChartTouchEnd);
+  document.removeEventListener('touchcancel',onChartTouchEnd);
+  readOrderFromDom();toast('✅ Ordem salva');
 }
 
 // ═══════════════════════════════════════════════════
