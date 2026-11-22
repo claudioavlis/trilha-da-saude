@@ -254,6 +254,7 @@ body{display:flex;flex-direction:column}
 .top-title{font-size:15px;font-weight:700;color:var(--t1);letter-spacing:-0.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:46vw}
 .main{padding:14px 14px 28px}
 .main>.tab{max-width:1200px;margin:0 auto}
+@media (min-width:1600px){.main>.tab{max-width:1480px}}
 .card{border-radius:18px;padding:16px}
 .card-title{font-size:14px}
 .btn-sm.ghost{background:transparent;color:var(--t2);border:1px solid var(--b2)}
@@ -344,6 +345,20 @@ body{display:flex;flex-direction:column}
 .size-l .cb-wrap{height:280px}
 .cb-empty{height:100%;min-height:110px;display:flex;align-items:center;justify-content:center;color:var(--t3);font-size:12px;border:1px dashed var(--b2);border-radius:12px}
 
+
+/* ANÁLISE ABAIXO DOS GRÁFICOS */
+.cb-ins{margin-top:12px;padding-top:12px;border-top:1px solid var(--b2)}
+.ins-hd{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--t3);margin-bottom:6px}
+.ins-txt{font-size:12.5px;line-height:1.55;color:var(--t2);margin-bottom:10px}
+.ins-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:7px}
+.ins-it{background:var(--card2);border:1px solid var(--b2);border-radius:11px;padding:8px 10px;min-width:0;border-left:3px solid var(--b1)}
+.ins-it.t-ok{border-left-color:var(--green)}.ins-it.t-warn{border-left-color:var(--amber)}.ins-it.t-bad{border-left-color:var(--red)}
+.ins-it.t-up{border-left-color:var(--blue)}.ins-it.t-down{border-left-color:var(--purple)}
+.ins-l{font-size:10px;color:var(--t3);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ins-ic{margin-right:4px}
+.ins-v{font-size:15px;font-weight:700;margin-top:3px;letter-spacing:-.3px;font-variant-numeric:tabular-nums}
+.ins-d{font-size:10px;color:var(--t3);margin-top:2px;line-height:1.35}
+.cb-card{display:flex;flex-direction:column}
 /* BOTTOM SHEET */
 .sheet-bg{position:fixed;inset:0;background:rgba(2,8,18,.6);backdrop-filter:blur(3px);z-index:600;opacity:0;pointer-events:none;transition:opacity .25s}
 .sheet-bg.open{opacity:1;pointer-events:all}
@@ -403,7 +418,8 @@ body.light .bottom-nav{background:#ffffff;border-top-color:rgba(0,0,0,.08)}
   .charts-grid .size-l{grid-column:1/-1}
   #tab-home.active{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
   #tab-home>*{grid-column:1/-1;margin-bottom:0}
-  #tab-home>.card:not(.mk-card):not(.body-card){grid-column:auto}
+  .home-cols{column-count:2;column-gap:12px}
+  .home-cols>.card{break-inside:avoid;display:inline-block;width:100%;margin:0 0 12px}
   .kpi-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
 }
 @media (min-width:1180px){
@@ -470,7 +486,7 @@ body.light .bottom-nav{background:#ffffff;border-top-color:rgba(0,0,0,.08)}
     <div class="sb-section">Configuração</div>
     <button class="sb-item" onclick="goTab('cadastro',this)"><span class="sb-icon">📦</span>Cadastro</button>
     <button class="sb-item" onclick="goTab('gym',this)"><span class="sb-icon">🏃</span>Atividades Físicas</button>
-    <button class="sb-item" onclick="goTab('charts',this)"><span class="sb-icon">📊</span>Gráficos</button>
+    <button class="sb-item" onclick="goTab('charts',this)"><span class="sb-icon">📊</span>Análises</button>
 
     <div class="sb-section">Sistema</div>
     <button class="sb-item" onclick="goTab('backup',this)"><span class="sb-icon">💾</span>Backup</button>
@@ -513,7 +529,7 @@ body.light .bottom-nav{background:#ffffff;border-top-color:rgba(0,0,0,.08)}
     <button class="qa" onclick="addWater(300)"><span>💧</span>+300 ml</button>
     <button class="qa" onclick="goTab('gym',null)"><span>🏃</span>Treino</button>
     <button class="qa" onclick="goTab('exames',null)"><span>🔬</span>Exame</button>
-    <button class="qa" onclick="goTab('charts',null)"><span>📊</span>Gráficos</button>
+    <button class="qa" onclick="goTab('charts',null)"><span>📊</span>Análises</button>
   </div>
   <div class="sgrid">
     <div class="sc"><div class="sl">💉 Tirzepetida</div><div class="sv" id="h-tirz" style="color:var(--teal)">—</div><div class="ss" id="h-tirz-d">sem registro</div></div>
@@ -600,6 +616,7 @@ body.light .bottom-nav{background:#ffffff;border-top-color:rgba(0,0,0,.08)}
     <div class="mk-obs" id="lipidHomeObs"></div>
   </div>
 
+  <div class="home-cols">
   <div class="card">
     <div class="card-hd"><div class="card-title">📦 Estoques</div><button class="btn-sm" style="background:rgba(0,212,170,0.15);color:var(--teal)" onclick="goTab('cadastro',null)">+ Cadastrar</button></div>
     <div id="homeStocks"><div class="empty-st">Cadastre estoques na aba Cadastro</div></div>
@@ -627,6 +644,7 @@ body.light .bottom-nav{background:#ffffff;border-top-color:rgba(0,0,0,.08)}
     <div class="card-hd"><div class="card-title">🕐 Últimos Registros</div><span class="badge bt" id="tot-badge">0</span></div>
     <div id="recentDoses"><div class="empty-st"><div class="ic">📝</div>Nenhum registro ainda</div></div>
   </div>
+  </div><!-- /home-cols -->
 </div>
 
 <!-- ════ TAB: REGISTRAR ════ -->
@@ -1269,8 +1287,8 @@ body.light .bottom-nav{background:#ffffff;border-top-color:rgba(0,0,0,.08)}
 <div class="tab" id="tab-charts">
   <div class="page-hd">
     <div>
-      <div class="page-title">Gráficos</div>
-      <div class="page-sub">Resumo e evolução dos seus indicadores</div>
+      <div class="page-title">Análises</div>
+      <div class="page-sub">Resumo, gráficos e leitura automática dos seus dados</div>
     </div>
     <button class="btn-sm solid" onclick="openChartEditor()">＋ Novo gráfico</button>
   </div>
@@ -1294,6 +1312,7 @@ body.light .bottom-nav{background:#ffffff;border-top-color:rgba(0,0,0,.08)}
   <div class="chart-toolbar">
     <div class="seg" id="chartPeriodSeg">
       <button data-p="def">Padrão</button>
+      <button data-p="7">7d</button>
       <button data-p="30">30d</button>
       <button data-p="90">90d</button>
       <button data-p="180">6m</button>
@@ -1388,7 +1407,7 @@ body.light .bottom-nav{background:#ffffff;border-top-color:rgba(0,0,0,.08)}
   <button class="bn-item active" data-tab="home" onclick="goTab('home',null)"><span class="bn-ic"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg></span><span>Início</span></button>
   <button class="bn-item" data-tab="register" onclick="goTab('register',null)"><span class="bn-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg></span><span>Registrar</span></button>
   <button class="bn-item" data-tab="gym" onclick="goTab('gym',null)"><span class="bn-ic"><svg viewBox="0 0 24 24"><path d="M6.5 6.5v11M17.5 6.5v11M3 9.5v5M21 9.5v5M6.5 12h11"/></svg></span><span>Treino</span></button>
-  <button class="bn-item" data-tab="charts" onclick="goTab('charts',null)"><span class="bn-ic"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><span>Gráficos</span></button>
+  <button class="bn-item" data-tab="charts" onclick="goTab('charts',null)"><span class="bn-ic"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><span>Análises</span></button>
   <button class="bn-item" data-tab="more" onclick="openSidebar()"><span class="bn-ic"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></span><span>Mais</span></button>
 </nav>
 
@@ -1410,7 +1429,7 @@ function closeSidebar(){
   document.getElementById('sidebar').classList.remove('open');
   document.getElementById('sbOverlay').classList.remove('open');
 }
-const TAB_TITLES={home:'Trilha da Saúde',register:'Registrar',history:'Histórico',exames:'Exames',cadastro:'Cadastro',gym:'Atividades Físicas',charts:'Gráficos',backup:'Backup'};
+const TAB_TITLES={home:'Trilha da Saúde',register:'Registrar',history:'Histórico',exames:'Exames',cadastro:'Cadastro',gym:'Atividades Físicas',charts:'Análises',backup:'Backup'};
 function goTab(name,btn){
   closeSidebar();
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -1624,7 +1643,8 @@ function save(){
 // ═══════════════════════════════════════════════════
 // UTILS
 // ═══════════════════════════════════════════════════
-function today(){return new Date().toISOString().split('T')[0];}
+function localISO(d){d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function today(){return localISO(new Date());}
 function nowLocal(){const d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,16);}
 function todayDate(){return new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});}
 function fmtDT(iso){if(!iso)return'—';const d=new Date(iso);return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'})+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});}
@@ -2576,7 +2596,16 @@ function saveMedDose(){
 function getTodayWater(){return waterLog[today()]||0;}
 function addWater(ml){const k=today();waterLog[k]=(waterLog[k]||0)+ml;save();renderWater();if(waterLog[k]>=waterGoal)toast('🎉 Meta de hidratação atingida!','var(--green)');else toast('💧 +'+ml+'ml');}
 function resetWater(){if(confirm('Zerar água de hoje?')){waterLog[today()]=0;save();renderWater();}}
-function saveWaterLog(){const ml=parseFloat(document.getElementById('r-water-ml').value);if(!ml||ml<=0){toast('⚠️ Informe o volume','#f59e0b');return;}addWater(ml);document.getElementById('r-water-ml').value='';}
+function saveWaterLog(){
+  const ml=parseFloat(document.getElementById('r-water-ml').value);
+  if(!ml||ml<=0){toast('⚠️ Informe o volume','#f59e0b');return;}
+  const dv=(document.getElementById('r-water-date').value||'').slice(0,10);
+  const k=/^\d{4}-\d{2}-\d{2}$/.test(dv)?dv:today();
+  if(k>today()){toast('⚠️ Data no futuro','#f59e0b');return;}
+  waterLog[k]=(waterLog[k]||0)+ml;save();renderWater();
+  document.getElementById('r-water-ml').value='';
+  toast(k===today()?(waterLog[k]>=waterGoal?'🎉 Meta de hidratação atingida!':'💧 +'+ml+'ml hoje'):'💧 +'+ml+'ml em '+fmtD(k));
+}
 function setWGoal(){const v=parseInt(document.getElementById('water-goal-inp').value);if(v>=1000&&v<=6000){waterGoal=v;save();renderWater();toast('💾 Meta: '+v+'ml/dia');}else toast('⚠️ Entre 1000 e 6000ml','#f59e0b');}
 function renderWater(){
   const cur=getTodayWater(),pct=Math.min(100,Math.round(cur/waterGoal*100));
@@ -3959,11 +3988,11 @@ if(!Array.isArray(chartDefs)||!chartDefs.length)chartDefs=buildDefaultCharts();
 function saveChartDefs(){chartOrder=chartDefs.map(d=>d.id);DB.set('tds_chart_defs',chartDefs);DB.set('tds_chart_order',chartOrder);}
 
 let chartPeriod=(()=>{try{return localStorage.getItem('tds_chart_period')||'def';}catch(e){return'def';}})();
-const PERIOD_LBL={'30':'30 dias','90':'90 dias','180':'6 meses','365':'1 ano','all':'Tudo'};
-function periodCut(p){if(!p||p==='all')return null;const d=new Date();d.setDate(d.getDate()-(+p));return d.toISOString().slice(0,10);}
+const PERIOD_LBL={'7':'7 dias','30':'30 dias','90':'90 dias','180':'6 meses','365':'1 ano','all':'Tudo'};
+function periodCut(p){if(!p||p==='all')return null;const d=new Date();d.setDate(d.getDate()-(+p)+1);return localISO(d);}
 function effPeriod(def){return chartPeriod!=='def'?chartPeriod:(def.period||'all');}
 
-function weekKey(ds){const d=new Date(ds+'T12:00:00');const day=(d.getDay()+6)%7;d.setDate(d.getDate()-day);return d.toISOString().slice(0,10);}
+function weekKey(ds){const d=new Date(ds+'T12:00:00');const day=(d.getDay()+6)%7;d.setDate(d.getDate()-day);return localISO(d);}
 const MESES=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 function fmtKeyShort(k,grp){
   const ds=dKey(k),[y,m,d]=ds.split('-');
@@ -4024,6 +4053,7 @@ function renderCharts(){
         </div>
         <div class="cb-stat" id="cbv_${def.id}"></div>
         <div class="chart-wrap cb-wrap"><canvas id="cv_${def.id}"></canvas></div>
+        <div class="cb-ins" id="cbi_${def.id}"></div>
       </div>
     </div>`;
   }).join('');
@@ -4045,6 +4075,7 @@ function drawChartDef(def){
   // ── Categorias (rosca / barras horizontais)
   if(src.kind==='cat'){
     const rows=src.get(cut);
+    renderAnalysis(def,src,{cut,rows});
     const total=rows.reduce((a,r)=>a+r.value,0);
     if(sub)sub.textContent=`${perLbl} · ${rows.length} ite${rows.length===1?'m':'ns'}`;
     if(stat)stat.innerHTML=rows.length?`<span class="cb-big">${fmtN(total,0)}</span><span class="cb-unit">${src.unit}</span><span class="cb-meta">mais frequente: <b>${escH(rows[0].label)}</b></span>`:'';
@@ -4074,6 +4105,7 @@ function drawChartDef(def){
   const src2=def.src2?srcById(def.src2):null;
   const s2=src2&&src2.kind!=='cat'?buildSeries(src2,grp,cut):null;
   const ref=defRef(def,src);
+  renderAnalysis(def,src,{cut,ref,s1,s2,src2});
 
   if(sub){
     const grpLbl={record:'por registro',day:'por dia',week:'por semana',month:'por mês'}[grp]||'';
@@ -4132,6 +4164,273 @@ function drawChartDef(def){
       scales}});
 }
 
+
+// ═══════════════════════════════════════════════════
+// ANÁLISES AUTOMÁTICAS (texto + indicadores abaixo de cada gráfico)
+// ═══════════════════════════════════════════════════
+const DAY_MS=864e5;
+function toDt(t){const s=String(t);return new Date(s.length>10?s:s+'T12:00:00');}
+function fmtDays(x){
+  if(x==null||!isFinite(x))return'—';
+  if(Math.abs(x)<1){const h=Math.round(Math.abs(x)*24);return h+' h';}
+  const r=Math.round(x*10)/10;return fmtN(r,1)+(Math.abs(r)===1?' dia':' dias');
+}
+function fmtDM(t){const d=toDt(t);return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0');}
+function pctTxt(a,b){if(!b)return'';const p=Math.round((a-b)/Math.abs(b)*100);return(p>0?'+':'')+p+'%';}
+function arrowOf(d){return d>0?'▲':d<0?'▼':'■';}
+function rawPts(src,cut){
+  let p=src.get().filter(x=>x.t&&isFinite(x.v));
+  if(cut)p=p.filter(x=>dKey(x.t)>=cut);
+  return p.sort((a,b)=>String(a.t).localeCompare(String(b.t)));
+}
+function dayMap(src){const m={};src.get().forEach(p=>{if(!p.t||!isFinite(p.v))return;const k=dKey(p.t);m[k]=(m[k]||0)+p.v;});return m;}
+function dayMapAvg(src){const m={},c={};src.get().forEach(p=>{if(!p.t||!isFinite(p.v))return;const k=dKey(p.t);m[k]=(m[k]||0)+p.v;c[k]=(c[k]||0)+1;});Object.keys(m).forEach(k=>m[k]/=c[k]);return m;}
+function daysBack(n,offset){const out=[];for(let i=n-1+(offset||0);i>=(offset||0);i--){const d=new Date();d.setDate(d.getDate()-i);out.push(localISO(d));}return out;}
+function slopePerDay(pts){
+  if(pts.length<3)return null;
+  const t0=toDt(pts[0].t).getTime();
+  const xs=pts.map(p=>(toDt(p.t).getTime()-t0)/DAY_MS),ys=pts.map(p=>p.v);
+  const n=xs.length,mx=xs.reduce((a,b)=>a+b,0)/n,my=ys.reduce((a,b)=>a+b,0)/n;
+  let num=0,den=0;xs.forEach((x,i)=>{num+=(x-mx)*(ys[i]-my);den+=(x-mx)**2;});
+  return den?num/den:null;
+}
+function pearson(a,b){
+  const n=a.length;if(n<4)return null;
+  const ma=a.reduce((x,y)=>x+y,0)/n,mb=b.reduce((x,y)=>x+y,0)/n;
+  let s=0,sa=0,sb=0;for(let i=0;i<n;i++){s+=(a[i]-ma)*(b[i]-mb);sa+=(a[i]-ma)**2;sb+=(b[i]-mb)**2;}
+  return sa&&sb?s/Math.sqrt(sa*sb):null;
+}
+function weekStartISO(offsetWeeks){const d=new Date();const day=(d.getDay()+6)%7;d.setDate(d.getDate()-day-7*(offsetWeeks||0));return localISO(d);}
+
+// ── Doses (tirzepatida, testosterona, klow, personalizados)
+function anDose(src,cut){
+  const all=rawPts(src,null),r=rawPts(src,cut);if(!r.length)return null;
+  const I=[],T=[],u=src.unit,nome=src.label.replace(/ — .*/,'');
+  const last=r[r.length-1],lastD=toDt(last.t);
+  const ints=[];for(let i=1;i<r.length;i++)ints.push((toDt(r[i].t)-toDt(r[i-1].t))/DAY_MS);
+  const since=(Date.now()-lastD)/DAY_MS;
+  I.push({ic:'🕒',l:'Última aplicação',v:'há '+fmtDays(since),d:fmtD(dKey(last.t))+(String(last.t).length>10?' às '+String(last.t).slice(11,16):'')});
+  if(ints.length){
+    const sorted=[...ints].sort((a,b)=>a-b),med=sorted[Math.floor(sorted.length/2)];
+    const pausas=ints.filter(x=>x>Math.max(med*2.5,med+5));
+    const regs=ints.filter(x=>!pausas.includes(x));
+    const avg=regs.reduce((a,b)=>a+b,0)/regs.length,lastI=ints[ints.length-1];
+    const mn=Math.min(...regs),mx=Math.max(...regs);
+    I.push({ic:'⏱',l:'Intervalo típico',v:fmtDays(avg),d:'último: '+fmtDays(lastI)+(regs.length>1&&mx-mn>=0.5?` · variou ${fmtDays(mn)}–${fmtDays(mx)}`:'')});
+    const paused=since>Math.max(avg*2.5,avg+5);
+    if(paused){
+      I.push({ic:'⏸',l:'Sem aplicações',v:'há '+fmtDays(since),d:'parece pausado',tone:'warn'});
+    }else{
+      const next=new Date(lastD.getTime()+avg*DAY_MS),dt=(next-Date.now())/DAY_MS,late=dt<-1;
+      I.push({ic:'📅',l:'Próxima prevista',v:fmtDM(next.toISOString()),d:dt>=0?'em '+fmtDays(dt):(late?'atrasada '+fmtDays(-dt):'hoje'),tone:late?'warn':''});
+    }
+    if(pausas.length)I.push({ic:'⏸',l:'Pausas longas',v:String(pausas.length),d:'maior: '+fmtDays(Math.max(...pausas))});
+    const reg=(mx-mn)<=1.5;
+    T.push(`Em ${r.length} aplicações de ${nome.toLowerCase()} no período, o intervalo típico entre doses foi de ${fmtDays(avg)}${reg?' (bem regular)':`, variando de ${fmtDays(mn)} a ${fmtDays(mx)}`}${pausas.length?`, com ${pausas.length} pausa${pausas.length>1?'s':''} mais longa${pausas.length>1?'s':''}`:''}.`);
+    if(paused)T.push(`Não há aplicação registrada há ${fmtDays(since)}.`);
+    else if(Math.abs(lastI-avg)>=1.5)T.push(`O último intervalo (${fmtDays(lastI)}) foi ${lastI>avg?'maior':'menor'} que o habitual.`);
+  }
+  // tendência da dose
+  const idxAll=all.findIndex(p=>p.t===last.t&&p.v===last.v);
+  const prevAll=idxAll>0?all[idxAll-1]:null;
+  let k=idxAll;while(k>0&&all[k-1].v===last.v)k--;
+  const streak=idxAll-k+1,streakSince=all[k];
+  if(prevAll){
+    const dv=last.v-prevAll.v;
+    if(dv!==0){
+      I.push({ic:dv>0?'⬆️':'⬇️',l:'Dose atual',v:fmtN(last.v)+' '+u,d:`${dv>0?'aumentou':'diminuiu'} de ${fmtN(prevAll.v)} para ${fmtN(last.v)} ${u}`,tone:dv>0?'up':'down'});
+      T.push(`A dose ${dv>0?'aumentou':'diminuiu'} ${fmtN(Math.abs(dv))} ${u} (${pctTxt(last.v,prevAll.v)}) na última aplicação.`);
+    }else{
+      I.push({ic:'➡️',l:'Dose atual',v:fmtN(last.v)+' '+u,d:`mantida há ${streak} aplicaç${streak>1?'ões':'ão'} (desde ${fmtD(dKey(streakSince.t))})`});
+      T.push(`A dose está estável em ${fmtN(last.v)} ${u} há ${streak} aplicaç${streak>1?'ões':'ão'}.`);
+    }
+  }else I.push({ic:'💉',l:'Dose atual',v:fmtN(last.v)+' '+u,d:'primeiro registro'});
+  const sum=r.reduce((a,p)=>a+p.v,0),vals=r.map(p=>p.v);
+  const changes=r.reduce((a,p,i)=>a+(i&&p.v!==r[i-1].v?1:0),0);
+  I.push({ic:'Σ',l:'Total no período',v:fmtN(sum)+' '+u,d:r.length+' aplicaç'+(r.length>1?'ões':'ão')});
+  I.push({ic:'↕️',l:'Faixa de dose',v:Math.min(...vals)===Math.max(...vals)?fmtN(vals[0])+' '+u:`${fmtN(Math.min(...vals))}–${fmtN(Math.max(...vals))} ${u}`,d:`média ${fmtN(sum/r.length)} · ${changes} mudança${changes===1?'':'s'} de dose`});
+  // ritmo semanal (mg/semana nos últimos 28 dias)
+  const c28=localISO(new Date(Date.now()-27*DAY_MS));
+  const s28=all.filter(p=>dKey(p.t)>=c28).reduce((a,p)=>a+p.v,0);
+  if(s28)I.push({ic:'📆',l:'Média semanal (28d)',v:fmtN(s28/4)+' '+u,d:'total '+fmtN(s28)+' '+u+' em 4 semanas'});
+  return{I,T};
+}
+
+// ── Corpo (peso, cintura, IMC)
+function anBody(src,cut){
+  const r=rawPts(src,cut);if(!r.length)return null;
+  const I=[],T=[],u=src.unit?(' '+src.unit):'';
+  const first=r[0],last=r[r.length-1],dv=last.v-first.v;
+  if(r.length>1){
+    I.push({ic:dv<0?'📉':dv>0?'📈':'➡️',l:'Variação no período',v:(dv>0?'+':'')+fmtN(dv,1)+u,d:`${fmtN(first.v,1)} → ${fmtN(last.v,1)}${u} (${pctTxt(last.v,first.v)||'0%'})`,tone:dv<0?'ok':dv>0?'bad':''});
+  }
+  const sl=slopePerDay(r);
+  if(sl!=null&&r.length>=4){
+    const wk=sl*7;
+    I.push({ic:'🏃',l:'Ritmo',v:(wk>0?'+':'')+fmtN(wk,2)+u+'/sem',d:wk<-0.05?'tendência de queda':wk>0.05?'tendência de alta':'estável'});
+  }
+  const m=dayMapAvg(src);
+  const a7=daysBack(7).map(k=>m[k]).filter(v=>v!=null),b7=daysBack(7,7).map(k=>m[k]).filter(v=>v!=null);
+  if(a7.length&&b7.length){
+    const A=a7.reduce((x,y)=>x+y,0)/a7.length,B=b7.reduce((x,y)=>x+y,0)/b7.length,d=A-B;
+    I.push({ic:'🗓',l:'7 dias vs 7 anteriores',v:`${arrowOf(d)} ${fmtN(Math.abs(d),1)}${u}`,d:`média ${fmtN(A,1)} vs ${fmtN(B,1)}${u}`,tone:d<0?'ok':d>0?'bad':''});
+  }
+  const mn=r.reduce((a,p)=>p.v<a.v?p:a),mx=r.reduce((a,p)=>p.v>a.v?p:a);
+  I.push({ic:'🔻',l:'Mínimo',v:fmtN(mn.v,1)+u,d:fmtD(dKey(mn.t))});
+  I.push({ic:'🔺',l:'Máximo',v:fmtN(mx.v,1)+u,d:fmtD(dKey(mx.t))});
+  if(src.id==='body:peso'||src.id==='body:cintura'){
+    const metas=src.id==='body:peso'?metasPeso:metasCintura;
+    const mt=metas&&metas.length?getMetaVigente(metas):null;
+    if(mt&&mt.val){
+      const falta=last.v-(+mt.val);
+      let d=falta>0?`faltam ${fmtN(falta,1)}${u}`:'meta atingida';
+      if(falta>0&&sl!=null&&sl<0){const dias=falta/(-sl);d+=` · ~${Math.ceil(dias/7)} semanas no ritmo atual`;}
+      I.push({ic:'🎯',l:'Meta',v:fmtN(+mt.val,1)+u,d,tone:falta<=0?'ok':''});
+      T.push(falta>0?`Faltam ${fmtN(falta,1)}${u} para a meta de ${fmtN(+mt.val,1)}${u}${sl!=null&&sl<0?`; mantendo o ritmo atual, a meta seria alcançada em cerca de ${Math.ceil(falta/(-sl)/7)} semanas`:sl!=null&&sl>0?', mas a tendência recente é de alta':''}.`:'A meta atual já foi atingida.');
+    }
+  }
+  if(src.id==='body:imc'){const inf=imcInfo(last.v);I.push({ic:'🔢',l:'Classificação',v:inf.label,d:'IMC '+fmtN(last.v,1)});}
+  if(r.length>1)T.unshift(`No período, ${src.label.toLowerCase()} ${dv<0?'caiu':dv>0?'subiu':'ficou estável'}${dv?` ${fmtN(Math.abs(dv),1)}${u}`:''}, de ${fmtN(first.v,1)} para ${fmtN(last.v,1)}${u}. O menor valor foi ${fmtN(mn.v,1)}${u} em ${fmtD(dKey(mn.t))}.`);
+  return{I,T};
+}
+
+// ── Exames
+function anLab(src,cut,ref){
+  const all=rawPts(src,null),r=rawPts(src,cut);if(!r.length)return null;
+  const I=[],T=[],u=' '+src.unit;
+  const last=r[r.length-1],prev=r[r.length-2];
+  const st=refStatus(last.v,ref);
+  I.push({ic:'🧪',l:'Resultado atual',v:fmtN(last.v)+u,d:(st.lbl?st.lbl+' · ':'')+'ref '+refText(ref),tone:st.cls==='ok'?'ok':st.cls==='high'?'bad':st.cls==='low'?'warn':''});
+  if(prev){const d=last.v-prev.v;I.push({ic:arrowOf(d),l:'Vs exame anterior',v:(d>0?'+':'')+fmtN(d),d:`${pctTxt(last.v,prev.v)} · ${fmtD(dKey(prev.t))}`});}
+  const age=Math.floor((Date.now()-toDt(last.t))/DAY_MS);
+  I.push({ic:'📅',l:'Último exame',v:'há '+fmtDays(age),d:fmtD(dKey(last.t)),tone:age>180?'warn':''});
+  if(ref){const out=r.filter(p=>refStatus(p.v,ref).cls!=='ok').length;I.push({ic:'🎯',l:'Fora da referência',v:`${out} de ${r.length}`,d:out?'coletas fora da faixa':'todas dentro da faixa',tone:out?'warn':'ok'});}
+  const mn=all.reduce((a,p)=>p.v<a.v?p:a),mx=all.reduce((a,p)=>p.v>a.v?p:a);
+  if(all.length>1)I.push({ic:'↕️',l:'Histórico',v:`${fmtN(mn.v)}–${fmtN(mx.v)}`,d:`mín ${fmtD(dKey(mn.t))} · máx ${fmtD(dKey(mx.t))}`});
+  let t=`${src.label}: ${fmtN(last.v)}${u} em ${fmtD(dKey(last.t))}${st.lbl?`, ${st.lbl.toLowerCase()} pela referência ${refText(ref)}`:''}.`;
+  if(prev)t+=` Em relação ao exame anterior, ${last.v>prev.v?'subiu':last.v<prev.v?'caiu':'ficou igual'}${last.v!==prev.v?` ${pctTxt(last.v,prev.v).replace('+','').replace('-','')}`:''}.`;
+  if(r.length>=3){const a=r.slice(-3).map(p=>p.v);if(a[0]<a[1]&&a[1]<a[2])t+=' Os três últimos resultados mostram alta contínua.';else if(a[0]>a[1]&&a[1]>a[2])t+=' Os três últimos resultados mostram queda contínua.';}
+  if(age>180)t+=` O último exame tem mais de 6 meses.`;
+  T.push(t);
+  return{I,T};
+}
+
+// ── Rotina (água, sono, atividade física)
+function anRoutine(src,cut,ref){
+  const isSum=src.agg==='sum',m=isSum?dayMap(src):dayMapAvg(src),u=' '+src.unit;
+  const keys=Object.keys(m).filter(k=>!cut||k>=cut).sort();
+  if(!keys.length)return null;
+  const I=[],T=[];
+  const isGym=src.id.startsWith('rot:gym'),isWater=src.id==='rot:water',isSleep=src.id==='rot:sleep';
+  const tot=a=>a.reduce((x,y)=>x+y,0);
+  // 7 dias vs 7 anteriores
+  const A=daysBack(7).map(k=>m[k]).filter(v=>v!=null&&v>0),B=daysBack(7,7).map(k=>m[k]).filter(v=>v!=null&&v>0);
+  if(isGym){
+    const a=tot(A),b=tot(B),d=a-b;
+    I.push({ic:'🗓',l:'Últimos 7 dias',v:fmtN(a,0)+u,d:`${A.length} dia${A.length===1?'':'s'} ativo${A.length===1?'':'s'}`});
+    I.push({ic:arrowOf(d),l:'Vs 7 dias anteriores',v:b?pctTxt(a,b):(a?'novo':'—'),d:`${fmtN(b,0)}${u} em ${B.length} dia${B.length===1?'':'s'}`,tone:d>0?'ok':d<0?'warn':''});
+    // semana calendário
+    const ws=weekStartISO(0),wp=weekStartISO(1);
+    const cw=tot(Object.entries(m).filter(([k])=>k>=ws).map(([,v])=>v));
+    const pw=tot(Object.entries(m).filter(([k])=>k>=wp&&k<ws).map(([,v])=>v));
+    I.push({ic:'📆',l:'Semana atual (seg→hoje)',v:fmtN(cw,0)+u,d:`semana passada: ${fmtN(pw,0)}${u}`});
+    // sequência e dias sem treino
+    const active=new Set(Object.keys(m).filter(k=>m[k]>0));
+    let streak=0;const d0=new Date();if(!active.has(localISO(d0)))d0.setDate(d0.getDate()-1);
+    while(active.has(localISO(d0))){streak++;d0.setDate(d0.getDate()-1);}
+    const lastK=[...active].sort().pop();
+    const gap=lastK?Math.round((toDt(today())-toDt(lastK))/DAY_MS):null;
+    I.push({ic:'🔥',l:'Sequência atual',v:streak+' dia'+(streak===1?'':'s'),d:gap?`último treino há ${gap} dia${gap===1?'':'s'}`:'treinou hoje',tone:gap>3?'warn':streak>=3?'ok':''});
+    const ak=keys.filter(k=>m[k]>0);
+    const weeks=Math.max(1,(toDt(today())-toDt(keys[0]))/DAY_MS/7);
+    I.push({ic:'📊',l:'Média semanal no período',v:fmtN(tot(ak.map(k=>m[k]))/weeks,0)+u,d:`${fmtN(ak.length/weeks,1)} dias ativos/semana`});
+    const best=ak.reduce((x,k)=>m[k]>m[x]?k:x,ak[0]);
+    if(best)I.push({ic:'🏆',l:'Melhor dia',v:fmtN(m[best],0)+u,d:fmtD(best)});
+    T.push(d>0?`Nos últimos 7 dias você fez ${fmtN(a,0)}${u} de atividade, ${b?pctTxt(a,b).replace('+','')+' a mais':'mais'} que nos 7 dias anteriores (${fmtN(b,0)}${u}).`:
+      d<0?`Nos últimos 7 dias você fez ${fmtN(a,0)}${u}, ${pctTxt(a,b).replace('-','')} a menos que nos 7 dias anteriores (${fmtN(b,0)}${u}).`:
+      `Volume igual aos 7 dias anteriores (${fmtN(a,0)}${u}).`);
+    T.push(`Semana atual: ${fmtN(cw,0)}${u} até agora, contra ${fmtN(pw,0)}${u} na semana passada.`+(gap>3?` Já são ${gap} dias sem registrar treino.`:''));
+    return{I,T};
+  }
+  const avg=a=>a.length?tot(a)/a.length:null;
+  const vals=keys.map(k=>m[k]).filter(v=>v>0);
+  const av=avg(vals);
+  const goal=ref&&ref.min!=null?ref.min:null;
+  const fh=h=>{const H=Math.floor(h),M=Math.round((h-H)*60);return H+'h'+(M?String(M).padStart(2,'0'):'');};
+  const fv=v=>isSleep?fh(v):fmtN(v,0)+u;
+  I.push({ic:'📊',l:'Média por dia',v:fv(av),d:`${vals.length} dia${vals.length===1?'':'s'} registrado${vals.length===1?'':'s'}`});
+  if(goal!=null){const hit=vals.filter(v=>v>=goal).length;I.push({ic:'🎯',l:'Dias na meta',v:`${hit} de ${vals.length}`,d:`meta ${isSleep?fh(goal):fmtN(goal,0)+u} · ${Math.round(hit/vals.length*100)}%`,tone:hit/vals.length>=0.7?'ok':'warn'});}
+  const a7=avg(A),b7=avg(B);
+  if(a7!=null){const d=b7!=null?a7-b7:0;I.push({ic:b7!=null?arrowOf(d):'🗓',l:'7 dias vs 7 anteriores',v:fv(a7),d:b7!=null?`antes: ${fv(b7)} (${pctTxt(a7,b7)})`:'sem dados anteriores',tone:d>0?'ok':d<0?'warn':''});}
+  const best=keys.reduce((x,k)=>m[k]>m[x]?k:x,keys[0]),worst=keys.filter(k=>m[k]>0).reduce((x,k)=>m[k]<m[x]?k:x,keys[0]);
+  I.push({ic:'🏆',l:'Melhor dia',v:fv(m[best]),d:fmtD(best)});
+  I.push({ic:'⚠️',l:'Pior dia',v:fv(m[worst]),d:fmtD(worst)});
+  if(isWater){const td=m[today()]||0;I.push({ic:'💧',l:'Hoje',v:fmtN(td,0)+u,d:goal?`${Math.round(td/goal*100)}% da meta`:''});}
+  T.push(`${isWater?'Você bebeu':'Você dormiu'} em média ${fv(av)} por dia no período${goal!=null?`, atingindo a meta em ${vals.filter(v=>v>=goal).length} de ${vals.length} dias`:''}.`+
+    (a7!=null&&b7!=null?` Nos últimos 7 dias a média ${a7>b7?'subiu':a7<b7?'caiu':'ficou igual'} (${fv(a7)} vs ${fv(b7)}).`:''));
+  return{I,T};
+}
+
+// ── Contagens (categorias)
+function anCat(src,cut,rows){
+  if(!rows||!rows.length)return null;
+  const I=[],T=[],tot=rows.reduce((a,r)=>a+r.value,0);
+  rows.slice(0,3).forEach((r,i)=>I.push({ic:['🥇','🥈','🥉'][i],l:r.label,v:fmtN(r.value,0)+' '+src.unit,d:Math.round(r.value/tot*100)+'% do total'}));
+  const c7=localISO(new Date(Date.now()-6*DAY_MS)),c14=localISO(new Date(Date.now()-13*DAY_MS));
+  const sum=x=>x.reduce((a,r)=>a+r.value,0);
+  const a=sum(src.get(c7)),b=sum(src.get(c14))-a;
+  I.push({ic:arrowOf(a-b),l:'Últimos 7 dias',v:fmtN(a,0)+' '+src.unit,d:`7 dias anteriores: ${fmtN(b,0)}`});
+  I.push({ic:'📋',l:'Itens diferentes',v:String(rows.length),d:'total '+fmtN(tot,0)+' '+src.unit});
+  T.push(`${rows[0].label} é o mais frequente, com ${Math.round(rows[0].value/tot*100)}% dos registros do período. Nos últimos 7 dias foram ${fmtN(a,0)} registros, contra ${fmtN(b,0)} nos 7 dias anteriores.`);
+  return{I,T};
+}
+
+// ── Genérica
+function anGeneric(src,cut){
+  const r=rawPts(src,cut);if(r.length<1)return null;
+  const I=[],u=' '+src.unit,f=r[0],l=r[r.length-1],vals=r.map(p=>p.v);
+  if(r.length>1)I.push({ic:arrowOf(l.v-f.v),l:'Variação',v:(l.v-f.v>0?'+':'')+fmtN(l.v-f.v)+u,d:pctTxt(l.v,f.v)});
+  I.push({ic:'📊',l:'Média',v:fmtN(vals.reduce((a,b)=>a+b,0)/vals.length)+u,d:r.length+' registros'});
+  I.push({ic:'↕️',l:'Faixa',v:`${fmtN(Math.min(...vals))}–${fmtN(Math.max(...vals))}`+u,d:''});
+  return{I,T:[]};
+}
+
+function buildAnalysis(def,src,ctx){
+  let res=null;
+  try{
+    if(src.kind==='cat')res=anCat(src,ctx.cut,ctx.rows);
+    else if(src.id.startsWith('dose:'))res=anDose(src,ctx.cut);
+    else if(src.id.startsWith('body:'))res=anBody(src,ctx.cut);
+    else if(src.id.startsWith('lab:'))res=anLab(src,ctx.cut,ctx.ref);
+    else if(src.id.startsWith('rot:'))res=anRoutine(src,ctx.cut,ctx.ref);
+    else res=anGeneric(src,ctx.cut);
+  }catch(e){console.warn('analise',def.id,e);res=null;}
+  if(res&&ctx.s1&&ctx.s2&&ctx.src2&&src.label.replace(/ — .*/,'')!==ctx.src2.label.replace(/ — .*/,'')){
+    const m2=new Map(ctx.s2.map(p=>[p.k,p.v]));
+    const pairs=ctx.s1.filter(p=>m2.has(p.k));
+    let r=pearson(pairs.map(p=>p.v),pairs.map(p=>m2.get(p.k)));
+    if(r==null){ // tenta casar por dia
+      const d2=new Map();ctx.s2.forEach(p=>d2.set(dKey(p.k),p.v));
+      const pp=ctx.s1.filter(p=>d2.has(dKey(p.k)));r=pearson(pp.map(p=>p.v),pp.map(p=>d2.get(dKey(p.k))));
+    }
+    if(r!=null){
+      const a=Math.abs(r),force=a>=0.7?'forte':a>=0.4?'moderada':a>=0.2?'fraca':'praticamente nenhuma';
+      res.I.push({ic:'🔗',l:'Relação com '+ctx.src2.label.replace(/ — .*/,''),v:fmtN(r,2),d:`correlação ${force}${a>=0.2?(r>0?' positiva':' negativa'):''}`});
+      if(a>=0.4)res.T.push(`Há correlação ${force} ${r>0?'positiva':'negativa'} entre ${src.label.toLowerCase()} e ${ctx.src2.label.toLowerCase()} no período (quando um sobe, o outro tende a ${r>0?'subir':'cair'}).`);
+    }
+  }
+  return res;
+}
+function renderAnalysis(def,src,ctx){
+  const el=document.getElementById('cbi_'+def.id);if(!el)return;
+  const res=src?buildAnalysis(def,src,ctx):null;
+  if(!res||(!res.I.length&&!res.T.length)){el.innerHTML='';el.style.display='none';return;}
+  el.style.display='';
+  el.innerHTML=`<div class="ins-hd">📋 Análise</div>
+    ${res.T.length?`<p class="ins-txt">${res.T.map(escH).join(' ')}</p>`:''}
+    <div class="ins-grid">${res.I.map(i=>`<div class="ins-it ${i.tone?'t-'+i.tone:''}"><div class="ins-l"><span class="ins-ic">${i.ic}</span>${escH(i.l)}</div><div class="ins-v">${escH(i.v)}</div>${i.d?`<div class="ins-d">${escH(i.d)}</div>`:''}</div>`).join('')}</div>`;
+}
+
 function renderChartKpis(){
   const tA=doses.filter(d=>d.tipo==='tirz'&&d.dose),teA=doses.filter(d=>d.tipo==='test'&&d.dose);
   const wk=getWeekGym();
@@ -4153,7 +4452,7 @@ function renderChartKpis(){
   const fh=h=>{const H=Math.floor(h),M=Math.round((h-H)*60);return H+u('h'+(M?String(M).padStart(2,'0'):''));};
   const ts=sleepLog.find(s=>s.date===today());
   if(ts){set('s-sleep',fh(ts.hours));set('s-sleep-d',ts.hours>=8?'meta atingida':ts.hours>=6?'aceitável':'insuficiente');}
-  const l7=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);l7.push(d.toISOString().slice(0,10));}
+  const l7=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);l7.push(localISO(d));}
   const vs=l7.map(k=>sleepLog.find(s=>s.date===k)).filter(Boolean);
   set('s-sleep-avg',vs.length?fh(vs.reduce((a,x)=>a+x.hours,0)/vs.length):'—');
 }
@@ -4203,10 +4502,10 @@ function openChartEditor(id){
       <div class="fg"><label>Agrupar</label><select id="ce-grp">
         <option value="">Automático</option><option value="record">Cada registro</option><option value="day">Por dia</option><option value="week">Por semana</option><option value="month">Por mês</option></select></div>
       <div class="fg"><label>Período padrão</label><select id="ce-period">
-        <option value="30">30 dias</option><option value="90">90 dias</option><option value="180">6 meses</option><option value="365">1 ano</option><option value="all">Tudo</option></select></div>
+        <option value="7">7 dias</option><option value="30">30 dias</option><option value="90">90 dias</option><option value="180">6 meses</option><option value="365">1 ano</option><option value="all">Tudo</option></select></div>
     </div>
     <div class="fg ce-cat-only"><label>Período padrão</label><select id="ce-period-cat">
-      <option value="30">30 dias</option><option value="90">90 dias</option><option value="180">6 meses</option><option value="365">1 ano</option><option value="all">Tudo</option></select></div>
+      <option value="7">7 dias</option><option value="30">30 dias</option><option value="90">90 dias</option><option value="180">6 meses</option><option value="365">1 ano</option><option value="all">Tudo</option></select></div>
     <div class="fg ce-series"><label>Comparar com (eixo direito)</label><select id="ce-src2">${sourceOptions(d.src2||'',false,true)}</select></div>
     <div class="fg ce-series"><label>Faixa de referência / meta</label>
       <select id="ce-ref" onchange="ceSync()"><option value="auto">Automática (padrão do dado)</option><option value="custom">Personalizada</option><option value="off">Não mostrar</option></select></div>
